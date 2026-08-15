@@ -428,7 +428,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(wideBackdropRoot.props['data-kisekae-sidebar-wide'], 'true')
   assert.equal(wideArtwork.props['data-kisekae-sidebar-artwork'], DEFAULT_BACKDROP_ARTWORK_ID)
   assert.equal(wideArtwork.props.style.backgroundImage, `url(${ARTWORK_ROUTE}/${DEFAULT_BACKDROP_ARTWORK_ID}.jpg)`)
-  assert.equal(wideArtwork.props.style.opacity, 0.30)
+  assert.equal(wideArtwork.props.style.opacity, 0.46)
   const narrowBackdrop = collectElements(backdropSlot.component({ wide: false, backdropStore }))
   assert.equal(
     narrowBackdrop.find(element => element.props?.['data-kisekae-sidebar-backdrop'] !== undefined)
@@ -443,7 +443,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(backdropStore.getSnapshot().mode, 'immersive')
   const immersiveArtwork = collectElements(backdropSlot.component({ wide: true, backdropStore }))
     .find(element => element.props?.['data-kisekae-sidebar-artwork'] !== undefined)
-  assert.equal(immersiveArtwork.props.style.opacity, 0.54)
+  assert.equal(immersiveArtwork.props.style.opacity, 0.68)
   backdropStore.setMode('off')
   assert.equal(backdropSlot.component({ wide: true, backdropStore }).props['data-kisekae-sidebar-backdrop'], 'off')
 

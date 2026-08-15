@@ -10,7 +10,7 @@ const ROOT_STYLE: CSSProperties = {
   width: '100%',
   height: '100%',
   overflow: 'hidden',
-  background: 'linear-gradient(180deg, var(--dsw-specific-sidebar-fill) 0%, color-mix(in srgb, var(--dsw-specific-sidebar-fill) 88%, var(--dsw-alias-brand-primary)) 100%)',
+  background: 'linear-gradient(180deg, color-mix(in srgb, var(--dsw-specific-sidebar-fill) 90%, var(--dsw-alias-brand-primary)) 0%, color-mix(in srgb, var(--dsw-specific-sidebar-fill) 68%, var(--dsw-alias-brand-primary)) 100%)',
 }
 
 const LAYER_STYLE: CSSProperties = {
@@ -70,10 +70,10 @@ export function SidebarBackdrop({ wide, backdropStore }: SidebarBackdropProps): 
             style={{
               ...IMAGE_STYLE,
               backgroundImage: `url(${artworkUrl(snapshot.artworkId)})`,
-              opacity: immersive ? 0.54 : 0.30,
+              opacity: immersive ? 0.68 : 0.46,
             }}
           />
-          <div style={{ ...GLASS_STYLE, opacity: immersive ? 0.34 : 0.52 }} />
+          <div style={{ ...GLASS_STYLE, opacity: immersive ? 0.24 : 0.38 }} />
         </>
       )}
     </div>
