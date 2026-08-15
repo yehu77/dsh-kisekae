@@ -6,15 +6,17 @@
 
 ## 当前状态
 
-首个可用皮肤是“DeepSeek蓝鲸娘”：一套以清冷海面和深海夜色为方向的非官方社区主题。安装后会立即叠加 16 个语义颜色令牌，同时保留 Harness 官方的浅色、深色和跟随系统偏好。设置页还包含 42 张图片的图鉴、右下角画框装饰，以及“蓝鲸玻璃侧栏·雨幕”。
+首个可用皮肤是“DeepSeek蓝鲸娘”：一套以清冷海面和深海夜色为方向的非官方社区主题。安装后会立即叠加 16 个语义颜色令牌，同时保留 Harness 官方的浅色、深色和跟随系统偏好。设置页还包含 42 张图片的图鉴、右下角画框装饰、“蓝鲸玻璃侧栏·雨幕”和主题化“新会话”按钮。
 
 设置中现在会显示独立的**外观与皮肤**页面，其中有**官方外观**和 **DeepSeek蓝鲸娘**两张卡片。点击卡片会立即预览，但不会自动保存；点击**取消**会恢复上次已应用的选择，点击**应用**会把选择写入当前浏览器、当前 Harness origin 下的版本化存储键 `@yehu77/dsh-kisekae:skin:v1`。同源标签页会自动同步，不同浏览器或 origin 各自保存。该实现不修改 Harness 的设置 namespace allowlist。
 
-图片选项会立即保存到 `@yehu77/dsh-kisekae:mascot:v1`。“随机”在每次加载页面时选择一张合适图片，“固定”使用图鉴中点选的图片，“关闭”则移除装饰。104 MiB 原始素材保持不变；插件使用 5.2 MiB 的浏览器发布副本，并在图鉴中懒加载。
+图片选项会立即保存到 `@yehu77/dsh-kisekae:mascot:v1`。“随机”在每次加载页面时选择一张合适图片，“固定”使用图鉴中点选的图片，“关闭”则移除装饰。右下角画框只在蓝鲸娘是当前可见皮肤时显示；预览官方外观时，其偏好仍会保留。104 MiB 原始素材保持不变；插件使用 5.2 MiB 的浏览器发布副本，并在图鉴中懒加载。
 
-侧栏背景会立即保存到 `@yehu77/dsh-kisekae:sidebar-backdrop:v1`。“清爽”和“沉浸”使用一张固定的图鉴图片，默认是雨景 `7fd9fafc…`，并提供向上渐隐与基于语义颜色的玻璃遮罩；“关闭”会移除背景。56 px 窄栏只显示安静的纯渐变。设置页用同一个组件提供实时侧栏预览，主题则通过半透明的语义 hover／active 颜色适配会话行，不直接修改会话行样式。一个使用 `currentColor` 的海浪对话图标只替换“新会话”图形，官方按钮、文字、操作、焦点行为和响应式尺寸保持不变。
+侧栏背景会立即保存到 `@yehu77/dsh-kisekae:sidebar-backdrop:v1`。“清爽”和“沉浸”使用一张固定的图鉴图片，默认是雨景 `7fd9fafc…`，并提供向上渐隐与基于语义颜色的玻璃遮罩；“关闭”会移除背景。56 px 窄栏只显示安静的纯渐变。设置页用同一个组件提供实时侧栏预览，主题则通过半透明的语义 hover／active 颜色适配会话行，不直接修改会话行样式。“新会话”按钮保留官方元素、文字、操作、焦点行为和提示：蓝鲸娘在宽栏使用右侧低透明图片与语义玻璃，窄栏使用紧凑玻璃，并配有响应式 `currentColor` 海浪对话图标。
 
-项目当前针对 DeepSeek Harness commit `85cbad945e8852416fce1d6ad57e07aa372fad09`（`0.1.0-rc.5`）开发，该版本提供公开的 `sidebar.backdrop` 和 `sidebar.newSession.icon` slot。DeepSeek Harness 仍处于开发者预览期，因此兼容性要显式固定和审查，不能默认成立。
+侧栏背景、“新会话”装饰、海浪对话图标和右下角画框组成一组由设置页当前 draft 驱动的可逆视觉贡献。预览官方外观会立即移除四者；如果已保存的是蓝鲸娘，点击“取消”会全部恢复。隐藏期间，美术偏好保持不变。
+
+项目当前针对 DeepSeek Harness commit `57062234bfdb84eca6bdb2bbeec03abdff5c6bbd`（`0.1.0-rc.5`）开发；该版本提供公开的 `sidebar.backdrop`、`sidebar.newSession.decoration` 和 `sidebar.newSession.icon` slot。DeepSeek Harness 仍处于开发者预览期，因此兼容性要显式固定和审查，不能默认成立。
 
 完整产品范围、交付阶段、决策门和发布标准见[路线图](ROADMAP.zh.md)。
 
@@ -83,7 +85,9 @@ src/client/mascot-store.ts  固定、随机与关闭图片偏好
 src/client/KisekaeMascotOverlay.tsx  右下角画框装饰
 src/client/sidebar-backdrop-store.ts  清爽、沉浸、关闭与固定背景偏好
 src/client/SidebarBackdrop.tsx  官方侧栏背景 slot 中的雨幕图片
+src/client/BlueWhaleNewSessionDecoration.tsx  “新会话”内容背后的玻璃与图片层
 src/client/BlueWhaleNewSessionIcon.tsx  官方“新会话”图形 slot 中的海浪对话图标
+src/client/skin-visual-orchestrator.ts  随 draft 管理蓝鲸娘外壳视觉生命周期
 src/client/themes/    数据化的主题配色定义
 cordis.patch.yml      可安装的 Web profile 层
 assets/release/       浏览器发布副本

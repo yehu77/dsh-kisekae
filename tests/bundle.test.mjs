@@ -7,6 +7,7 @@ const PACKAGE_NAME = '@yehu77/dsh-kisekae'
 const ARTWORK_ROUTE = '/plugins/@yehu77/dsh-kisekae/assets'
 const BACKDROP_STORAGE_KEY = '@yehu77/dsh-kisekae:sidebar-backdrop:v1'
 const DEFAULT_BACKDROP_ARTWORK_ID = '7fd9fafc-aa19-449d-a92d-338a9bce7db5'
+const NEW_SESSION_ARTWORK_ID = '7a9c4fae-6fca-4c5e-b232-5c802f788dae'
 const MASCOT_STORAGE_KEY = '@yehu77/dsh-kisekae:mascot:v1'
 const SKIN_STORAGE_KEY = '@yehu77/dsh-kisekae:skin:v1'
 const RELEASE_ARTWORK_DIRECTORY = new URL('../assets/release/deepseek-blue-whale-chan/', import.meta.url)
@@ -160,6 +161,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   }
   assert.match(source, /settings\.section/)
   assert.match(source, /sidebar\.backdrop/)
+  assert.match(source, /sidebar\.newSession\.decoration/)
   assert.match(source, /sidebar\.newSession\.icon/)
   assert.match(source, /shell\.overlay/)
   const storageListeners = new Set()
@@ -264,6 +266,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   let tokenDisposeCalls = 0
   let localeDisposeCalls = 0
   const slotDisposeCalls = new Map()
+  const slotRegisterCalls = new Map()
   let registeredLocale
   let registeredDictionaries
   const slotRegistrations = new Map()
@@ -290,9 +293,17 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
         return dispose
       },
       register(options, component) {
-        slotRegistrations.set(options.name, { component, options })
+        const registration = { component, options }
+        slotRegistrations.set(options.name, registration)
+        slotRegisterCalls.set(options.name, (slotRegisterCalls.get(options.name) ?? 0) + 1)
+        let disposed = false
         return () => {
+          if (disposed) return
+          disposed = true
           slotDisposeCalls.set(options.name, (slotDisposeCalls.get(options.name) ?? 0) + 1)
+          if (slotRegistrations.get(options.name) === registration) {
+            slotRegistrations.delete(options.name)
+          }
         }
       },
     },
@@ -310,16 +321,19 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.deepEqual(effectLabels, [
     'dsh-kisekae: skin selection controller',
     'dsh-kisekae: settings dictionaries',
+    'dsh-kisekae: skin visual contributions',
   ])
   assert.deepEqual([...slotRegistrations.keys()].sort(), [
     'settings.section',
     'shell.overlay',
     'sidebar.backdrop',
+    'sidebar.newSession.decoration',
     'sidebar.newSession.icon',
   ])
   const settingsSlot = slotRegistrations.get('settings.section')
   const overlaySlot = slotRegistrations.get('shell.overlay')
   const backdropSlot = slotRegistrations.get('sidebar.backdrop')
+  const newSessionDecorationSlot = slotRegistrations.get('sidebar.newSession.decoration')
   const newSessionIconSlot = slotRegistrations.get('sidebar.newSession.icon')
   const { component: slotComponent, options: slotOptions } = settingsSlot
   assert.equal(slotOptions.name, 'settings.section')
@@ -333,6 +347,8 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(typeof overlaySlot.component, 'function')
   assert.deepEqual(Object.keys(backdropSlot.options).sort(), ['inject', 'name'])
   assert.equal(typeof backdropSlot.component, 'function')
+  assert.deepEqual(Object.keys(newSessionDecorationSlot.options), ['name'])
+  assert.equal(typeof newSessionDecorationSlot.component, 'function')
   assert.deepEqual(Object.keys(newSessionIconSlot.options), ['name'])
   assert.equal(typeof newSessionIconSlot.component, 'function')
 
@@ -446,6 +462,41 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(iconPaths.length, 3)
   assert.ok(iconPaths.every(path => path.props.stroke === 'currentColor'))
 
+  const wideNewSessionDecoration = collectElements(newSessionDecorationSlot.component({ wide: true }))
+  const wideDecorationRoot = wideNewSessionDecoration.find(
+    element => element.props?.['data-kisekae-new-session-decoration'] !== undefined,
+  )
+  const buttonArtwork = wideNewSessionDecoration.find(
+    element => element.props?.['data-kisekae-new-session-artwork'] !== undefined,
+  )
+  assert.equal(wideDecorationRoot.props['data-kisekae-new-session-decoration'], 'wide')
+  assert.equal(wideDecorationRoot.props['aria-hidden'], 'true')
+  assert.equal(buttonArtwork.props['data-kisekae-new-session-artwork'], NEW_SESSION_ARTWORK_ID)
+  assert.equal(
+    buttonArtwork.props.style.backgroundImage,
+    `url(${ARTWORK_ROUTE}/${NEW_SESSION_ARTWORK_ID}.jpg)`,
+  )
+  assert.equal(buttonArtwork.props.style.backgroundPosition, 'center 44%')
+  assert.equal(buttonArtwork.props.style.opacity, 0.26)
+  const railNewSessionDecoration = collectElements(newSessionDecorationSlot.component({ wide: false }))
+  assert.equal(
+    railNewSessionDecoration.find(
+      element => element.props?.['data-kisekae-new-session-decoration'] !== undefined,
+    ).props['data-kisekae-new-session-decoration'],
+    'rail',
+  )
+  assert.equal(
+    railNewSessionDecoration.some(
+      element => element.props?.['data-kisekae-new-session-artwork'] !== undefined,
+    ),
+    false,
+  )
+  const railWave = railNewSessionDecoration.find(
+    element => element.props?.['data-kisekae-new-session-rail-wave'] === 'true',
+  )
+  assert.equal(railWave.type, 'svg')
+  assert.equal(collectElements(railWave).find(element => element.type === 'path').props.stroke, 'currentColor')
+
   const fixedBackdropId = releaseArtworkIds.at(-1)
   backdropStore.setArtwork(fixedBackdropId)
   assert.equal(backdropStore.getSnapshot().artworkId, fixedBackdropId)
@@ -483,12 +534,20 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(controller.getSnapshot().draft, 'official')
   assert.equal(controller.getSnapshot().dirty, true)
   assert.equal(tokenDisposeCalls, 1)
+  assert.deepEqual([...slotRegistrations.keys()], ['settings.section'])
 
   controller.cancelPreview()
   assert.equal(controller.getSnapshot().committed, 'deepseek-blue-whale-chan')
   assert.equal(controller.getSnapshot().draft, 'deepseek-blue-whale-chan')
   assert.equal(controller.getSnapshot().dirty, false)
   assert.equal(overrideHistory.length, 2)
+  assert.deepEqual([...slotRegistrations.keys()].sort(), [
+    'settings.section',
+    'shell.overlay',
+    'sidebar.backdrop',
+    'sidebar.newSession.decoration',
+    'sidebar.newSession.icon',
+  ])
 
   controller.preview('official')
   await controller.applyPreview()
@@ -500,6 +559,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(controller.getSnapshot().draft, 'official')
   assert.equal(controller.getSnapshot().dirty, false)
   assert.equal(controller.getSnapshot().error, null)
+  assert.deepEqual([...slotRegistrations.keys()], ['settings.section'])
 
   storedSkin = 'skin-from-a-newer-version'
   for (const listener of [...storageListeners]) {
@@ -527,6 +587,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
     })
   }
   assert.equal(controller.getSnapshot().committed, 'deepseek-blue-whale-chan')
+  assert.equal(slotRegistrations.has('sidebar.newSession.decoration'), true)
 
   storedSkin = 'official'
   for (const listener of [...storageListeners]) {
@@ -537,6 +598,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
     })
   }
   assert.equal(controller.getSnapshot().committed, 'official')
+  assert.deepEqual([...slotRegistrations.keys()], ['settings.section'])
   rejectStorageWrites = true
   controller.preview('deepseek-blue-whale-chan')
   await controller.applyPreview()
@@ -547,31 +609,47 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(controller.getSnapshot().error, 'save-failed')
   assert.equal(controller.getSnapshot().committed, 'official')
   assert.equal(controller.getSnapshot().draft, 'deepseek-blue-whale-chan')
+  assert.equal(slotRegistrations.has('shell.overlay'), true)
   controller.cancelPreview()
   assert.equal(controller.getSnapshot().draft, 'official')
   assert.equal(controller.getSnapshot().error, null)
+  assert.deepEqual([...slotRegistrations.keys()], ['settings.section'])
   rejectStorageWrites = false
   controller.preview('deepseek-blue-whale-chan')
   await controller.applyPreview()
   assert.equal(storedSkin, 'deepseek-blue-whale-chan')
   assert.equal(controller.getSnapshot().committed, 'deepseek-blue-whale-chan')
+  assert.equal(slotRegistrations.has('sidebar.backdrop'), true)
   componentCleanups[0]()
   assert.equal(controller.getSnapshot().draft, 'deepseek-blue-whale-chan')
 
-  assert.equal(effectDisposers.length, 2)
+  assert.equal(effectDisposers.length, 3)
   effectDisposers[0]()
   effectDisposers[1]()
+  effectDisposers[2]()
   assert.deepEqual(
     [...slotInjectionDisposers.keys()].sort(),
-    ['settings.section', 'shell.overlay', 'sidebar.backdrop', 'sidebar.newSession.icon'],
+    [
+      'settings.section',
+      'shell.overlay',
+      'sidebar.backdrop',
+      'sidebar.newSession.decoration',
+      'sidebar.newSession.icon',
+    ],
   )
   for (const dispose of slotInjectionDisposers.values()) dispose()
   assert.equal(tokenDisposeCalls, overrideHistory.length)
   assert.equal(localeDisposeCalls, 1)
   assert.equal(slotDisposeCalls.get('settings.section'), 1)
-  assert.equal(slotDisposeCalls.get('shell.overlay'), 1)
-  assert.equal(slotDisposeCalls.get('sidebar.backdrop'), 1)
-  assert.equal(slotDisposeCalls.get('sidebar.newSession.icon'), 1)
+  for (const name of [
+    'shell.overlay',
+    'sidebar.backdrop',
+    'sidebar.newSession.decoration',
+    'sidebar.newSession.icon',
+  ]) {
+    assert.equal(slotDisposeCalls.get(name), slotRegisterCalls.get(name))
+  }
+  assert.equal(slotRegistrations.size, 0)
   assert.equal(storageListeners.size, 0)
 
   let reentrantControllerDispose

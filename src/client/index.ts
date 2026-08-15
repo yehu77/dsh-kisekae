@@ -1,6 +1,8 @@
 /** Browser half: durable skin selection over the official color mode. */
 
 import { BrowserSkinStore } from './browser-skin-store'
+import { BlueWhaleNewSessionDecoration } from './BlueWhaleNewSessionDecoration'
+import type { BlueWhaleNewSessionDecorationProps } from './BlueWhaleNewSessionDecoration'
 import { BlueWhaleNewSessionIcon } from './BlueWhaleNewSessionIcon'
 import type { BlueWhaleNewSessionIconProps } from './BlueWhaleNewSessionIcon'
 import { KisekaeMascotOverlay } from './KisekaeMascotOverlay'
@@ -13,6 +15,7 @@ import { SidebarBackdropStore } from './sidebar-backdrop-store'
 import { SkinSelectionController } from './skin-controller'
 import { SkinSelectorSection } from './SkinSelectorSection'
 import type { SkinSelectorSectionProps } from './SkinSelectorSection'
+import { mountSkinVisuals } from './skin-visual-orchestrator'
 import type { ThemeTokenOverrides } from './theme-types'
 
 export { DEEPSEEK_BLUE_WHALE_CHAN } from './themes/deepseek-blue-whale-chan'
@@ -39,7 +42,7 @@ interface OrderedSlotOptions {
 }
 
 interface SidebarVisualSlotOptions {
-  readonly name: 'sidebar.backdrop' | 'sidebar.newSession.icon'
+  readonly name: 'sidebar.backdrop' | 'sidebar.newSession.decoration' | 'sidebar.newSession.icon'
   readonly inject?: () => object
 }
 
@@ -91,17 +94,27 @@ export function apply(ctx: KisekaeClientContext): void {
     locale: KISEKAE_LOCALE_NAMESPACE,
     inject: () => ({ controller, mascotStore, backdropStore }),
   }, SkinSelectorSection))
-  ctx.slots.inject('sidebar.backdrop', () => ctx.slots.register<SidebarBackdropProps>({
-    name: 'sidebar.backdrop',
-    inject: () => ({ backdropStore }),
-  }, SidebarBackdrop))
-  ctx.slots.inject('sidebar.newSession.icon', () => ctx.slots.register<BlueWhaleNewSessionIconProps>({
-    name: 'sidebar.newSession.icon',
-  }, BlueWhaleNewSessionIcon))
-  ctx.slots.inject('shell.overlay', () => ctx.slots.register<KisekaeMascotOverlayProps>({
-    name: 'shell.overlay',
-    id: 'dsh-kisekae.blue-whale',
-    order: 100,
-    inject: () => ({ mascotStore }),
-  }, KisekaeMascotOverlay))
+  ctx.effect(() => mountSkinVisuals(controller, () => {
+    const disposers = [
+      ctx.slots.inject('sidebar.backdrop', () => ctx.slots.register<SidebarBackdropProps>({
+        name: 'sidebar.backdrop',
+        inject: () => ({ backdropStore }),
+      }, SidebarBackdrop)),
+      ctx.slots.inject('sidebar.newSession.decoration', () => ctx.slots.register<BlueWhaleNewSessionDecorationProps>({
+        name: 'sidebar.newSession.decoration',
+      }, BlueWhaleNewSessionDecoration)),
+      ctx.slots.inject('sidebar.newSession.icon', () => ctx.slots.register<BlueWhaleNewSessionIconProps>({
+        name: 'sidebar.newSession.icon',
+      }, BlueWhaleNewSessionIcon)),
+      ctx.slots.inject('shell.overlay', () => ctx.slots.register<KisekaeMascotOverlayProps>({
+        name: 'shell.overlay',
+        id: 'dsh-kisekae.blue-whale',
+        order: 100,
+        inject: () => ({ mascotStore }),
+      }, KisekaeMascotOverlay)),
+    ]
+    return () => {
+      for (const dispose of disposers.toReversed()) dispose()
+    }
+  }), 'dsh-kisekae: skin visual contributions')
 }
