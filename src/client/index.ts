@@ -1,6 +1,8 @@
 /** Browser half: durable skin selection over the official color mode. */
 
 import { BrowserSkinStore } from './browser-skin-store'
+import { BlueWhaleNewSessionIcon } from './BlueWhaleNewSessionIcon'
+import type { BlueWhaleNewSessionIconProps } from './BlueWhaleNewSessionIcon'
 import { KisekaeMascotOverlay } from './KisekaeMascotOverlay'
 import type { KisekaeMascotOverlayProps } from './KisekaeMascotOverlay'
 import { KISEKAE_LOCALE_NAMESPACE, en, zh } from './locales'
@@ -36,12 +38,12 @@ interface OrderedSlotOptions {
   readonly inject?: () => object
 }
 
-interface SidebarBackdropSlotOptions {
-  readonly name: 'sidebar.backdrop'
+interface SidebarVisualSlotOptions {
+  readonly name: 'sidebar.backdrop' | 'sidebar.newSession.icon'
   readonly inject?: () => object
 }
 
-type SlotOptions = OrderedSlotOptions | SidebarBackdropSlotOptions
+type SlotOptions = OrderedSlotOptions | SidebarVisualSlotOptions
 
 interface SlotsService {
   inject(name: SlotOptions['name'], install: () => Disposer): Disposer
@@ -93,6 +95,9 @@ export function apply(ctx: KisekaeClientContext): void {
     name: 'sidebar.backdrop',
     inject: () => ({ backdropStore }),
   }, SidebarBackdrop))
+  ctx.slots.inject('sidebar.newSession.icon', () => ctx.slots.register<BlueWhaleNewSessionIconProps>({
+    name: 'sidebar.newSession.icon',
+  }, BlueWhaleNewSessionIcon))
   ctx.slots.inject('shell.overlay', () => ctx.slots.register<KisekaeMascotOverlayProps>({
     name: 'shell.overlay',
     id: 'dsh-kisekae.blue-whale',

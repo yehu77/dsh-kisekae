@@ -6,7 +6,7 @@ English | [中文](ROADMAP.zh.md)
 
 Current milestone: Stage 2 — browser-persistent selection for Official appearance and “DeepSeek Blue Whale-chan.” The rest of Stage 2 remains open until two more original skins prove the catalog is data-driven.
 
-The first gallery, optional corner decoration, and “Blue Whale glass sidebar · Rain veil” are implemented. All 42 released illustrations appear in the gallery; Fixed, Random, and Off control one framed `shell.overlay`, while Clear, Immersive, and Off control a fixed-image `sidebar.backdrop`. Both remain independent of the selected skin.
+The first gallery, optional corner decoration, and “Blue Whale glass sidebar · Rain veil” are implemented. All 42 released illustrations appear in the gallery; Fixed, Random, and Off control one framed `shell.overlay`, while Clear, Immersive, and Off control a fixed-image `sidebar.backdrop`. A wave-chat glyph also occupies `sidebar.newSession.icon`. These contributions remain independent of the selected skin.
 
 ## Goal
 
@@ -53,6 +53,7 @@ Exit when selection survives reload and server restart in the same browser and o
 
 - Keep the shipped framed `shell.overlay` decoration optional through Fixed, Random, and Off controls.
 - Keep the shipped glass sidebar optional through Clear, Immersive, and Off controls. Wide mode uses one fixed catalog image with an upward fade; the narrow rail uses only a quiet semantic gradient.
+- Keep the shipped wave-chat New Session glyph responsive through the host-provided wide state, without replacing the official button or action.
 - Keep the static overlay click-through and outside task content; any future motion must respect reduced-motion preferences.
 - Extend the theme later to conversation backgrounds and composer styling as separately optional surfaces. Sidebar styling already uses the public backdrop slot and semantic row tokens; reuse the artwork catalog through role-specific browser copies instead of stretching every illustration into every surface.
 - Build any first-run guidance as a separate `settings.onboarding` contribution.
@@ -80,7 +81,7 @@ Exit when a new pack can be built without importing Kisekae runtime internals. A
 - If tokens cannot express a credible first skin, list missing semantic roles and propose only generic aliases justified by two consumers; do not use private CSS as an escape hatch.
 - If skin activation causes a measurable first-paint flash, propose a generic installed-token bootstrap hook; do not patch generated HTML.
 - Released gallery art is served by Kisekae's same-origin Host route from packaged browser copies; do not rely on emitted Client siblings, inbox originals, or a remote CDN.
-- The official `shell.overlay` slot is sufficient for the framed corner decoration, and the product-neutral `sidebar.backdrop` slot is sufficient for sidebar artwork. Any other behind-content surface still needs its own generic seam rather than private selectors.
+- The official `shell.overlay` slot is sufficient for the framed corner decoration, while the product-neutral `sidebar.backdrop` and `sidebar.newSession.icon` slots carry sidebar artwork and the themed New Session glyph. Any other visual surface still needs its own generic seam rather than private selectors.
 - Conversation backgrounds, composer styling, and sidebar styling remain separately optional. Busy artwork must not sit directly beneath messages or editable text; each surface needs a quiet fallback that preserves readability.
 - Keep definitions internal until independent release or ownership makes package separation useful.
 - While Harness exposes only an allowlisted set of settings namespaces, keep the choice in Kisekae-owned versioned browser storage. Do not patch the upstream allowlist; reconsider Host persistence only after a generic out-of-tree extension point exists.

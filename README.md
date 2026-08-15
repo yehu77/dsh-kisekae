@@ -12,9 +12,9 @@ Settings now includes an **Appearance & Skins** section with **Official appearan
 
 Artwork controls save immediately under `@yehu77/dsh-kisekae:mascot:v1`. Random chooses one suitable illustration per page load, Fixed uses the image selected in the gallery, and Off removes the decoration. The 104 MiB source library remains untouched; the plugin ships 5.2 MiB of browser-ready JPEG copies and lazy-loads gallery images.
 
-The sidebar backdrop saves immediately under `@yehu77/dsh-kisekae:sidebar-backdrop:v1`. Clear and Immersive use one fixed gallery image—the rainy `7fd9fafc…` scene by default—with an upward fade and a semantic-color glass scrim; Off removes it. The 56 px rail renders only a quiet gradient. Settings uses the same component for its live sidebar preview, and the theme supplies translucent semantic hover and active colors instead of styling session rows directly.
+The sidebar backdrop saves immediately under `@yehu77/dsh-kisekae:sidebar-backdrop:v1`. Clear and Immersive use one fixed gallery image—the rainy `7fd9fafc…` scene by default—with an upward fade and a semantic-color glass scrim; Off removes it. The 56 px rail renders only a quiet gradient. Settings uses the same component for its live sidebar preview, and the theme supplies translucent semantic hover and active colors instead of styling session rows directly. A `currentColor` wave-chat glyph replaces only the New Session icon while retaining the official button, label, action, focus behavior, and responsive sizing.
 
-The project is developed against DeepSeek Harness commit `47f943859bef60e4160492346772ded9b24f765a` (`0.1.0-rc.5`). The glass sidebar additionally needs a Harness build exposing the public `sidebar.backdrop` slot. DeepSeek Harness is still in developer preview, so compatibility is pinned and reviewed explicitly rather than assumed.
+The project is developed against DeepSeek Harness commit `85cbad945e8852416fce1d6ad57e07aa372fad09` (`0.1.0-rc.5`), which exposes the public `sidebar.backdrop` and `sidebar.newSession.icon` slots. DeepSeek Harness is still in developer preview, so compatibility is pinned and reviewed explicitly rather than assumed.
 
 See the [roadmap](ROADMAP.md) for product scope, delivery stages, decision gates, and release criteria.
 
@@ -83,6 +83,7 @@ src/client/mascot-store.ts  Fixed, random, and off artwork preference
 src/client/KisekaeMascotOverlay.tsx  Framed lower-right artwork
 src/client/sidebar-backdrop-store.ts  Clear, immersive, off, and fixed-background preference
 src/client/SidebarBackdrop.tsx  Rain artwork for the official sidebar backdrop slot
+src/client/BlueWhaleNewSessionIcon.tsx  Wave-chat replacement for the official New Session glyph
 src/client/themes/    Data-defined theme palettes
 cordis.patch.yml      Installable Web profile layer
 assets/release/       Browser-ready gallery copies

@@ -12,9 +12,9 @@
 
 图片选项会立即保存到 `@yehu77/dsh-kisekae:mascot:v1`。“随机”在每次加载页面时选择一张合适图片，“固定”使用图鉴中点选的图片，“关闭”则移除装饰。104 MiB 原始素材保持不变；插件使用 5.2 MiB 的浏览器发布副本，并在图鉴中懒加载。
 
-侧栏背景会立即保存到 `@yehu77/dsh-kisekae:sidebar-backdrop:v1`。“清爽”和“沉浸”使用一张固定的图鉴图片，默认是雨景 `7fd9fafc…`，并提供向上渐隐与基于语义颜色的玻璃遮罩；“关闭”会移除背景。56 px 窄栏只显示安静的纯渐变。设置页用同一个组件提供实时侧栏预览，主题则通过半透明的语义 hover／active 颜色适配会话行，不直接修改会话行样式。
+侧栏背景会立即保存到 `@yehu77/dsh-kisekae:sidebar-backdrop:v1`。“清爽”和“沉浸”使用一张固定的图鉴图片，默认是雨景 `7fd9fafc…`，并提供向上渐隐与基于语义颜色的玻璃遮罩；“关闭”会移除背景。56 px 窄栏只显示安静的纯渐变。设置页用同一个组件提供实时侧栏预览，主题则通过半透明的语义 hover／active 颜色适配会话行，不直接修改会话行样式。一个使用 `currentColor` 的海浪对话图标只替换“新会话”图形，官方按钮、文字、操作、焦点行为和响应式尺寸保持不变。
 
-项目当前针对 DeepSeek Harness commit `47f943859bef60e4160492346772ded9b24f765a`（`0.1.0-rc.5`）开发。玻璃侧栏还需要 Harness build 提供公开的 `sidebar.backdrop` slot。DeepSeek Harness 仍处于开发者预览期，因此兼容性要显式固定和审查，不能默认成立。
+项目当前针对 DeepSeek Harness commit `85cbad945e8852416fce1d6ad57e07aa372fad09`（`0.1.0-rc.5`）开发，该版本提供公开的 `sidebar.backdrop` 和 `sidebar.newSession.icon` slot。DeepSeek Harness 仍处于开发者预览期，因此兼容性要显式固定和审查，不能默认成立。
 
 完整产品范围、交付阶段、决策门和发布标准见[路线图](ROADMAP.zh.md)。
 
@@ -83,6 +83,7 @@ src/client/mascot-store.ts  固定、随机与关闭图片偏好
 src/client/KisekaeMascotOverlay.tsx  右下角画框装饰
 src/client/sidebar-backdrop-store.ts  清爽、沉浸、关闭与固定背景偏好
 src/client/SidebarBackdrop.tsx  官方侧栏背景 slot 中的雨幕图片
+src/client/BlueWhaleNewSessionIcon.tsx  官方“新会话”图形 slot 中的海浪对话图标
 src/client/themes/    数据化的主题配色定义
 cordis.patch.yml      可安装的 Web profile 层
 assets/release/       浏览器发布副本

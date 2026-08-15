@@ -160,6 +160,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   }
   assert.match(source, /settings\.section/)
   assert.match(source, /sidebar\.backdrop/)
+  assert.match(source, /sidebar\.newSession\.icon/)
   assert.match(source, /shell\.overlay/)
   const storageListeners = new Set()
   const skinStorageWrites = []
@@ -310,10 +311,16 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
     'dsh-kisekae: skin selection controller',
     'dsh-kisekae: settings dictionaries',
   ])
-  assert.deepEqual([...slotRegistrations.keys()].sort(), ['settings.section', 'shell.overlay', 'sidebar.backdrop'])
+  assert.deepEqual([...slotRegistrations.keys()].sort(), [
+    'settings.section',
+    'shell.overlay',
+    'sidebar.backdrop',
+    'sidebar.newSession.icon',
+  ])
   const settingsSlot = slotRegistrations.get('settings.section')
   const overlaySlot = slotRegistrations.get('shell.overlay')
   const backdropSlot = slotRegistrations.get('sidebar.backdrop')
+  const newSessionIconSlot = slotRegistrations.get('sidebar.newSession.icon')
   const { component: slotComponent, options: slotOptions } = settingsSlot
   assert.equal(slotOptions.name, 'settings.section')
   assert.equal(slotOptions.id, 'kisekae-skins')
@@ -326,6 +333,8 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(typeof overlaySlot.component, 'function')
   assert.deepEqual(Object.keys(backdropSlot.options).sort(), ['inject', 'name'])
   assert.equal(typeof backdropSlot.component, 'function')
+  assert.deepEqual(Object.keys(newSessionIconSlot.options), ['name'])
+  assert.equal(typeof newSessionIconSlot.component, 'function')
 
   assert.equal(plugin.DEEPSEEK_BLUE_WHALE_CHAN.id, 'deepseek-blue-whale-chan')
   assert.equal(plugin.DEEPSEEK_BLUE_WHALE_CHAN.displayName.zh, 'DeepSeek蓝鲸娘')
@@ -421,6 +430,22 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(immersiveArtwork.props.style.opacity, 0.54)
   backdropStore.setMode('off')
   assert.equal(backdropSlot.component({ wide: true, backdropStore }).props['data-kisekae-sidebar-backdrop'], 'off')
+
+  const wideNewSessionIcon = newSessionIconSlot.component({ wide: true })
+  const narrowNewSessionIcon = newSessionIconSlot.component({ wide: false })
+  assert.equal(wideNewSessionIcon.type, 'svg')
+  assert.equal(wideNewSessionIcon.props['aria-hidden'], 'true')
+  assert.equal(wideNewSessionIcon.props.focusable, 'false')
+  assert.equal(wideNewSessionIcon.props['data-kisekae-new-session-icon'], 'blue-whale-wave-chat')
+  assert.equal(wideNewSessionIcon.props.width, 16)
+  assert.equal(wideNewSessionIcon.props.height, 16)
+  assert.equal(wideNewSessionIcon.props.style.color, 'var(--dsw-alias-brand-primary)')
+  assert.equal(narrowNewSessionIcon.props.width, 18)
+  assert.equal(narrowNewSessionIcon.props.height, 18)
+  const iconPaths = collectElements(wideNewSessionIcon).filter(element => element.type === 'path')
+  assert.equal(iconPaths.length, 3)
+  assert.ok(iconPaths.every(path => path.props.stroke === 'currentColor'))
+
   const fixedBackdropId = releaseArtworkIds.at(-1)
   backdropStore.setArtwork(fixedBackdropId)
   assert.equal(backdropStore.getSnapshot().artworkId, fixedBackdropId)
@@ -538,7 +563,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   effectDisposers[1]()
   assert.deepEqual(
     [...slotInjectionDisposers.keys()].sort(),
-    ['settings.section', 'shell.overlay', 'sidebar.backdrop'],
+    ['settings.section', 'shell.overlay', 'sidebar.backdrop', 'sidebar.newSession.icon'],
   )
   for (const dispose of slotInjectionDisposers.values()) dispose()
   assert.equal(tokenDisposeCalls, overrideHistory.length)
@@ -546,6 +571,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(slotDisposeCalls.get('settings.section'), 1)
   assert.equal(slotDisposeCalls.get('shell.overlay'), 1)
   assert.equal(slotDisposeCalls.get('sidebar.backdrop'), 1)
+  assert.equal(slotDisposeCalls.get('sidebar.newSession.icon'), 1)
   assert.equal(storageListeners.size, 0)
 
   let reentrantControllerDispose
