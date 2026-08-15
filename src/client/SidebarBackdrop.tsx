@@ -30,8 +30,6 @@ const IMAGE_STYLE: CSSProperties = {
 const GLASS_STYLE: CSSProperties = {
   ...LAYER_STYLE,
   background: 'linear-gradient(180deg, color-mix(in srgb, var(--dsw-specific-sidebar-fill) 94%, transparent) 0%, color-mix(in srgb, var(--dsw-specific-sidebar-fill) 74%, transparent) 58%, color-mix(in srgb, var(--dsw-specific-sidebar-fill) 58%, transparent) 100%)',
-  backdropFilter: 'blur(1.5px) saturate(1.08)',
-  WebkitBackdropFilter: 'blur(1.5px) saturate(1.08)',
 }
 
 /** Props composed by the official sidebar backdrop slot. */

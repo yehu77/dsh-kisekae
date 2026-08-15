@@ -6,7 +6,7 @@ Anime-inspired Web themes and delightful UI extensions for DeepSeek Harness.
 
 ## Status
 
-The first working skin is “DeepSeek Blue Whale-chan,” an unofficial community theme built around cool ocean daylight and a deep-sea night palette. Installing the package immediately overlays 16 semantic color tokens while preserving the official Harness Light, Dark, and System preferences. The settings page also includes a 42-image gallery, a framed lower-right decoration, the “Blue Whale glass sidebar · Rain veil,” and a themed New Session button.
+The first working skin is “DeepSeek Blue Whale-chan,” an unofficial community theme built around cool ocean daylight and a deep-sea night palette. Installing the package immediately overlays 16 semantic color tokens while preserving the official Harness Light, Dark, and System preferences. The settings page also includes a 42-image gallery, a framed lower-right decoration, the “Blue Whale glass sidebar · Rain veil,” and themed New Session and Settings triggers.
 
 Settings now includes an **Appearance & Skins** section with **Official appearance** and **DeepSeek Blue Whale-chan** cards. Choosing a card previews it immediately without saving; **Cancel** restores the last applied choice, and **Apply** saves it under the versioned browser-storage key `@yehu77/dsh-kisekae:skin:v1` for the current Harness origin. Tabs on the same origin synchronize automatically, while different browsers and origins keep independent choices. This implementation does not modify Harness's settings-namespace allowlist.
 
@@ -14,9 +14,11 @@ Artwork controls save immediately under `@yehu77/dsh-kisekae:mascot:v1`. Random 
 
 The sidebar backdrop saves immediately under `@yehu77/dsh-kisekae:sidebar-backdrop:v1`. Clear and Immersive use one fixed gallery image—the rainy `7fd9fafc…` scene by default—with an upward fade and a semantic-color glass scrim; Off removes it. The 56 px rail renders only a quiet gradient. Settings uses the same component for its live sidebar preview, and the theme supplies translucent semantic hover and active colors instead of styling session rows directly. The New Session button keeps the official element, label, action, focus behavior, and tooltip: Blue Whale-chan adds low-opacity right-side artwork under semantic glass in wide mode, compact glass in the rail, and a responsive `currentColor` wave-chat glyph.
 
-The sidebar backdrop, New Session decoration, wave-chat glyph, and framed corner artwork are one reversible visual group driven by the current settings draft. Previewing Official appearance removes all four immediately; Cancel restores them when Blue Whale-chan is the saved skin. Their artwork preferences remain intact while hidden.
+The Settings trigger likewise retains the official button, gear, label, and dialog behavior. Wide mode shows the nautical-room `d5dd1b2f…` artwork quietly at the right under a semantic readability scrim; the rail uses image-free glass and two subtle ripples.
 
-The project is developed against DeepSeek Harness commit `57062234bfdb84eca6bdb2bbeec03abdff5c6bbd` (`0.1.0-rc.5`), which exposes the public `sidebar.backdrop`, `sidebar.newSession.decoration`, and `sidebar.newSession.icon` slots. DeepSeek Harness is still in developer preview, so compatibility is pinned and reviewed explicitly rather than assumed.
+The sidebar backdrop, New Session decoration, wave-chat glyph, Settings trigger decoration, and framed corner artwork are one reversible visual group driven by the current settings draft. Previewing Official appearance removes all five immediately; Cancel restores them when Blue Whale-chan is the saved skin. Their artwork preferences remain intact while hidden.
+
+The project is developed against DeepSeek Harness commit `73389381946c78b5db758239c986005faa0fdccf` (`0.1.0-rc.5`), which exposes `settings.trigger.decoration` alongside the public `sidebar.backdrop`, `sidebar.newSession.decoration`, and `sidebar.newSession.icon` slots. DeepSeek Harness is still in developer preview, so compatibility is pinned and reviewed explicitly rather than assumed.
 
 See the [roadmap](ROADMAP.md) for product scope, delivery stages, decision gates, and release criteria.
 
@@ -87,6 +89,7 @@ src/client/sidebar-backdrop-store.ts  Clear, immersive, off, and fixed-backgroun
 src/client/SidebarBackdrop.tsx  Rain artwork for the official sidebar backdrop slot
 src/client/BlueWhaleNewSessionDecoration.tsx  Glass-and-art layer behind New Session content
 src/client/BlueWhaleNewSessionIcon.tsx  Wave-chat replacement for the official New Session glyph
+src/client/BlueWhaleSettingsTriggerDecoration.tsx  Glass-and-art layer behind Settings trigger content
 src/client/skin-visual-orchestrator.ts  Draft-driven lifecycle for Blue Whale shell visuals
 src/client/themes/    Data-defined theme palettes
 cordis.patch.yml      Installable Web profile layer

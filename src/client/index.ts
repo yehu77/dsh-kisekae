@@ -5,6 +5,8 @@ import { BlueWhaleNewSessionDecoration } from './BlueWhaleNewSessionDecoration'
 import type { BlueWhaleNewSessionDecorationProps } from './BlueWhaleNewSessionDecoration'
 import { BlueWhaleNewSessionIcon } from './BlueWhaleNewSessionIcon'
 import type { BlueWhaleNewSessionIconProps } from './BlueWhaleNewSessionIcon'
+import { BlueWhaleSettingsTriggerDecoration } from './BlueWhaleSettingsTriggerDecoration'
+import type { BlueWhaleSettingsTriggerDecorationProps } from './BlueWhaleSettingsTriggerDecoration'
 import { KisekaeMascotOverlay } from './KisekaeMascotOverlay'
 import type { KisekaeMascotOverlayProps } from './KisekaeMascotOverlay'
 import { KISEKAE_LOCALE_NAMESPACE, en, zh } from './locales'
@@ -41,12 +43,16 @@ interface OrderedSlotOptions {
   readonly inject?: () => object
 }
 
-interface SidebarVisualSlotOptions {
-  readonly name: 'sidebar.backdrop' | 'sidebar.newSession.decoration' | 'sidebar.newSession.icon'
+interface SkinVisualSlotOptions {
+  readonly name:
+    | 'settings.trigger.decoration'
+    | 'sidebar.backdrop'
+    | 'sidebar.newSession.decoration'
+    | 'sidebar.newSession.icon'
   readonly inject?: () => object
 }
 
-type SlotOptions = OrderedSlotOptions | SidebarVisualSlotOptions
+type SlotOptions = OrderedSlotOptions | SkinVisualSlotOptions
 
 interface SlotsService {
   inject(name: SlotOptions['name'], install: () => Disposer): Disposer
@@ -106,6 +112,9 @@ export function apply(ctx: KisekaeClientContext): void {
       ctx.slots.inject('sidebar.newSession.icon', () => ctx.slots.register<BlueWhaleNewSessionIconProps>({
         name: 'sidebar.newSession.icon',
       }, BlueWhaleNewSessionIcon)),
+      ctx.slots.inject('settings.trigger.decoration', () => ctx.slots.register<BlueWhaleSettingsTriggerDecorationProps>({
+        name: 'settings.trigger.decoration',
+      }, BlueWhaleSettingsTriggerDecoration)),
       ctx.slots.inject('shell.overlay', () => ctx.slots.register<KisekaeMascotOverlayProps>({
         name: 'shell.overlay',
         id: 'dsh-kisekae.blue-whale',
