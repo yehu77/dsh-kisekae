@@ -68,7 +68,7 @@ export function SidebarBackdrop({ wide, backdropStore }: SidebarBackdropProps): 
             style={{
               ...IMAGE_STYLE,
               backgroundImage: `url(${artworkUrl(snapshot.artworkId)})`,
-              opacity: immersive ? 0.76 : 0.56,
+              opacity: immersive ? 0.95 : 0.56,
             }}
           />
           <div style={{ ...GLASS_STYLE, opacity: immersive ? 0.20 : 0.34 }} />

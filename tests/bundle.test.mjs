@@ -453,7 +453,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(backdropStore.getSnapshot().mode, 'immersive')
   const immersiveArtwork = collectElements(backdropSlot.component({ wide: true, backdropStore }))
     .find(element => element.props?.['data-kisekae-sidebar-artwork'] !== undefined)
-  assert.equal(immersiveArtwork.props.style.opacity, 0.76)
+  assert.equal(immersiveArtwork.props.style.opacity, 0.95)
   backdropStore.setMode('off')
   assert.equal(backdropSlot.component({ wide: true, backdropStore }).props['data-kisekae-sidebar-backdrop'], 'off')
 
