@@ -3,6 +3,8 @@
 /** Public Host route that serves browser-ready artwork. */
 export const KISEKAE_ARTWORK_ROUTE = '/plugins/@yehu77/dsh-kisekae/assets'
 
+const KISEKAE_ARTWORK_RELEASE = 'source-q80-v1'
+
 /** Stable ids shared by the gallery, mascot controls, and asset route. */
 export const KISEKAE_ARTWORK_IDS = [
   '1eaed38d-0bc6-46bb-a87f-a8e604392773',
@@ -86,5 +88,5 @@ export const DEFAULT_MASCOT_ARTWORK_ID: ArtworkId = 'd5dd1b2f-ecdc-4be7-abef-ce9
  * @returns URL served by the Kisekae Host plugin.
  */
 export function artworkUrl(id: string): string {
-  return `${KISEKAE_ARTWORK_ROUTE}/${id}.jpg`
+  return `${KISEKAE_ARTWORK_ROUTE}/${id}.jpg?v=${KISEKAE_ARTWORK_RELEASE}`
 }

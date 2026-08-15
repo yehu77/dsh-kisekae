@@ -5,6 +5,7 @@ import vm from 'node:vm'
 
 const PACKAGE_NAME = '@yehu77/dsh-kisekae'
 const ARTWORK_ROUTE = '/plugins/@yehu77/dsh-kisekae/assets'
+const ARTWORK_RELEASE = 'source-q80-v1'
 const BACKDROP_STORAGE_KEY = '@yehu77/dsh-kisekae:sidebar-backdrop:v1'
 const DEFAULT_BACKDROP_ARTWORK_ID = '7fd9fafc-aa19-449d-a92d-338a9bce7db5'
 const NEW_SESSION_ARTWORK_ID = '7a9c4fae-6fca-4c5e-b232-5c802f788dae'
@@ -30,6 +31,10 @@ const EXPECTED_THEME_TOKENS = [
   '--dsw-specific-sidebar-nav-item-active',
   '--dsw-specific-sidebar-nav-item-hover',
 ]
+
+function artworkUrl(id) {
+  return `${ARTWORK_ROUTE}/${id}.jpg?v=${ARTWORK_RELEASE}`
+}
 
 function relativeLuminance(value) {
   assert.match(value, /^#[0-9A-F]{6}$/i)
@@ -129,7 +134,7 @@ test('serves released artwork from a reversible Host route', async () => {
 
   const [knownId] = await readReleaseArtworkIds()
   const expectedContent = await readFile(new URL(`${knownId}.jpg`, RELEASE_ARTWORK_DIRECTORY))
-  const get = await request('GET', `${ARTWORK_ROUTE}/${knownId}.jpg`)
+  const get = await request('GET', artworkUrl(knownId))
   assert.equal(get.status, 200)
   assert.equal(get.headers['content-type'], 'image/jpeg')
   assert.equal(get.headers['content-length'], expectedContent.byteLength)
@@ -434,7 +439,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(wideBackdropRoot.props['data-kisekae-sidebar-backdrop'], 'clear')
   assert.equal(wideBackdropRoot.props['data-kisekae-sidebar-wide'], 'true')
   assert.equal(wideArtwork.props['data-kisekae-sidebar-artwork'], DEFAULT_BACKDROP_ARTWORK_ID)
-  assert.equal(wideArtwork.props.style.backgroundImage, `url(${ARTWORK_ROUTE}/${DEFAULT_BACKDROP_ARTWORK_ID}.jpg)`)
+  assert.equal(wideArtwork.props.style.backgroundImage, `url(${artworkUrl(DEFAULT_BACKDROP_ARTWORK_ID)})`)
   assert.equal(wideArtwork.props.style.opacity, 0.56)
   assert.equal(wideBackdrop.some(element =>
     element.props?.style?.backdropFilter !== undefined
@@ -484,7 +489,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(buttonArtwork.props['data-kisekae-new-session-artwork'], NEW_SESSION_ARTWORK_ID)
   assert.equal(
     buttonArtwork.props.style.backgroundImage,
-    `url(${ARTWORK_ROUTE}/${NEW_SESSION_ARTWORK_ID}.jpg)`,
+    `url(${artworkUrl(NEW_SESSION_ARTWORK_ID)})`,
   )
   assert.equal(buttonArtwork.props.style.backgroundPosition, 'center 44%')
   assert.equal(buttonArtwork.props.style.opacity, 0.26)
@@ -520,7 +525,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(settingsArtwork.props['data-kisekae-settings-trigger-artwork'], SETTINGS_TRIGGER_ARTWORK_ID)
   assert.equal(
     settingsArtwork.props.style.backgroundImage,
-    `url(${ARTWORK_ROUTE}/${SETTINGS_TRIGGER_ARTWORK_ID}.jpg)`,
+    `url(${artworkUrl(SETTINGS_TRIGGER_ARTWORK_ID)})`,
   )
   assert.equal(settingsArtwork.props.style.backgroundPosition, 'center 46%')
   assert.equal(settingsArtwork.props.style.opacity, 0.34)
@@ -569,7 +574,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   const overlayRoot = overlayElements.find(element => element.props?.['data-kisekae-mascot'] !== undefined)
   const overlayImage = overlayElements.find(element => element.type === 'img')
   assert.equal(overlayRoot.props['data-kisekae-mascot'], fixedArtworkId)
-  assert.equal(overlayImage.props.src, `${ARTWORK_ROUTE}/${fixedArtworkId}.jpg`)
+  assert.equal(overlayImage.props.src, artworkUrl(fixedArtworkId))
   assert.equal(mascotStorageWrites.length, 2)
   assert.deepEqual(mascotStorageWrites.at(-1), {
     key: MASCOT_STORAGE_KEY,

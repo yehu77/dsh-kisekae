@@ -11,6 +11,6 @@ assets:
       date: not recorded
       prompt: not recorded
       reference_rights: no third-party references reported
-    human_edits: Downscaled to at most 640 px and encoded as JPEG quality 72 for Web delivery; originals remain unchanged in assets/inbox.
+    human_edits: Encoded at the original pixel dimensions as JPEG quality 80 for high-density Web surfaces; originals remain unchanged in assets/inbox.
     license: CC-BY-4.0
     attribution: DeepSeek Blue Whale-chan artwork by yehu77
