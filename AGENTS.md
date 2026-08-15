@@ -16,12 +16,15 @@ DSH Kisekae is an out-of-tree DeepSeek Harness Web Client Plugin. Keep the offic
 - `package.json` declares both `dsh.bundle` and `dsh.client`; `cordis.patch.yml` mounts the package's Host entry.
 - The browser artifact is a Harness loader factory registered through `window.__ModuleLoader__.load(...)`, not an ordinary browser ESM bundle.
 - Client collaboration with Harness plugins goes through injected `ctx` services. Imports from other Client Plugins are type-only; do not inline or duplicate their runtime values.
-- The current self-contained tsdown config is intentionally sufficient only for the dependency-free token skeleton. Before adding React, CSS Modules, or value dependencies, mirror the supported Harness platform externals, dependency-inlining rules, bundle-purity gate, environment substitutions, and effect-owned style injection, with bundle tests in the same change.
+- The release entry may use React for settings UI and the official `shell.overlay` slot. Keep the self-contained tsdown config's Harness platform externals, dependency-inlining rule, bundle-purity gate, and environment substitutions aligned with the pinned Harness revision. Before adding CSS Modules, port the official effect-owned style injection and cover cleanup in bundle tests.
 - Start with semantic `--dsw-*` token overrides. Add CSS Modules only when tokens cannot express component-local layout, and keep literal colors out of feature CSS.
+- Persist the applied skin under the versioned, origin-scoped browser key owned by Kisekae and synchronize same-origin tabs. Do not patch Harness's settings-namespace allowlist for project-specific persistence.
 - Settings, overlay decoration, and onboarding remain independent contributions so users can disable them separately.
 
 ## Assets
 
+- `assets/inbox/` is a user-managed, read-only material library. Never create, transform, rename, move, overwrite, or delete anything there without the user's explicit approval for the exact operation and targets.
+- Browser-ready copies live under `assets/release/`; they may be regenerated from approved inbox originals without modifying those originals.
 - Code and documentation use MIT. Every file under `assets/` has an entry in `assets/manifest.yaml` and follows `ASSETS_LICENSE.md`.
 - AI-assisted art uses original prompts and authorized references. Do not request or accept franchise characters, logos, living-artist imitation, unlicensed fonts, signatures, or watermarks.
 - Keep provider, model, date, prompt, reference rights, human edits, license, and attribution with each released asset.

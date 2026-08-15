@@ -1,36 +1,102 @@
-/** Browser half: one reversible skin layer over the official color mode. */
+/** Browser half: durable skin selection over the official color mode. */
+
+import { BrowserSkinStore } from './browser-skin-store'
+import { KisekaeMascotOverlay } from './KisekaeMascotOverlay'
+import type { KisekaeMascotOverlayProps } from './KisekaeMascotOverlay'
+import { KISEKAE_LOCALE_NAMESPACE, en, zh } from './locales'
+import { MascotStore } from './mascot-store'
+import { SidebarBackdrop } from './SidebarBackdrop'
+import type { SidebarBackdropProps } from './SidebarBackdrop'
+import { SidebarBackdropStore } from './sidebar-backdrop-store'
+import { SkinSelectionController } from './skin-controller'
+import { SkinSelectorSection } from './SkinSelectorSection'
+import type { SkinSelectorSectionProps } from './SkinSelectorSection'
+import type { ThemeTokenOverrides } from './theme-types'
+
+export { DEEPSEEK_BLUE_WHALE_CHAN } from './themes/deepseek-blue-whale-chan'
+export type { ThemeTokenModes, ThemeTokenOverrides } from './theme-types'
 
 type Disposer = () => void
-
-interface ThemeTokenModes {
-  readonly light: string
-  readonly dark: string
-}
-
-type ThemeTokenOverrides = Readonly<Record<string, ThemeTokenModes>>
 
 interface ThemeService {
   overrideTokens(source: string, tokens: ThemeTokenOverrides): Disposer
 }
 
-interface KisekaeClientContext {
+interface LocaleService {
+  register(namespace: string, dictionaries: { readonly zh: object; readonly en: object }): Disposer
+  bind(namespace: string): (key: string) => string
+}
+
+interface OrderedSlotOptions {
+  readonly name: 'settings.section' | 'shell.overlay'
+  readonly id: string
+  readonly order: number
+  readonly label?: () => string
+  readonly locale?: string
+  readonly inject?: () => object
+}
+
+interface SidebarBackdropSlotOptions {
+  readonly name: 'sidebar.backdrop'
+  readonly inject?: () => object
+}
+
+type SlotOptions = OrderedSlotOptions | SidebarBackdropSlotOptions
+
+interface SlotsService {
+  inject(name: SlotOptions['name'], install: () => Disposer): Disposer
+  register<Props>(options: SlotOptions, component: (props: Props) => unknown): Disposer
+}
+
+/** Client services used by the release browser entry. */
+export interface KisekaeClientContext {
+  readonly locale: LocaleService
+  readonly slots: SlotsService
   readonly theme: ThemeService
   effect(register: () => void | Disposer, label?: string): void
 }
 
 /** Cordis services required by the browser entry. */
-export const inject = ['theme']
-
-const SOURCE = '@yehu77/dsh-kisekae'
-const EMPTY_SKIN: ThemeTokenOverrides = Object.freeze({})
+export const inject = ['theme', 'slots', 'locale']
 
 /**
- * Mount the Kisekae token layer.
- * @param ctx - Client context with the official theme service.
+ * Mount the durable skin controller and its settings page.
+ * @param ctx - Client context with theme, locale, and slot services.
  */
 export function apply(ctx: KisekaeClientContext): void {
+  const store = new BrowserSkinStore(window)
+  const controller = new SkinSelectionController(ctx.theme, store)
+  const mascotStore = new MascotStore()
+  const backdropStore = new SidebarBackdropStore()
+  ctx.effect(() => {
+    const disposeStore = store.mount()
+    const disposeController = controller.mount()
+    return () => {
+      disposeController()
+      disposeStore()
+    }
+  }, 'dsh-kisekae: skin selection controller')
   ctx.effect(
-    () => ctx.theme.overrideTokens(SOURCE, EMPTY_SKIN),
-    'dsh-kisekae: theme token layer',
+    () => ctx.locale.register(KISEKAE_LOCALE_NAMESPACE, { zh, en }),
+    'dsh-kisekae: settings dictionaries',
   )
+  const t = ctx.locale.bind(KISEKAE_LOCALE_NAMESPACE)
+  ctx.slots.inject('settings.section', () => ctx.slots.register<SkinSelectorSectionProps>({
+    name: 'settings.section',
+    id: 'kisekae-skins',
+    order: 15,
+    label: () => t('nav'),
+    locale: KISEKAE_LOCALE_NAMESPACE,
+    inject: () => ({ controller, mascotStore, backdropStore }),
+  }, SkinSelectorSection))
+  ctx.slots.inject('sidebar.backdrop', () => ctx.slots.register<SidebarBackdropProps>({
+    name: 'sidebar.backdrop',
+    inject: () => ({ backdropStore }),
+  }, SidebarBackdrop))
+  ctx.slots.inject('shell.overlay', () => ctx.slots.register<KisekaeMascotOverlayProps>({
+    name: 'shell.overlay',
+    id: 'dsh-kisekae.blue-whale',
+    order: 100,
+    inject: () => ({ mascotStore }),
+  }, KisekaeMascotOverlay))
 }

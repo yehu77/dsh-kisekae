@@ -6,11 +6,19 @@
 
 ## 当前状态
 
-仓库目前只包含可安装的基础骨架。它会注册一个可逆但内容为空的令牌覆盖层，因此安装后暂时不会明显改变页面颜色。等视觉方向与令牌映射通过审阅后，再开始实现第一套真实皮肤。
+首个可用皮肤是“DeepSeek蓝鲸娘”：一套以清冷海面和深海夜色为方向的非官方社区主题。安装后会立即叠加 16 个语义颜色令牌，同时保留 Harness 官方的浅色、深色和跟随系统偏好。设置页还包含 42 张图片的图鉴、右下角画框装饰，以及“蓝鲸玻璃侧栏·雨幕”。
 
-项目当前针对 DeepSeek Harness commit `47f943859bef60e4160492346772ded9b24f765a`（`0.1.0-rc.5`）开发。DeepSeek Harness 仍处于开发者预览期，因此兼容性要显式固定和审查，不能默认成立。
+设置中现在会显示独立的**外观与皮肤**页面，其中有**官方外观**和 **DeepSeek蓝鲸娘**两张卡片。点击卡片会立即预览，但不会自动保存；点击**取消**会恢复上次已应用的选择，点击**应用**会把选择写入当前浏览器、当前 Harness origin 下的版本化存储键 `@yehu77/dsh-kisekae:skin:v1`。同源标签页会自动同步，不同浏览器或 origin 各自保存。该实现不修改 Harness 的设置 namespace allowlist。
+
+图片选项会立即保存到 `@yehu77/dsh-kisekae:mascot:v1`。“随机”在每次加载页面时选择一张合适图片，“固定”使用图鉴中点选的图片，“关闭”则移除装饰。104 MiB 原始素材保持不变；插件使用 5.2 MiB 的浏览器发布副本，并在图鉴中懒加载。
+
+侧栏背景会立即保存到 `@yehu77/dsh-kisekae:sidebar-backdrop:v1`。“清爽”和“沉浸”使用一张固定的图鉴图片，默认是雨景 `7fd9fafc…`，并提供向上渐隐与基于语义颜色的玻璃遮罩；“关闭”会移除背景。56 px 窄栏只显示安静的纯渐变。设置页用同一个组件提供实时侧栏预览，主题则通过半透明的语义 hover／active 颜色适配会话行，不直接修改会话行样式。
+
+项目当前针对 DeepSeek Harness commit `47f943859bef60e4160492346772ded9b24f765a`（`0.1.0-rc.5`）开发。玻璃侧栏还需要 Harness build 提供公开的 `sidebar.backdrop` slot。DeepSeek Harness 仍处于开发者预览期，因此兼容性要显式固定和审查，不能默认成立。
 
 完整产品范围、交付阶段、决策门和发布标准见[路线图](ROADMAP.zh.md)。
+
+DSH Kisekae 是独立社区项目，与 DeepSeek 及 DeepSeek Harness 维护者不存在隶属、赞助或官方认可关系。“DeepSeek蓝鲸娘”是为本项目创作的原创社区主题，并非官方角色或吉祥物。相关名称与标识的权利归各自权利人所有。
 
 ## 设计原则
 
@@ -64,10 +72,21 @@ allowBuilds:
 ## 仓库结构
 
 ```text
-src/index.ts          让 Client Plugin 进入组合的 Host 入口
-src/client/index.ts   浏览器入口与可逆主题层
+src/index.ts          Host 入口与同源图片路由
+src/artworks.ts       42 张图片的共享目录
+src/settings-contract.ts  皮肤 ID 与版本化浏览器存储标识
+src/client/index.ts   正式浏览器入口与设置贡献
+src/client/browser-skin-store.ts  按 origin 持久化与跨标签页同步
+src/client/SkinSelectorSection.tsx  响应式双卡片选择器
+src/client/skin-controller.ts  预览、取消、持久化与令牌生命周期
+src/client/mascot-store.ts  固定、随机与关闭图片偏好
+src/client/KisekaeMascotOverlay.tsx  右下角画框装饰
+src/client/sidebar-backdrop-store.ts  清爽、沉浸、关闭与固定背景偏好
+src/client/SidebarBackdrop.tsx  官方侧栏背景 slot 中的雨幕图片
+src/client/themes/    数据化的主题配色定义
 cordis.patch.yml      可安装的 Web profile 层
-assets/               美术来源与许可证记录
+assets/release/       浏览器发布副本
+assets/inbox/         用户管理的只读原始素材库
 tests/                构建产物加载与生命周期检查
 ```
 

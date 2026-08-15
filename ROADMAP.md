@@ -1,8 +1,12 @@
 # DSH Kisekae roadmap
 
-Status: proposed
+Status: in progress
 
 English | [中文](ROADMAP.zh.md)
+
+Current milestone: Stage 2 — browser-persistent selection for Official appearance and “DeepSeek Blue Whale-chan.” The rest of Stage 2 remains open until two more original skins prove the catalog is data-driven.
+
+The first gallery, optional corner decoration, and “Blue Whale glass sidebar · Rain veil” are implemented. All 42 released illustrations appear in the gallery; Fixed, Random, and Off control one framed `shell.overlay`, while Clear, Immersive, and Off control a fixed-image `sidebar.backdrop`. Both remain independent of the selected skin.
 
 ## Goal
 
@@ -29,7 +33,7 @@ Exit when the linked package installs, loads, disposes, and leaves the official 
 
 ### 1. One reversible skin
 
-- Implement one original, token-only skin with complete light and dark pairs.
+- Implement the original “DeepSeek Blue Whale-chan” token-only skin with complete light and dark pairs.
 - Validate definition ids, token values, replacement, mode switching, and disposal.
 - Use no private selectors and request no upstream changes.
 
@@ -37,18 +41,20 @@ Exit when Light, Dark, and System all work, hot disposal restores the official a
 
 ### 2. Theme-pack MVP
 
-- Register a Host settings namespace owned by Kisekae.
-- Extend the standalone Client bundler with the current Harness platform externals, dependency-purity checks, environment substitutions, and effect-owned CSS Modules before adding React UI code.
-- Add a settings selector with local preview, Preview, Cancel, Use this theme, and Official appearance.
+- Persist the applied skin in versioned browser storage scoped to the current origin, and synchronize same-origin tabs through `storage` events.
+- Keep the standalone Client bundler aligned with the current Harness platform externals, dependency-purity checks, and environment substitutions. Add effect-owned CSS Modules before component-local styles require them.
+- Add a responsive settings selector with immediate local preview, Cancel, Apply, and Official appearance.
 - Add two more original skins to prove that definitions are data-driven.
 - Fall back visibly to Official appearance when a stored skin is unavailable.
 
-Exit when selection survives loopback refresh and server restart, remote-browser limitations are explicit, keyboard-only use works, and package removal leaves an ordinary Web profile.
+Exit when selection survives reload and server restart in the same browser and origin, same-origin tabs converge after Apply, browser/origin isolation is documented, keyboard-only use works, and package removal leaves an ordinary Web profile.
 
 ### 3. Optional richness and guidance
 
-- Add one opt-in mascot or ambient decoration through `shell.overlay`.
-- Respect reduced motion, keep the overlay click-through by default, and keep it outside task content.
+- Keep the shipped framed `shell.overlay` decoration optional through Fixed, Random, and Off controls.
+- Keep the shipped glass sidebar optional through Clear, Immersive, and Off controls. Wide mode uses one fixed catalog image with an upward fade; the narrow rail uses only a quiet semantic gradient.
+- Keep the static overlay click-through and outside task content; any future motion must respect reduced-motion preferences.
+- Extend the theme later to conversation backgrounds and composer styling as separately optional surfaces. Sidebar styling already uses the public backdrop slot and semantic row tokens; reuse the artwork catalog through role-specific browser copies instead of stretching every illustration into every surface.
 - Build any first-run guidance as a separate `settings.onboarding` contribution.
 
 Exit when decoration and guidance can each be disabled without changing the selected skin or blocking conversation, tools, credentials, or settings.
@@ -73,9 +79,11 @@ Exit when a new pack can be built without importing Kisekae runtime internals. A
 
 - If tokens cannot express a credible first skin, list missing semantic roles and propose only generic aliases justified by two consumers; do not use private CSS as an escape hatch.
 - If skin activation causes a measurable first-paint flash, propose a generic installed-token bootstrap hook; do not patch generated HTML.
-- The current Client Plugin route serves only `client.js` and its source map. Inline small MVP previews; before shipping larger art, add a reviewed same-origin Host asset route instead of relying on emitted sibling files or a remote CDN.
-- Before adding wallpapers, prove whether `shell.overlay` is sufficient. A new behind-content slot requires a second non-theme consumer.
+- Released gallery art is served by Kisekae's same-origin Host route from packaged browser copies; do not rely on emitted Client siblings, inbox originals, or a remote CDN.
+- The official `shell.overlay` slot is sufficient for the framed corner decoration, and the product-neutral `sidebar.backdrop` slot is sufficient for sidebar artwork. Any other behind-content surface still needs its own generic seam rather than private selectors.
+- Conversation backgrounds, composer styling, and sidebar styling remain separately optional. Busy artwork must not sit directly beneath messages or editable text; each surface needs a quiet fallback that preserves readability.
 - Keep definitions internal until independent release or ownership makes package separation useful.
+- While Harness exposes only an allowlisted set of settings namespaces, keep the choice in Kisekae-owned versioned browser storage. Do not patch the upstream allowlist; reconsider Host persistence only after a generic out-of-tree extension point exists.
 - Any upstream API change needs its own DeepSeek Harness design record, current-state documentation, reversible effects, and an assembled Web test.
 
 ## Release criteria

@@ -17,12 +17,25 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "lib",
+    "lib/index.js",
+    "lib/client.js",
+    "lib/client.js.map",
+    "lib/types/index.d.ts",
+    "lib/types/index.d.ts.map",
+    "lib/types/client/index.d.ts",
+    "lib/types/client/index.d.ts.map",
+    "lib/types/client/theme-types.d.ts",
+    "lib/types/client/theme-types.d.ts.map",
+    "lib/types/client/themes",
+    "assets/release",
     "cordis.patch.yml",
     "LICENSE",
     "ASSETS_LICENSE.md",
     "assets/manifest.yaml",
-    "README.md"
+    "README.md",
+    "README.zh.md",
+    "ROADMAP.md",
+    "ROADMAP.zh.md"
   ],
   "dsh": {
     "bundle": {
@@ -31,7 +44,12 @@
     "client": {
       "platform": "web",
       "inject": [
-        "@deepseek-ai/dsh-client-ui-theme"
+        "@deepseek-ai/dsh-client-ui-theme",
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-sidebar"
       ]
     }
   },
@@ -67,7 +85,15 @@
     "node": "^22.19.0 || >=24.0.0"
   },
   "packageManager": "pnpm@11.7.0",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "4.0.1",
+    "react": "^18.2.0"
+  },
   "devDependencies": {
+    "@deepseek-ai/cordis": "4.0.1",
+    "@types/node": "^22.20.0",
+    "@types/react": "~18.3.1",
+    "react": "^18.2.0",
     "rimraf": "^6.1.2",
     "tsdown": "^0.22.2",
     "typescript": "^6.0.3"
