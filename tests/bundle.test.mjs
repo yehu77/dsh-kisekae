@@ -27,6 +27,8 @@ const EXPECTED_THEME_TOKENS = [
   '--dsw-alias-label-secondary',
   '--dsw-alias-state-business-primary',
   '--dsw-alias-state-business-tertiary',
+  '--dsw-specific-conversation-message-prose-color',
+  '--dsw-specific-conversation-message-prose-font-weight',
   '--dsw-specific-input-major',
   '--dsw-specific-sidebar-fill',
   '--dsw-specific-sidebar-nav-item-active',
@@ -391,6 +393,10 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(overrideTokens['--dsw-alias-bg-base'].dark, '#091824')
   assert.equal(overrideTokens['--dsw-specific-input-major'].light, 'rgba(250, 254, 255, 0.94)')
   assert.equal(overrideTokens['--dsw-specific-input-major'].dark, 'rgba(10, 32, 47, 0.94)')
+  assert.equal(overrideTokens['--dsw-specific-conversation-message-prose-color'].light, '#6A1B8C')
+  assert.equal(overrideTokens['--dsw-specific-conversation-message-prose-color'].dark, '#E8C4FF')
+  assert.equal(overrideTokens['--dsw-specific-conversation-message-prose-font-weight'].light, '500')
+  assert.equal(overrideTokens['--dsw-specific-conversation-message-prose-font-weight'].dark, '500')
   assert.ok(Object.values(overrideTokens).some(modes => modes.light !== modes.dark))
 
   const contrastPairs = [
@@ -398,6 +404,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
     ['--dsw-alias-label-secondary', '--dsw-alias-bg-base'],
     ['--dsw-alias-state-business-primary', '--dsw-alias-state-business-tertiary'],
     ['--dsw-alias-label-secondary', '--dsw-alias-bg-overlay'],
+    ['--dsw-specific-conversation-message-prose-color', '--dsw-alias-bg-base'],
   ]
   for (const mode of ['light', 'dark']) {
     for (const [foreground, background] of contrastPairs) {

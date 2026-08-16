@@ -33,6 +33,14 @@ export const DEEPSEEK_BLUE_WHALE_CHAN = {
       light: 'rgba(250, 254, 255, 0.94)',
       dark: 'rgba(10, 32, 47, 0.94)',
     },
+    '--dsw-specific-conversation-message-prose-color': {
+      light: '#6A1B8C',
+      dark: '#E8C4FF',
+    },
+    '--dsw-specific-conversation-message-prose-font-weight': {
+      light: '500',
+      dark: '500',
+    },
     '--dsw-specific-sidebar-fill': { light: '#EAF5FA', dark: '#0D2131' },
     '--dsw-specific-sidebar-nav-item-hover': {
       light: 'rgba(255, 255, 255, 0.52)',
