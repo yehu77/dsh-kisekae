@@ -29,6 +29,10 @@ export const DEEPSEEK_BLUE_WHALE_CHAN = {
     '--dsw-alias-state-business-tertiary': { light: '#D8EEF7', dark: '#153E52' },
     '--dsw-alias-label-primary': { light: '#163247', dark: '#EAF8FE' },
     '--dsw-alias-label-secondary': { light: '#4C687A', dark: '#A6C8D8' },
+    '--dsw-specific-input-major': {
+      light: 'rgba(250, 254, 255, 0.94)',
+      dark: 'rgba(10, 32, 47, 0.94)',
+    },
     '--dsw-specific-sidebar-fill': { light: '#EAF5FA', dark: '#0D2131' },
     '--dsw-specific-sidebar-nav-item-hover': {
       light: 'rgba(255, 255, 255, 0.52)',

@@ -6,7 +6,7 @@
 
 ## 当前状态
 
-首个可用皮肤是“DeepSeek蓝鲸娘”：一套以清冷海面和深海夜色为方向的非官方社区主题。安装后会立即叠加 16 个语义颜色令牌，同时保留 Harness 官方的浅色、深色和跟随系统偏好。设置页还包含 42 张图片的图鉴、随会话阶段变化的主对话背景、“蓝鲸玻璃侧栏·雨幕”，以及主题化“新会话”和“设置”入口。
+首个可用皮肤是“DeepSeek蓝鲸娘”：一套以清冷海面和深海夜色为方向的非官方社区主题。安装后会立即叠加 17 个语义颜色令牌，同时保留 Harness 官方的浅色、深色和跟随系统偏好。设置页还包含 42 张图片的图鉴、随会话阶段变化的主对话背景、“蓝鲸玻璃侧栏·雨幕”，以及主题化输入框、“新会话”和“设置”入口。
 
 设置中现在会显示独立的**外观与皮肤**页面，其中有**官方外观**和 **DeepSeek蓝鲸娘**两张卡片。点击卡片会立即预览，但不会自动保存；点击**取消**会恢复上次已应用的选择，点击**应用**会把选择写入当前浏览器、当前 Harness origin 下的版本化存储键 `@yehu77/dsh-kisekae:skin:v1`。同源标签页会自动同步，不同浏览器或 origin 各自保存。该实现不修改 Harness 的设置 namespace allowlist。
 
@@ -16,9 +16,11 @@
 
 “设置”入口同样保留官方按钮、齿轮、文字和对话框行为。宽栏会在右侧安静显示航海房间图片 `d5dd1b2f…`，并用语义遮罩保证文字可读；窄栏则使用无图片玻璃与两道轻微涟漪。
 
-主对话背景、侧栏背景、“新会话”装饰、海浪对话图标和“设置”入口装饰组成一组由设置页当前 draft 驱动的可逆视觉贡献。预览官方外观会立即移除五者；如果已保存的是蓝鲸娘，点击“取消”会全部恢复。隐藏期间，美术偏好保持不变。
+输入框保留官方 textarea、按钮、焦点、文件拖放和高度变化行为。蓝鲸娘只绘制卡片的无交互背景：保证文字可读的语义海玻璃底色、内高光与主题边框、两道潮汐线和安静的鲸尾角标。Hero 使用稍强的表现，常驻对话输入框则降低装饰强度；这里不使用图片，也不使用模糊。
 
-项目当前针对 DeepSeek Harness commit `074f8b43993d44936bd383e8f08ace303343ab8b`（`0.1.0-rc.5`）开发；该版本提供 `conversation.backdrop`、`settings.trigger.decoration`、`sidebar.backdrop`、`sidebar.newSession.decoration` 和 `sidebar.newSession.icon`。DeepSeek Harness 仍处于开发者预览期，因此兼容性要显式固定和审查，不能默认成立。
+主对话背景、输入框装饰、侧栏背景、“新会话”装饰、海浪对话图标和“设置”入口装饰组成一组由设置页当前 draft 驱动的可逆视觉贡献。预览官方外观会立即移除六者；如果已保存的是蓝鲸娘，点击“取消”会全部恢复。隐藏期间，美术偏好保持不变。
+
+项目当前针对 DeepSeek Harness commit `22820d35413817b6085ecb003389a8273745cff4`（`0.1.0-rc.5`）开发；该版本提供 `conversation.composer.bar.decoration`、`conversation.backdrop`、`settings.trigger.decoration`、`sidebar.backdrop`、`sidebar.newSession.decoration` 和 `sidebar.newSession.icon`。DeepSeek Harness 仍处于开发者预览期，因此兼容性要显式固定和审查，不能默认成立。
 
 完整产品范围、交付阶段、决策门和发布标准见[路线图](ROADMAP.zh.md)。
 
@@ -85,6 +87,7 @@ src/client/SkinSelectorSection.tsx  响应式双卡片选择器
 src/client/skin-controller.ts  预览、取消、持久化与令牌生命周期
 src/client/main-background-store.ts  固定、随机与关闭主背景偏好
 src/client/BlueWhaleConversationBackdrop.tsx  随会话阶段变化的边绘背景
+src/client/BlueWhaleComposerDecoration.tsx  官方输入框内容背后的海玻璃层
 src/client/sidebar-backdrop-store.ts  清爽、沉浸、关闭与固定背景偏好
 src/client/SidebarBackdrop.tsx  官方侧栏背景 slot 中的雨幕图片
 src/client/BlueWhaleNewSessionDecoration.tsx  “新会话”内容背后的玻璃与图片层

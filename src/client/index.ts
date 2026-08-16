@@ -1,6 +1,8 @@
 /** Browser half: durable skin selection over the official color mode. */
 
 import { BrowserSkinStore } from './browser-skin-store'
+import { BlueWhaleComposerDecoration } from './BlueWhaleComposerDecoration'
+import type { BlueWhaleComposerDecorationProps } from './BlueWhaleComposerDecoration'
 import { BlueWhaleConversationBackdrop } from './BlueWhaleConversationBackdrop'
 import type { BlueWhaleConversationBackdropProps } from './BlueWhaleConversationBackdrop'
 import { BlueWhaleNewSessionDecoration } from './BlueWhaleNewSessionDecoration'
@@ -46,6 +48,7 @@ interface OrderedSlotOptions {
 interface SkinVisualSlotOptions {
   readonly name:
     | 'conversation.backdrop'
+    | 'conversation.composer.bar.decoration'
     | 'settings.trigger.decoration'
     | 'sidebar.backdrop'
     | 'sidebar.newSession.decoration'
@@ -103,6 +106,9 @@ export function apply(ctx: KisekaeClientContext): void {
   }, SkinSelectorSection))
   ctx.effect(() => mountSkinVisuals(controller, () => {
     const disposers = [
+      ctx.slots.inject('conversation.composer.bar.decoration', () => ctx.slots.register<BlueWhaleComposerDecorationProps>({
+        name: 'conversation.composer.bar.decoration',
+      }, BlueWhaleComposerDecoration)),
       ctx.slots.inject('conversation.backdrop', () => ctx.slots.register<BlueWhaleConversationBackdropProps>({
         name: 'conversation.backdrop',
         inject: () => ({ mainBackgroundStore }),

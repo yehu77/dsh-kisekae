@@ -27,6 +27,7 @@ const EXPECTED_THEME_TOKENS = [
   '--dsw-alias-label-secondary',
   '--dsw-alias-state-business-primary',
   '--dsw-alias-state-business-tertiary',
+  '--dsw-specific-input-major',
   '--dsw-specific-sidebar-fill',
   '--dsw-specific-sidebar-nav-item-active',
   '--dsw-specific-sidebar-nav-item-hover',
@@ -168,6 +169,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   }
   assert.match(source, /settings\.section/)
   assert.match(source, /conversation\.backdrop/)
+  assert.match(source, /conversation\.composer\.bar\.decoration/)
   assert.match(source, /settings\.trigger\.decoration/)
   assert.match(source, /sidebar\.backdrop/)
   assert.match(source, /sidebar\.newSession\.decoration/)
@@ -335,6 +337,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   ])
   assert.deepEqual([...slotRegistrations.keys()].sort(), [
     'conversation.backdrop',
+    'conversation.composer.bar.decoration',
     'settings.section',
     'settings.trigger.decoration',
     'sidebar.backdrop',
@@ -342,6 +345,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
     'sidebar.newSession.icon',
   ])
   const conversationBackdropSlot = slotRegistrations.get('conversation.backdrop')
+  const composerDecorationSlot = slotRegistrations.get('conversation.composer.bar.decoration')
   const settingsSlot = slotRegistrations.get('settings.section')
   const settingsTriggerDecorationSlot = slotRegistrations.get('settings.trigger.decoration')
   const backdropSlot = slotRegistrations.get('sidebar.backdrop')
@@ -358,6 +362,8 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(typeof settingsTriggerDecorationSlot.component, 'function')
   assert.deepEqual(Object.keys(conversationBackdropSlot.options).sort(), ['inject', 'name'])
   assert.equal(typeof conversationBackdropSlot.component, 'function')
+  assert.deepEqual(Object.keys(composerDecorationSlot.options), ['name'])
+  assert.equal(typeof composerDecorationSlot.component, 'function')
   assert.deepEqual(Object.keys(backdropSlot.options).sort(), ['inject', 'name'])
   assert.equal(typeof backdropSlot.component, 'function')
   assert.deepEqual(Object.keys(newSessionDecorationSlot.options), ['name'])
@@ -383,6 +389,8 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   }
   assert.equal(overrideTokens['--dsw-alias-bg-base'].light, '#F6FBFE')
   assert.equal(overrideTokens['--dsw-alias-bg-base'].dark, '#091824')
+  assert.equal(overrideTokens['--dsw-specific-input-major'].light, 'rgba(250, 254, 255, 0.94)')
+  assert.equal(overrideTokens['--dsw-specific-input-major'].dark, 'rgba(10, 32, 47, 0.94)')
   assert.ok(Object.values(overrideTokens).some(modes => modes.light !== modes.dark))
 
   const contrastPairs = [
@@ -397,6 +405,50 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
       assert.ok(ratio >= 4.5, `${mode} ${foreground} on ${background} has ${ratio.toFixed(2)}:1 contrast`)
     }
   }
+
+  const heroComposerDecoration = collectElements(composerDecorationSlot.component({ variant: 'hero' }))
+  const heroComposerRoot = heroComposerDecoration.find(
+    element => element.props?.['data-kisekae-composer-decoration'] !== undefined,
+  )
+  const heroTide = heroComposerDecoration.find(
+    element => element.props?.['data-kisekae-composer-tide'] === 'true',
+  )
+  const heroCorner = heroComposerDecoration.find(
+    element => element.props?.['data-kisekae-composer-corner'] === 'whale-tail',
+  )
+  assert.equal(heroComposerRoot.props['data-kisekae-composer-decoration'], 'hero')
+  assert.match(heroComposerRoot.props.style.background, /--dsw-alias-state-business-tertiary/)
+  assert.match(heroComposerRoot.props.style.boxShadow, /--dsw-alias-brand-primary/)
+  assert.equal(heroTide.type, 'svg')
+  assert.equal(heroTide.props.style.opacity, 0.28)
+  assert.equal(heroTide.props.preserveAspectRatio, 'none')
+  assert.equal(
+    collectElements(heroTide).filter(element => element.type === 'path').every(
+      path => path.props.stroke === 'currentColor',
+    ),
+    true,
+  )
+  assert.equal(heroCorner.type, 'svg')
+  assert.equal(heroCorner.props.style.opacity, 0.22)
+  assert.equal(heroComposerDecoration.some(element =>
+    element.props?.style?.filter !== undefined
+    || element.props?.style?.backdropFilter !== undefined
+    || element.props?.style?.WebkitBackdropFilter !== undefined), false)
+
+  const quietComposerDecoration = collectElements(composerDecorationSlot.component({ variant: 'composer' }))
+  const quietComposerRoot = quietComposerDecoration.find(
+    element => element.props?.['data-kisekae-composer-decoration'] !== undefined,
+  )
+  const quietTide = quietComposerDecoration.find(
+    element => element.props?.['data-kisekae-composer-tide'] === 'true',
+  )
+  const quietCorner = quietComposerDecoration.find(
+    element => element.props?.['data-kisekae-composer-corner'] === 'whale-tail',
+  )
+  assert.equal(quietComposerRoot.props['data-kisekae-composer-decoration'], 'composer')
+  assert.notEqual(quietComposerRoot.props.style.background, heroComposerRoot.props.style.background)
+  assert.equal(quietTide.props.style.opacity, 0.12)
+  assert.equal(quietCorner.props.style.opacity, 0.08)
 
   const { controller, mainBackgroundStore, backdropStore } = slotOptions.inject()
   assert.equal(conversationBackdropSlot.options.inject().mainBackgroundStore, mainBackgroundStore)
@@ -643,6 +695,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(overrideHistory.length, 2)
   assert.deepEqual([...slotRegistrations.keys()].sort(), [
     'conversation.backdrop',
+    'conversation.composer.bar.decoration',
     'settings.section',
     'settings.trigger.decoration',
     'sidebar.backdrop',
@@ -733,6 +786,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
     [...slotInjectionDisposers.keys()].sort(),
     [
       'conversation.backdrop',
+      'conversation.composer.bar.decoration',
       'settings.section',
       'settings.trigger.decoration',
       'sidebar.backdrop',
@@ -746,6 +800,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(slotDisposeCalls.get('settings.section'), 1)
   for (const name of [
     'conversation.backdrop',
+    'conversation.composer.bar.decoration',
     'settings.trigger.decoration',
     'sidebar.backdrop',
     'sidebar.newSession.decoration',

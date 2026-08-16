@@ -6,7 +6,7 @@ Status: in progress
 
 当前里程碑：阶段 2——在浏览器内持久选择“官方外观”和“DeepSeek蓝鲸娘”。在另外两套原创皮肤证明目录确实由数据驱动前，阶段 2 仍未完成。
 
-首版图鉴、随阶段变化的主对话背景和“蓝鲸玻璃侧栏·雨幕”已经实现：42 张发布图片全部进入图鉴；“固定／随机／关闭”控制 `conversation.backdrop`，“清爽／沉浸／关闭”则控制使用固定图片的 `sidebar.backdrop`。“新会话”按钮还会增加 `sidebar.newSession.decoration` 和海浪对话 `sidebar.newSession.icon`，“设置”入口则增加 `settings.trigger.decoration`。这五项视觉贡献跟随当前预览的皮肤，而已存美术偏好保持独立。
+首版图鉴、随阶段变化的主对话背景和“蓝鲸玻璃侧栏·雨幕”已经实现：42 张发布图片全部进入图鉴；“固定／随机／关闭”控制 `conversation.backdrop`，“清爽／沉浸／关闭”则控制使用固定图片的 `sidebar.backdrop`。输入框通过 `conversation.composer.bar.decoration` 增加无图片海玻璃；“新会话”按钮增加 `sidebar.newSession.decoration` 和海浪对话 `sidebar.newSession.icon`；“设置”入口则增加 `settings.trigger.decoration`。这六项视觉贡献跟随当前预览的皮肤，而已存美术偏好保持独立。
 
 ## 目标
 
@@ -55,9 +55,9 @@ Status: in progress
 - 通过“清爽／沉浸／关闭”让已经发布的玻璃侧栏保持可选。宽侧栏使用一张固定的图鉴图片并向上渐隐，窄栏只使用安静的语义渐变。
 - 通过宿主提供的宽栏状态保持“新会话”皮肤响应式：宽栏结合右侧低透明图片与语义玻璃，窄栏使用紧凑玻璃。海浪对话图标只改变图形；两项贡献都不替换官方按钮或操作。
 - 保持“设置”入口皮肤响应式，同时不替换官方齿轮、文字、按钮或对话框行为。宽栏使用右侧低透明图片与保证文字可读的语义遮罩，窄栏使用无图片玻璃和轻微涟漪。
-- 仅在蓝鲸娘是当前可见 draft 时挂载主对话背景、侧栏背景、“新会话”装饰、海浪对话图标和“设置”入口装饰。预览官方外观会移除整组；点击“取消”会恢复已存皮肤对应的整组，同时不清除偏好。
+- 保持已发布的输入框皮肤位于官方 textarea 和控件背后。Hero 使用稍强的语义海玻璃、内高光、潮汐线和鲸尾角标，常驻对话输入框降低装饰强度；它不使用图片或模糊，也不替换焦点、文件拖放或高度变化行为。
+- 仅在蓝鲸娘是当前可见 draft 时挂载主对话背景、输入框装饰、侧栏背景、“新会话”装饰、海浪对话图标和“设置”入口装饰。预览官方外观会移除整组；点击“取消”会恢复已存皮肤对应的整组，同时不清除偏好。
 - 保持主对话背景点击穿透，并保护消息与输入区可读性；短暂透明度过渡必须在减少动态效果偏好下关闭。
-- 后续把输入框样式作为独立可选表面继续扩展。主对话区与侧栏已经使用公开背景 slot；根据用途生成专门的浏览器副本来复用图鉴素材，不强行把每张图片塞进每个界面。
 - 把任何首次运行指引实现成独立的 `settings.onboarding` 贡献。
 
 退出条件是：装饰和指引都可以在不改变所选皮肤的情况下独立禁用，也不会阻塞会话、工具、凭据或设置。
@@ -83,7 +83,7 @@ Status: in progress
 - 如果令牌无法表达可信的第一套皮肤，列出缺失语义角色，并且只提议由两个消费方证明的通用 alias；不得用私有 CSS 绕过。
 - 如果皮肤激活产生可测量的首屏闪烁，提议通用的已安装令牌 bootstrap hook；不得修改生成后的 HTML。
 - 发布图鉴素材由 Kisekae 的同源 Host 路由从包内浏览器副本提供；不得依赖 Client 构建相邻文件、inbox 原图或远程 CDN。
-- 产品中立的 `conversation.backdrop`、`sidebar.backdrop`、`sidebar.newSession.decoration`、`sidebar.newSession.icon` 和 `settings.trigger.decoration` 分别承载主画布美术、侧栏美术与主题化按钮皮肤。其他视觉表面仍应先提供自己的通用 seam，不得使用私有选择器。
+- 产品中立的 `conversation.backdrop`、`conversation.composer.bar.decoration`、`sidebar.backdrop`、`sidebar.newSession.decoration`、`sidebar.newSession.icon` 和 `settings.trigger.decoration` 分别承载主画布美术、输入框材质、侧栏美术与主题化按钮皮肤。其他视觉表面仍应先提供自己的通用 seam，不得使用私有选择器。
 - 聊天背景、输入框和侧边栏样式分别保持可选。复杂图片不得直接垫在消息或可编辑文字下方；每个表面都要保留安静、清晰的可读方案。
 - 在独立发布或所有权让拆包真正有用之前，主题定义保持内部实现。
 - 在 Harness 仅暴露 allowlist 内设置 namespace 期间，选择由 Kisekae 自己的版本化浏览器存储负责。不得为 Kisekae 修改上游 allowlist；只有出现通用的仓库外扩展点后，才重新评估 Host 持久化。
