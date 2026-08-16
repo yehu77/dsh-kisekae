@@ -11,17 +11,29 @@ export type ConversationBackdropPhase = 'settling' | 'hero' | 'active'
 const ROOT_STYLE: CSSProperties = {
   position: 'absolute',
   inset: 0,
+  backgroundColor: 'var(--dsw-alias-bg-base)',
   overflow: 'hidden',
   pointerEvents: 'none',
   userSelect: 'none',
 }
 
-const ARTWORK_STYLE: CSSProperties = {
+const AMBIENT_STYLE: CSSProperties = {
   position: 'absolute',
   inset: 0,
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'cover',
+  opacity: 0.46,
+}
+
+const ARTWORK_STYLE: CSSProperties = {
+  position: 'absolute',
+  inset: 0,
+  display: 'block',
+  width: '100%',
+  height: '100%',
+  objectFit: 'contain',
+  objectPosition: 'center',
 }
 
 /** Props composed by the official conversation backdrop slot. */
@@ -33,7 +45,7 @@ export interface BlueWhaleConversationBackdropProps {
 }
 
 /**
- * Render unobscured full-bleed artwork behind the conversation surface.
+ * Render the complete artwork over a quiet full-canvas copy of the same scene.
  * @param props - Official conversation phase plus Kisekae background preferences.
  * @returns decorative conversation layer, or nothing in off mode.
  */
@@ -56,11 +68,18 @@ export function BlueWhaleConversationBackdrop({
       style={ROOT_STYLE}
     >
       <span
-        data-kisekae-conversation-artwork={snapshot.shownArtworkId}
+        data-kisekae-conversation-ambient={snapshot.shownArtworkId}
         style={{
-          ...ARTWORK_STYLE,
+          ...AMBIENT_STYLE,
           backgroundImage: `url(${artworkUrl(snapshot.shownArtworkId)})`,
         }}
+      />
+      <img
+        alt=""
+        data-kisekae-conversation-artwork={snapshot.shownArtworkId}
+        draggable={false}
+        src={artworkUrl(snapshot.shownArtworkId)}
+        style={ARTWORK_STYLE}
       />
     </div>
   )

@@ -6,7 +6,7 @@ English | [中文](ROADMAP.zh.md)
 
 Current milestone: Stage 2 — browser-persistent selection for Official appearance and “DeepSeek Blue Whale-chan.” The rest of Stage 2 remains open until two more original skins prove the catalog is data-driven.
 
-The first gallery, phase-aware main conversation background, and “Blue Whale glass sidebar · Rain veil” are implemented. All 42 released illustrations appear in the gallery; Fixed, Random, and Off control `conversation.backdrop`, while Clear, Immersive, and Off control a fixed-image `sidebar.backdrop`. The composer adds image-free sea glass through `conversation.composer.bar.decoration`; the New Session button adds `sidebar.newSession.decoration` and a wave-chat `sidebar.newSession.icon`; and the Settings trigger adds `settings.trigger.decoration`. These six visual contributions follow the currently previewed skin; their stored artwork preferences remain independent.
+The first gallery, phase-aware main conversation background, and “Blue Whale glass sidebar · Rain veil” are implemented. All 41 released illustrations appear in the gallery; Fixed, Random, and Off control `conversation.backdrop`, while Clear, Immersive, and Off control a fixed-image `sidebar.backdrop`. The composer adds image-free sea glass through `conversation.composer.bar.decoration`; the New Session button adds `sidebar.newSession.decoration` and a wave-chat `sidebar.newSession.icon`; and the Settings trigger adds `settings.trigger.decoration`. These six visual contributions follow the currently previewed skin; their stored artwork preferences remain independent.
 
 ## Goal
 
@@ -51,7 +51,7 @@ Exit when selection survives reload and server restart in the same browser and o
 
 ### 3. Optional richness and guidance
 
-- Keep the shipped main `conversation.backdrop` optional through Fixed, Random, and Off controls. Hero, Active, and Settling all use unobscured, full-opacity, centered cover artwork without a reading lane, top veil, sea fog, mask, blur, or fade. Protect text through separate content surfaces rather than a backdrop-wide wash.
+- Keep the shipped main `conversation.backdrop` optional through Fixed, Random, and Off controls. Hero, Active, and Settling show an uncropped, full-opacity `contain` foreground over an unblurred low-opacity `cover` copy that fills the remaining canvas. Protect text through separate content surfaces rather than a backdrop-wide wash.
 - Keep the shipped glass sidebar optional through Clear, Immersive, and Off controls. Wide mode uses one fixed catalog image with an upward fade; the narrow rail uses only a quiet semantic gradient.
 - Keep the shipped New Session treatment responsive through the host-provided wide state: wide mode combines low-opacity right-side artwork with semantic glass, while the rail uses compact glass. The wave-chat glyph changes only the icon; neither contribution replaces the official button or action.
 - Keep the shipped Settings trigger treatment responsive without replacing its official gear, label, button, or dialog behavior. Wide mode uses low-opacity right-side artwork and a semantic readability scrim; the rail uses image-free glass and subtle ripples.

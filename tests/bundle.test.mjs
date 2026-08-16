@@ -547,8 +547,8 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
     element => element.props?.['data-kisekae-main-background-mode'] !== undefined,
   )
   assert.ok(gallery)
-  assert.equal(releaseArtworkIds.length, 42)
-  assert.equal(galleryCards.length, 42)
+  assert.equal(releaseArtworkIds.length, 41)
+  assert.equal(galleryCards.length, 41)
   assert.deepEqual(galleryIds, releaseArtworkIds)
   assert.deepEqual(
     mainBackgroundModeButtons.map(button => button.props['data-kisekae-main-background-mode']),
@@ -563,7 +563,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
     'clear', 'immersive', 'off',
   ])
   assert.equal(backdropSelect.props.value, DEFAULT_BACKDROP_ARTWORK_ID)
-  assert.equal(collectElements(backdropSelect).filter(element => element.type === 'option').length, 42)
+  assert.equal(collectElements(backdropSelect).filter(element => element.type === 'option').length, 41)
 
   assert.equal(backdropStore.getSnapshot().mode, 'clear')
   assert.equal(backdropStore.getSnapshot().artworkId, DEFAULT_BACKDROP_ARTWORK_ID)
@@ -706,17 +706,28 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
     const artwork = background.find(
       element => element.props?.['data-kisekae-conversation-artwork'] !== undefined,
     )
+    const ambient = background.find(
+      element => element.props?.['data-kisekae-conversation-ambient'] !== undefined,
+    )
     assert.equal(root.props['data-kisekae-conversation-backdrop'], phase)
     assert.equal(root.props['aria-hidden'], 'true')
-    assert.equal(artwork.props.style.opacity, undefined)
-    assert.equal(artwork.props.style.backgroundSize, 'cover')
-    assert.equal(artwork.props.style.backgroundPosition, 'center')
-    assert.equal(artwork.props.style.maskImage, undefined)
-    assert.equal(artwork.props.style.WebkitMaskImage, undefined)
+    assert.equal(ambient.props['data-kisekae-conversation-ambient'], releaseArtworkIds[0])
+    assert.equal(ambient.props.style.opacity, 0.46)
+    assert.equal(ambient.props.style.backgroundSize, 'cover')
+    assert.equal(ambient.props.style.backgroundPosition, 'center')
     assert.equal(
-      artwork.props.style.backgroundImage,
+      ambient.props.style.backgroundImage,
       `url(${artworkUrl(releaseArtworkIds[0])})`,
     )
+    assert.equal(artwork.type, 'img')
+    assert.equal(artwork.props.alt, '')
+    assert.equal(artwork.props.draggable, false)
+    assert.equal(artwork.props.src, artworkUrl(releaseArtworkIds[0]))
+    assert.equal(artwork.props.style.opacity, undefined)
+    assert.equal(artwork.props.style.objectFit, 'contain')
+    assert.equal(artwork.props.style.objectPosition, 'center')
+    assert.equal(artwork.props.style.maskImage, undefined)
+    assert.equal(artwork.props.style.WebkitMaskImage, undefined)
     assert.equal(background.some(element => element.type === 'style'), false)
     for (const layer of ['reading-lane', 'chrome-veil', 'sea-fog']) {
       assert.equal(background.some(

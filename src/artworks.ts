@@ -8,7 +8,6 @@ const KISEKAE_ARTWORK_RELEASE = 'source-q80-v1'
 /** Stable ids shared by the gallery, main-background controls, and asset route. */
 export const KISEKAE_ARTWORK_IDS = [
   '1eaed38d-0bc6-46bb-a87f-a8e604392773',
-  '2680c583-7b93-43ec-96a1-fd8fd641654b',
   '3888b0d1-58b7-49e8-a946-d2a3f61b5cc6',
   '461461e2-38aa-4dbe-8d89-8f149b95f2e7',
   '4b004ccc-af16-4274-9eaa-a71be4406d4c',

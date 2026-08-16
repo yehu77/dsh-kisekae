@@ -6,7 +6,7 @@ Status: in progress
 
 当前里程碑：阶段 2——在浏览器内持久选择“官方外观”和“DeepSeek蓝鲸娘”。在另外两套原创皮肤证明目录确实由数据驱动前，阶段 2 仍未完成。
 
-首版图鉴、随阶段变化的主对话背景和“蓝鲸玻璃侧栏·雨幕”已经实现：42 张发布图片全部进入图鉴；“固定／随机／关闭”控制 `conversation.backdrop`，“清爽／沉浸／关闭”则控制使用固定图片的 `sidebar.backdrop`。输入框通过 `conversation.composer.bar.decoration` 增加无图片海玻璃；“新会话”按钮增加 `sidebar.newSession.decoration` 和海浪对话 `sidebar.newSession.icon`；“设置”入口则增加 `settings.trigger.decoration`。这六项视觉贡献跟随当前预览的皮肤，而已存美术偏好保持独立。
+首版图鉴、随阶段变化的主对话背景和“蓝鲸玻璃侧栏·雨幕”已经实现：41 张发布图片全部进入图鉴；“固定／随机／关闭”控制 `conversation.backdrop`，“清爽／沉浸／关闭”则控制使用固定图片的 `sidebar.backdrop`。输入框通过 `conversation.composer.bar.decoration` 增加无图片海玻璃；“新会话”按钮增加 `sidebar.newSession.decoration` 和海浪对话 `sidebar.newSession.icon`；“设置”入口则增加 `settings.trigger.decoration`。这六项视觉贡献跟随当前预览的皮肤，而已存美术偏好保持独立。
 
 ## 目标
 
@@ -51,7 +51,7 @@ Status: in progress
 
 ### 3. 可选的丰富表现与指引
 
-- 通过“固定／随机／关闭”让已经发布的主 `conversation.backdrop` 始终保持可选。Hero、Active 和 Settling 都使用完全不透明、居中铺满且毫无遮挡的图片，不增加阅读航道、顶部遮罩、海雾、遮罩、模糊或渐隐。文字保护改由独立的内容表层负责，不再用整幅淡化处理背景。
+- 通过“固定／随机／关闭”让已经发布的主 `conversation.backdrop` 始终保持可选。Hero、Active 和 Settling 都用完全不透明的 `contain` 前景展示整张未裁切图片，再用未模糊的低透明度 `cover` 副本填补剩余画布。文字保护由独立的内容表层负责，不再用整幅淡化处理背景。
 - 通过“清爽／沉浸／关闭”让已经发布的玻璃侧栏保持可选。宽侧栏使用一张固定的图鉴图片并向上渐隐，窄栏只使用安静的语义渐变。
 - 通过宿主提供的宽栏状态保持“新会话”皮肤响应式：宽栏结合右侧低透明图片与语义玻璃，窄栏使用紧凑玻璃。海浪对话图标只改变图形；两项贡献都不替换官方按钮或操作。
 - 保持“设置”入口皮肤响应式，同时不替换官方齿轮、文字、按钮或对话框行为。宽栏使用右侧低透明图片与保证文字可读的语义遮罩，窄栏使用无图片玻璃和轻微涟漪。
