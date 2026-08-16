@@ -33,12 +33,6 @@ export const DEEPSEEK_BLUE_WHALE_CHAN = {
       light: 'rgba(250, 254, 255, 0.94)',
       dark: 'rgba(10, 32, 47, 0.94)',
     },
-    '--dsw-specific-conversation-transcript-text-shadow': {
-      light:
-        '-1px 0 0 rgba(255, 255, 255, 0.90), 1px 0 0 rgba(255, 255, 255, 0.90), 0 -1px 0 rgba(255, 255, 255, 0.90), 0 1px 0 rgba(255, 255, 255, 0.90), 0 2px 0 rgba(10, 48, 70, 0.26), 0 0 4px rgba(74, 178, 214, 0.20)',
-      dark:
-        '-1px 0 0 rgba(5, 29, 43, 0.92), 1px 0 0 rgba(5, 29, 43, 0.92), 0 -1px 0 rgba(5, 29, 43, 0.92), 0 1px 0 rgba(5, 29, 43, 0.92), 0 2px 0 rgba(2, 16, 26, 0.44), 0 0 4px rgba(105, 210, 240, 0.34)',
-    },
     '--dsw-specific-sidebar-fill': { light: '#EAF5FA', dark: '#0D2131' },
     '--dsw-specific-sidebar-nav-item-hover': {
       light: 'rgba(255, 255, 255, 0.52)',

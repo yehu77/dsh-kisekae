@@ -27,7 +27,6 @@ const EXPECTED_THEME_TOKENS = [
   '--dsw-alias-label-secondary',
   '--dsw-alias-state-business-primary',
   '--dsw-alias-state-business-tertiary',
-  '--dsw-specific-conversation-transcript-text-shadow',
   '--dsw-specific-input-major',
   '--dsw-specific-sidebar-fill',
   '--dsw-specific-sidebar-nav-item-active',
@@ -392,14 +391,6 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(overrideTokens['--dsw-alias-bg-base'].dark, '#091824')
   assert.equal(overrideTokens['--dsw-specific-input-major'].light, 'rgba(250, 254, 255, 0.94)')
   assert.equal(overrideTokens['--dsw-specific-input-major'].dark, 'rgba(10, 32, 47, 0.94)')
-  assert.equal(
-    overrideTokens['--dsw-specific-conversation-transcript-text-shadow'].light,
-    '-1px 0 0 rgba(255, 255, 255, 0.90), 1px 0 0 rgba(255, 255, 255, 0.90), 0 -1px 0 rgba(255, 255, 255, 0.90), 0 1px 0 rgba(255, 255, 255, 0.90), 0 2px 0 rgba(10, 48, 70, 0.26), 0 0 4px rgba(74, 178, 214, 0.20)',
-  )
-  assert.equal(
-    overrideTokens['--dsw-specific-conversation-transcript-text-shadow'].dark,
-    '-1px 0 0 rgba(5, 29, 43, 0.92), 1px 0 0 rgba(5, 29, 43, 0.92), 0 -1px 0 rgba(5, 29, 43, 0.92), 0 1px 0 rgba(5, 29, 43, 0.92), 0 2px 0 rgba(2, 16, 26, 0.44), 0 0 4px rgba(105, 210, 240, 0.34)',
-  )
   assert.ok(Object.values(overrideTokens).some(modes => modes.light !== modes.dark))
 
   const contrastPairs = [
