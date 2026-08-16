@@ -2,41 +2,31 @@
 
 English | [中文](README.zh.md)
 
-Anime-inspired Web themes and delightful UI extensions for DeepSeek Harness.
+DSH Kisekae is a community theme workspace for DeepSeek Harness. The repository contains two real Cordis Client Plugin packages that are developed, tested, and released together.
 
-## Status
+## Packages
 
-The first working skin is “DeepSeek Blue Whale-chan,” an unofficial community theme built around cool ocean daylight and a deep-sea night palette. Installing the package immediately overlays 23 semantic color tokens, two role-scoped conversation text-shadow tokens, and one shared conversation font-weight token while preserving the official Harness Light, Dark, and System preferences. The settings page also includes a 41-image gallery, a phase-aware main conversation background, the “Blue Whale glass sidebar · Rain veil,” and themed composer, New Session, and Settings surfaces.
+| Package | Path | Responsibility |
+| --- | --- | --- |
+| `@yehu77/dsh-kisekae` | [`packages/theme`](packages/theme) | Themes, artwork, settings, color, typography, and decorative slot contributions |
+| `@deepseek-ai/dsh-client-ui-conversation` | [`packages/conversation`](packages/conversation) | Community drop-in replacement for the official conversation plugin, preserving official behavior while exposing themeable conversation presentation controls |
 
-User message prose uses deep violet in Light mode and pale lilac in Dark mode without a shadow. Assistant prose uses a near-white ice core, a zero-blur blue hard edge, and a short zero-blur deep-blue drop shadow. Both retain clear system type at weight 500, and the plugin bundles no third-party typeface. The global label palette from primary through dimmed also shifts to ice blue, so neutral code and tool copy that already consumes those aliases follows the palette. Caption and dimmed remain intentionally weaker hierarchy levels. Foreground, inverted, error, warning, and success colors remain independent Harness semantics.
+Typography belongs to the theme package. “DeepSeek Blue Whale-chan” currently supplies violet user prose and ice-edged assistant prose; later themes may choose entirely different colors, weights, shadows, and, when properly licensed font files are added, font families. The conversation replacement only routes the selected theme values to the correct user and assistant text. It contains no Blue Whale-chan palette or artwork.
 
-Settings now includes an **Appearance & Skins** section with **Official appearance** and **DeepSeek Blue Whale-chan** cards. Choosing a card previews it immediately without saving; **Cancel** restores the last applied choice, and **Apply** saves it under the versioned browser-storage key `@yehu77/dsh-kisekae:skin:v1` for the current Harness origin. Tabs on the same origin synchronize automatically, while different browsers and origins keep independent choices. This implementation does not modify Harness's settings-namespace allowlist.
+The replacement keeps the official package identity because the rest of Harness connects to that identity. Keeping both packages in one repository does not merge their runtime responsibilities: each directory has its own `package.json`, build artifacts, version, and install target.
 
-Main-background controls save immediately under `@yehu77/dsh-kisekae:main-background:v1`. Random chooses one illustration per page load, Fixed uses the image selected in the gallery, and Off removes the background. Hero, Active, and Settling show the complete uncropped artwork at full opacity with `contain`; a second, unblurred low-opacity copy uses `cover` only to fill the unused canvas around it. This avoids magnifying a narrow crop of portrait artwork, while true high-density sharpness still depends on the source pixels. Text readability belongs to separate content surfaces rather than the backdrop. The background appears only while Blue Whale-chan is visible, while its preference remains available during Official appearance preview. The 104 MiB source library remains untouched; the plugin ships about 22 MiB of source-resolution JPEG copies and lazy-loads gallery images.
+## Install from GitHub
 
-The sidebar backdrop saves immediately under `@yehu77/dsh-kisekae:sidebar-backdrop:v1`. Clear and Immersive use one fixed gallery image—the rainy `7fd9fafc…` scene by default—with an upward fade and a semantic-color glass scrim; Off removes it. The 56 px rail renders only a quiet gradient. Settings uses the same component for its live sidebar preview, and the theme supplies translucent semantic hover and active colors instead of styling session rows directly. The New Session button keeps the official element, label, action, focus behavior, and tooltip: Blue Whale-chan adds low-opacity right-side artwork under semantic glass in wide mode, compact glass in the rail, and a responsive `currentColor` wave-chat glyph.
+Install the conversation replacement first, then the theme. pnpm's Git `path:` selector installs each package from this monorepo independently.
 
-The Settings trigger likewise retains the official button, gear, label, and dialog behavior. Wide mode shows the nautical-room `d5dd1b2f…` artwork quietly at the right under a semantic readability scrim; the rail uses image-free glass and two subtle ripples.
+```sh
+dsh plugin --profile web add 'github:yehu77/dsh-kisekae#path:/packages/conversation'
+dsh plugin --profile web add 'github:yehu77/dsh-kisekae#path:/packages/theme'
+```
 
-The composer keeps the official textarea, controls, focus, file-drop, and resizing behavior. Blue Whale-chan paints only the card's non-interactive background: an opaque-enough semantic sea-glass fill, an inner highlight and themed border, two tide lines, and a quiet whale-tail corner. Hero uses the stronger treatment; the resident composer reduces the accent. The treatment uses no raster artwork and no blur.
+Restart the Web profile after installation. Both packages commit their built artifacts, so Git installation does not run build scripts or need an `allowBuilds` entry.
 
-The main conversation background, composer decoration, sidebar backdrop, New Session decoration, wave-chat glyph, and Settings trigger decoration are one reversible visual group driven by the current settings draft. Previewing Official appearance removes all six immediately; Cancel restores them when Blue Whale-chan is the saved skin. Their artwork preferences remain intact while hidden.
-
-The project is developed against DeepSeek Harness commit `18c22363d7c8655603a065909c05c5222736d5d1` (`0.1.0-rc.5`), which exposes `conversation.composer.bar.decoration`, `conversation.backdrop`, `settings.trigger.decoration`, `sidebar.backdrop`, `sidebar.newSession.decoration`, and `sidebar.newSession.icon`, plus separate user and assistant message-prose color and text-shadow tokens and their shared font-weight token. The community-maintained [`dsh-kisekae-conversation`](https://github.com/yehu77/dsh-kisekae-conversation) plugin now distributes the complete replacement conversation base with those capabilities. DeepSeek Harness is still in developer preview, so both packages pin and review compatibility explicitly rather than assuming it.
-
-See the [roadmap](ROADMAP.md) for product scope, delivery stages, decision gates, and release criteria.
-
-DSH Kisekae is an independent community project and is not affiliated with, sponsored by, or endorsed by DeepSeek or the DeepSeek Harness maintainers. “DeepSeek Blue Whale-chan” is an original community theme created for this project, not an official character or mascot. Relevant names and marks remain the property of their respective owners.
-
-## Design
-
-- Light, Dark, and System remain official DeepSeek Harness preferences.
-- Kisekae is a separate, removable skin layer implemented with `theme.overrideTokens()`.
-- The package uses public Cordis services and slots; it does not target generated CSS classes or mutate official component DOM.
-- Visual state never changes prompts, model-visible messages, tools, credentials, or Session history.
-- Original and AI-assisted art is tracked independently from source-code licensing.
-
-One npm package currently carries both roles required for installation: `dsh.bundle` contributes the profile patch, while `dsh.client` contributes the browser plugin. The package can split only when independently released theme packs create a real ownership or versioning need.
+For a reproducible installation, add a common release tag or commit before the `path:` parameter, for example `#v0.1.0&path:/packages/theme`.
 
 ## Local development
 
@@ -47,71 +37,27 @@ pnpm install
 pnpm run check
 ```
 
-Install the linked checkout into a source-built DeepSeek Harness Web profile:
+Link both packages into a source-built Harness profile:
 
 ```sh
 cd ../deepseek-harness
-pnpm dsh plugin --profile web add ../dsh-kisekae-conversation
-pnpm dsh plugin --profile web add ../dsh-kisekae
+pnpm dsh plugin --profile web add ../dsh-kisekae/packages/conversation
+pnpm dsh plugin --profile web add ../dsh-kisekae/packages/theme
 pnpm dsh --profile web --dump-config
 pnpm dsh --profile web
 ```
 
-Remove it cleanly:
+Remove them with:
 
 ```sh
 pnpm dsh plugin --profile web remove @yehu77/dsh-kisekae
 pnpm dsh plugin --profile web remove @deepseek-ai/dsh-client-ui-conversation
 ```
 
-## Install from GitHub
-
-```sh
-dsh plugin --profile web add github:yehu77/dsh-kisekae-conversation#v0.1.0-rc.5-kisekae.1
-dsh plugin --profile web add github:yehu77/dsh-kisekae
-```
-
-Install the conversation base first; it keeps the official package identity so the Web profile resolves it in place of Harness's bundled conversation plugin. Its prebuilt artifacts need no install-time build permission. The CLI's notice that it has no `dsh.bundle` is expected because the existing `ui-conversation` configuration row already mounts that package identity.
-
-The Kisekae Git dependency arrives as source, so pnpm must be allowed to run its `prepare` build. Pin a commit for a reproducible installation. Future npm and tarball Kisekae releases will carry built artifacts and will not need install-time build permission.
-
-After pnpm reports the blocked build, add the exact package key to the Web profile's `pnpm-workspace.yaml`, then repeat the install:
-
-```yaml
-allowBuilds:
-  '@yehu77/dsh-kisekae': true
-```
-
-## Repository layout
-
-```text
-src/index.ts          Host entry and same-origin artwork route
-src/artworks.ts       Shared 41-image catalog
-src/settings-contract.ts  Skin ids and versioned browser-storage identity
-src/client/index.ts   Release browser entry and settings contribution
-src/client/browser-skin-store.ts  Per-origin persistence and cross-tab synchronization
-src/client/SkinSelectorSection.tsx  Responsive two-card selector
-src/client/skin-controller.ts  Preview, cancel, persistence, and token lifecycle
-src/client/main-background-store.ts  Fixed, random, and off main-background preference
-src/client/BlueWhaleConversationBackdrop.tsx  Phase-aware conversation edge artwork
-src/client/BlueWhaleComposerDecoration.tsx  Sea-glass layer behind the official composer card
-src/client/sidebar-backdrop-store.ts  Clear, immersive, off, and fixed-background preference
-src/client/SidebarBackdrop.tsx  Rain artwork for the official sidebar backdrop slot
-src/client/BlueWhaleNewSessionDecoration.tsx  Glass-and-art layer behind New Session content
-src/client/BlueWhaleNewSessionIcon.tsx  Wave-chat replacement for the official New Session glyph
-src/client/BlueWhaleSettingsTriggerDecoration.tsx  Glass-and-art layer behind Settings trigger content
-src/client/skin-visual-orchestrator.ts  Draft-driven lifecycle for Blue Whale shell visuals
-src/client/themes/    Data-defined theme palettes
-cordis.patch.yml      Installable Web profile layer
-assets/release/       Browser-ready gallery copies
-assets/inbox/         User-managed read-only source library
-tests/                Built-artifact loading and lifecycle checks
-```
+See the [theme package](packages/theme/README.md) for current visuals and usage, the [conversation package](packages/conversation/README.md) for replacement and compatibility details, and the [roadmap](ROADMAP.md) for planned themes and surfaces.
 
 ## Licensing
 
-Source code and documentation are available under the [MIT License](LICENSE). Art and other non-code assets are governed individually by [ASSETS_LICENSE.md](ASSETS_LICENSE.md) and `assets/manifest.yaml`.
+Source code and documentation use the [MIT License](LICENSE). Released artwork is documented separately by the [theme asset license](packages/theme/ASSETS_LICENSE.md) and [asset manifest](packages/theme/assets/manifest.yaml).
 
-## Model Experience
-
-None. Kisekae is a browser presentation plugin; nothing here enters a model request or changes the Session log.
+DSH Kisekae is independent and is not affiliated with, sponsored by, or endorsed by DeepSeek or the DeepSeek Harness maintainers.

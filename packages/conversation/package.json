@@ -1,0 +1,117 @@
+{
+  "name": "@deepseek-ai/dsh-client-ui-conversation",
+  "version": "0.1.0-rc.5-kisekae.1",
+  "private": true,
+  "description": "Community-maintained drop-in conversation UI replacement for DeepSeek Harness and DSH Kisekae.",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-connection",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-api-remotes",
+        "@deepseek-ai/dsh-client-ui-layout"
+      ],
+      "platform": "web"
+    }
+  },
+  "scripts": {
+    "test": "node --test fork-tests/*.test.mjs",
+    "check": "node --test fork-tests/*.test.mjs",
+    "sync:upstream": "node ./scripts/sync-from-harness.mjs"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/client.js",
+    "lib/client.js.map",
+    "lib/types/**/*.d.ts",
+    "LICENSE",
+    "NOTICE.md",
+    "README.md",
+    "README.zh.md",
+    "UPSTREAM.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yehu77/dsh-kisekae.git",
+    "directory": "packages/conversation"
+  },
+  "bugs": {
+    "url": "https://github.com/yehu77/dsh-kisekae/issues"
+  },
+  "homepage": "https://github.com/yehu77/dsh-kisekae/tree/main/packages/conversation#readme",
+  "license": "MIT",
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "packageManager": "pnpm@11.7.0",
+  "keywords": [
+    "deepseek-harness",
+    "cordis",
+    "dsh-plugin",
+    "conversation-ui",
+    "kisekae"
+  ],
+  "dshFork": {
+    "upstreamPackage": "@deepseek-ai/dsh-client-ui-conversation",
+    "upstreamVersion": "0.1.0-rc.5",
+    "upstreamCommit": "18c22363d7c8655603a065909c05c5222736d5d1",
+    "distribution": "git"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "4.0.1",
+    "@deepseek-ai/dsh-client-runtime": "0.1.0-rc.5",
+    "@deepseek-ai/dsh-client-ui-attachment": "0.1.0-rc.5",
+    "@deepseek-ai/dsh-client-ui-primitives": "0.1.0-rc.5",
+    "@deepseek-ai/dsh-client-ui-slots": "0.1.0-rc.5",
+    "@deepseek-ai/dsh-settings": "0.1.0-rc.5",
+    "@deepseek-ai/schemastery": "^3.18.1",
+    "react": "^18.2.0"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/cordis": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-client-runtime": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-client-ui-attachment": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-client-ui-primitives": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-client-ui-slots": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-settings": {
+      "optional": true
+    },
+    "@deepseek-ai/schemastery": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  }
+}

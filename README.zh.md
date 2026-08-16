@@ -2,41 +2,31 @@
 
 [English](README.md) | 中文
 
-为 DeepSeek Harness 提供二次元风格的 Web 主题与愉快的 UI 扩展。
+DSH Kisekae 是一个面向 DeepSeek Harness 的社区主题工作区。仓库里包含两个真正的 Cordis Client Plugin 包，它们在同一个仓库中开发、测试和发布。
 
-## 当前状态
+## 包结构
 
-首个可用皮肤是“DeepSeek蓝鲸娘”：一套以清冷海面和深海夜色为方向的非官方社区主题。安装后会立即叠加 23 个语义颜色令牌、2 个按消息角色区分的会话文字阴影令牌和 1 个共享会话字重令牌，同时保留 Harness 官方的浅色、深色和跟随系统偏好。设置页还包含 41 张图片的图鉴、随会话阶段变化的主对话背景、“蓝鲸玻璃侧栏·雨幕”，以及主题化输入框、“新会话”和“设置”入口。
+| 包 | 路径 | 职责 |
+| --- | --- | --- |
+| `@yehu77/dsh-kisekae` | [`packages/theme`](packages/theme) | 主题、美术、设置、配色、字体与装饰 slot 贡献 |
+| `@deepseek-ai/dsh-client-ui-conversation` | [`packages/conversation`](packages/conversation) | 完整替换官方对话插件，在保留官方行为的同时提供可换肤的对话呈现接口 |
 
-用户消息正文在浅色模式使用深紫色、深色模式使用淡丁香紫，并保持无阴影。assistant 正文使用近白色冰芯、零模糊蓝色硬边和一道短促的零模糊深蓝投影。两者都保留清晰的系统字体，字重为 500；插件也没有内置第三方字体。从主标签到淡化标签的全局调色板同样转为冰蓝色，因此已经使用这些别名的中性代码和工具文案也会跟随变化；caption 与 dimmed 仍是有意保留的较弱信息层级。前景、反相、错误、警告和成功颜色继续由 Harness 各自独立的语义负责。
+字体属于主题包。“DeepSeek 蓝鲸娘”现在提供紫色用户正文和冰晶边缘的助手正文；后续主题可以选择完全不同的颜色、字重、阴影，以及在加入许可合规的字体文件后选择不同字族。对话底座只负责把当前主题值分发到正确的用户或助手文字上，不包含蓝鲸娘配色或美术。
 
-设置中现在会显示独立的**外观与皮肤**页面，其中有**官方外观**和 **DeepSeek蓝鲸娘**两张卡片。点击卡片会立即预览，但不会自动保存；点击**取消**会恢复上次已应用的选择，点击**应用**会把选择写入当前浏览器、当前 Harness origin 下的版本化存储键 `@yehu77/dsh-kisekae:skin:v1`。同源标签页会自动同步，不同浏览器或 origin 各自保存。该实现不修改 Harness 的设置 namespace allowlist。
+对话底座继续使用官方包身份，是因为 Harness 里的其他插件都连接这个身份。放在同一个仓库不等于混在一个插件里：两个目录各有自己的 `package.json`、构建产物、版本和安装目标。
 
-主背景选项会立即保存到 `@yehu77/dsh-kisekae:main-background:v1`。“随机”在每次加载页面时选择一张图片，“固定”使用图鉴中点选的图片，“关闭”则移除背景。Hero、Active 和 Settling 都用 `contain` 以完全不透明的方式展示整张未裁切图片；第二层未模糊的低透明度副本只用 `cover` 填补主画布周围的空余区域。这会避免把竖图的局部大幅放大，但高分屏的真实清晰度仍取决于原图像素。文字可读性由独立的内容表层负责。主背景只在蓝鲸娘可见时出现；预览官方外观期间，其偏好仍会保留。104 MiB 原始素材保持不变；插件使用约 22 MiB 的原始像素尺寸 JPEG 发布副本，并在图鉴中懒加载。
+## 从 GitHub 安装
 
-侧栏背景会立即保存到 `@yehu77/dsh-kisekae:sidebar-backdrop:v1`。“清爽”和“沉浸”使用一张固定的图鉴图片，默认是雨景 `7fd9fafc…`，并提供向上渐隐与基于语义颜色的玻璃遮罩；“关闭”会移除背景。56 px 窄栏只显示安静的纯渐变。设置页用同一个组件提供实时侧栏预览，主题则通过半透明的语义 hover／active 颜色适配会话行，不直接修改会话行样式。“新会话”按钮保留官方元素、文字、操作、焦点行为和提示：蓝鲸娘在宽栏使用右侧低透明图片与语义玻璃，窄栏使用紧凑玻璃，并配有响应式 `currentColor` 海浪对话图标。
+先安装对话底座，再安装主题。pnpm 的 Git `path:` 选择器会从同一个仓库分别安装两个包。
 
-“设置”入口同样保留官方按钮、齿轮、文字和对话框行为。宽栏会在右侧安静显示航海房间图片 `d5dd1b2f…`，并用语义遮罩保证文字可读；窄栏则使用无图片玻璃与两道轻微涟漪。
+```sh
+dsh plugin --profile web add 'github:yehu77/dsh-kisekae#path:/packages/conversation'
+dsh plugin --profile web add 'github:yehu77/dsh-kisekae#path:/packages/theme'
+```
 
-输入框保留官方 textarea、按钮、焦点、文件拖放和高度变化行为。蓝鲸娘只绘制卡片的无交互背景：保证文字可读的语义海玻璃底色、内高光与主题边框、两道潮汐线和安静的鲸尾角标。Hero 使用稍强的表现，常驻对话输入框则降低装饰强度；这里不使用图片，也不使用模糊。
+安装后重启 Web profile。两个包都已经提交构建产物，因此 Git 安装不会执行构建脚本，也不需要配置 `allowBuilds`。
 
-主对话背景、输入框装饰、侧栏背景、“新会话”装饰、海浪对话图标和“设置”入口装饰组成一组由设置页当前 draft 驱动的可逆视觉贡献。预览官方外观会立即移除六者；如果已保存的是蓝鲸娘，点击“取消”会全部恢复。隐藏期间，美术偏好保持不变。
-
-项目当前针对 DeepSeek Harness commit `18c22363d7c8655603a065909c05c5222736d5d1`（`0.1.0-rc.5`）开发；该版本提供 `conversation.composer.bar.decoration`、`conversation.backdrop`、`settings.trigger.decoration`、`sidebar.backdrop`、`sidebar.newSession.decoration`、`sidebar.newSession.icon`，以及分别作用于用户和助手正文的颜色与文字阴影令牌和共享字重令牌。现在由社区维护的 [`dsh-kisekae-conversation`](https://github.com/yehu77/dsh-kisekae-conversation) 插件发布包含这些能力的完整替换对话底座。DeepSeek Harness 仍处于开发者预览期，因此两个包都会显式固定和审查兼容性，不能默认成立。
-
-完整产品范围、交付阶段、决策门和发布标准见[路线图](ROADMAP.zh.md)。
-
-DSH Kisekae 是独立社区项目，与 DeepSeek 及 DeepSeek Harness 维护者不存在隶属、赞助或官方认可关系。“DeepSeek蓝鲸娘”是为本项目创作的原创社区主题，并非官方角色或吉祥物。相关名称与标识的权利归各自权利人所有。
-
-## 设计原则
-
-- 浅色、深色和跟随系统继续由 DeepSeek Harness 官方偏好负责。
-- Kisekae 是通过 `theme.overrideTokens()` 实现的独立、可移除皮肤层。
-- 只使用公共 Cordis 服务和 slot，不定位生成后的 CSS 类名，也不修改官方组件 DOM。
-- 视觉状态绝不改变提示词、模型可见消息、工具、凭据或 Session 历史。
-- 原创与 AI 辅助美术独立于源代码许可证记录。
-
-当前由一个 npm 包同时承担安装所需的两种角色：`dsh.bundle` 提供 profile patch，`dsh.client` 提供浏览器插件。只有可独立发布的主题包产生真实的所有权或版本需求后才拆包。
+需要可复现安装时，可以在 `path:` 前加入共同的发布 tag 或 commit，例如 `#v0.1.0&path:/packages/theme`。
 
 ## 本地开发
 
@@ -47,71 +37,27 @@ pnpm install
 pnpm run check
 ```
 
-把本地 checkout 链接安装到从源码运行的 DeepSeek Harness Web profile：
+把两个包链接到从源码运行的 Harness profile：
 
 ```sh
 cd ../deepseek-harness
-pnpm dsh plugin --profile web add ../dsh-kisekae-conversation
-pnpm dsh plugin --profile web add ../dsh-kisekae
+pnpm dsh plugin --profile web add ../dsh-kisekae/packages/conversation
+pnpm dsh plugin --profile web add ../dsh-kisekae/packages/theme
 pnpm dsh --profile web --dump-config
 pnpm dsh --profile web
 ```
 
-干净移除：
+移除命令：
 
 ```sh
 pnpm dsh plugin --profile web remove @yehu77/dsh-kisekae
 pnpm dsh plugin --profile web remove @deepseek-ai/dsh-client-ui-conversation
 ```
 
-## 从 GitHub 安装
-
-```sh
-dsh plugin --profile web add github:yehu77/dsh-kisekae-conversation#v0.1.0-rc.5-kisekae.1
-dsh plugin --profile web add github:yehu77/dsh-kisekae
-```
-
-请先安装对话底座；它保留官方包身份，因此 Web profile 会用它替换 Harness 内置的对话插件。仓库已经包含预构建产物，不需要安装时构建权限。CLI 提示它没有 `dsh.bundle` 属于正常现象，因为现有 `ui-conversation` 配置行已经挂载该包身份。
-
-Kisekae 的 Git 依赖以源码到达，因此 pnpm 必须获准运行它的 `prepare` 构建。需要可复现安装时应固定 commit。未来的 npm 与 tarball Kisekae 版本会携带构建产物，不需要安装时构建权限。
-
-pnpm 报告构建被阻止后，把准确的包 key 加入 Web profile 的 `pnpm-workspace.yaml`，再重复安装：
-
-```yaml
-allowBuilds:
-  '@yehu77/dsh-kisekae': true
-```
-
-## 仓库结构
-
-```text
-src/index.ts          Host 入口与同源图片路由
-src/artworks.ts       41 张图片的共享目录
-src/settings-contract.ts  皮肤 ID 与版本化浏览器存储标识
-src/client/index.ts   正式浏览器入口与设置贡献
-src/client/browser-skin-store.ts  按 origin 持久化与跨标签页同步
-src/client/SkinSelectorSection.tsx  响应式双卡片选择器
-src/client/skin-controller.ts  预览、取消、持久化与令牌生命周期
-src/client/main-background-store.ts  固定、随机与关闭主背景偏好
-src/client/BlueWhaleConversationBackdrop.tsx  随会话阶段变化的边绘背景
-src/client/BlueWhaleComposerDecoration.tsx  官方输入框内容背后的海玻璃层
-src/client/sidebar-backdrop-store.ts  清爽、沉浸、关闭与固定背景偏好
-src/client/SidebarBackdrop.tsx  官方侧栏背景 slot 中的雨幕图片
-src/client/BlueWhaleNewSessionDecoration.tsx  “新会话”内容背后的玻璃与图片层
-src/client/BlueWhaleNewSessionIcon.tsx  官方“新会话”图形 slot 中的海浪对话图标
-src/client/BlueWhaleSettingsTriggerDecoration.tsx  “设置”入口内容背后的玻璃与图片层
-src/client/skin-visual-orchestrator.ts  随 draft 管理蓝鲸娘外壳视觉生命周期
-src/client/themes/    数据化的主题配色定义
-cordis.patch.yml      可安装的 Web profile 层
-assets/release/       浏览器发布副本
-assets/inbox/         用户管理的只读原始素材库
-tests/                构建产物加载与生命周期检查
-```
+当前视觉与使用方法见[主题包](packages/theme/README.zh.md)，替换机制与兼容性见[对话包](packages/conversation/README.zh.md)，后续主题和界面计划见[路线图](ROADMAP.zh.md)。
 
 ## 许可证
 
-源代码与文档使用 [MIT License](LICENSE)。美术及其他非代码素材由 [ASSETS_LICENSE.md](ASSETS_LICENSE.md) 和 `assets/manifest.yaml` 分别管理。
+源代码与文档使用 [MIT License](LICENSE)。发布美术由[主题素材许可](packages/theme/ASSETS_LICENSE.md)和[素材清单](packages/theme/assets/manifest.yaml)独立记录。
 
-## 模型体验
-
-无。Kisekae 是浏览器表现插件；其中没有内容进入模型请求，也不改变 Session 日志。
+DSH Kisekae 是独立社区项目，与 DeepSeek 或 DeepSeek Harness 维护者不存在隶属、赞助或官方认可关系。

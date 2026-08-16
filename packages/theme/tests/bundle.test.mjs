@@ -97,7 +97,7 @@ test('declares matching bundle and Client Plugin manifests', async () => {
   ])
   assert.match(patch, /id: kisekae/)
   assert.match(patch, /name: '@yehu77\/dsh-kisekae'/)
-  for (const file of ['assets/manifest.yaml', 'assets/release', 'README.zh.md', 'ROADMAP.md', 'ROADMAP.zh.md']) {
+  for (const file of ['assets/manifest.yaml', 'assets/release', 'README.md', 'README.zh.md']) {
     assert.ok(manifest.files.includes(file), `package files must include ${file}`)
   }
 })

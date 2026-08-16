@@ -17,14 +17,14 @@ Status: in progress
 - 官方浅色、深色和跟随系统偏好保持不变。
 - Kisekae 皮肤是一个 `theme.overrideTokens()` 层，每个覆盖值都同时提供浅色和深色版本。
 - 首个版本只使用原创或获得适当授权的美术，不纳入可识别的作品角色素材。
-- 首个版本不包含远程市场、任意用户 CSS、浏览器下载代码、模型人格、桌面端表面或替换会话布局。
+- 首个版本不包含远程市场、任意用户 CSS、浏览器下载代码、模型人格、桌面端表面或另一套会话布局。社区对话底座保留官方布局，只增加主题呈现接口。
 - 设置选择器、装饰 overlay 和 onboarding 即使共享美术方向，也保持为不同功能。
 
 ## 交付阶段
 
 ### 0. 基础与基线
 
-- 保持一个自包含 npm 包，同时携带 `dsh.bundle`、Host 入口和 `dsh.client`。
+- 保持一个仓库中的两个可独立安装包：自包含主题包携带 `dsh.bundle`、Host 入口和 `dsh.client`，主题中立的对话底座则继续使用官方包身份。
 - 固定受支持的 DeepSeek Harness commit，并记录未修改 Web UI 的基线。
 - 盘点设置、会话、Markdown、代码、工具、终端、overlay 和焦点状态的语义令牌。
 - 批准一个响应式选择器线框图、一套原创视觉方向和素材政策。
@@ -85,7 +85,7 @@ Status: in progress
 - 发布图鉴素材由 Kisekae 的同源 Host 路由从包内浏览器副本提供；不得依赖 Client 构建相邻文件、inbox 原图或远程 CDN。
 - 产品中立的 `conversation.backdrop`、`conversation.composer.bar.decoration`、`sidebar.backdrop`、`sidebar.newSession.decoration`、`sidebar.newSession.icon` 和 `settings.trigger.decoration` 分别承载主画布美术、输入框材质、侧栏美术与主题化按钮皮肤。其他视觉表面仍应先提供自己的通用 seam，不得使用私有选择器。
 - 聊天背景、输入框和侧边栏样式分别保持可选。复杂图片不得直接垫在消息或可编辑文字下方；每个表面都要保留安静、清晰的可读方案。
-- 在独立发布或所有权让拆包真正有用之前，主题定义保持内部实现。
+- 所有美术、颜色、字体和文字效果定义都留在主题包中。对话底座可以提供通用呈现接口，但不得包含 Kisekae 配色或字体选择。
 - 在 Harness 仅暴露 allowlist 内设置 namespace 期间，选择由 Kisekae 自己的版本化浏览器存储负责。不得为 Kisekae 修改上游 allowlist；只有出现通用的仓库外扩展点后，才重新评估 Host 持久化。
 - 任何上游 API 变更都需要自己的 DeepSeek Harness 设计记录、当前状态文档、可逆 effect 和组装 Web 测试。
 

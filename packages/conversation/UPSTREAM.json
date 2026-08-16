@@ -1,0 +1,7 @@
+{
+  "repository": "https://github.com/deepseek-ai/deepseek-harness.git",
+  "packagePath": "packages/client/ui-conversation",
+  "commit": "18c22363d7c8655603a065909c05c5222736d5d1",
+  "version": "0.1.0-rc.5",
+  "syncedAt": "2026-08-16"
+}

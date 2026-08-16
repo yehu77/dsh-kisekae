@@ -17,14 +17,14 @@ Build a maintainable, open-source collection of anime-inspired Web skins for Dee
 - Official Light, Dark, and System preferences remain unchanged.
 - A Kisekae skin is one `theme.overrideTokens()` layer with light and dark values for every override.
 - The first release uses original or appropriately licensed art; recognizable franchise assets are excluded.
-- The first release has no remote marketplace, arbitrary user CSS, browser-downloaded code, model persona, desktop surface, or replacement conversation layout.
+- The first release has no remote marketplace, arbitrary user CSS, browser-downloaded code, model persona, desktop surface, or alternate conversation layout. The community conversation replacement preserves the official layout while adding theme presentation controls.
 - Settings selection, decorative overlays, and onboarding are separate features even when they share one art direction.
 
 ## Delivery stages
 
 ### 0. Foundation and baseline
 
-- Keep one self-contained npm package carrying `dsh.bundle`, its Host entry, and `dsh.client`.
+- Keep one repository with two independently installable packages: a self-contained theme carrying `dsh.bundle`, its Host entry, and `dsh.client`, plus a theme-neutral conversation replacement with the official package identity.
 - Pin the supported DeepSeek Harness commit and capture the unmodified Web baseline.
 - Inventory semantic tokens across settings, conversation, Markdown, code, tools, terminal, overlays, and focus states.
 - Approve one responsive selector wireframe, an original visual direction, and the asset policy.
@@ -85,7 +85,7 @@ Exit when a new pack can be built without importing Kisekae runtime internals. A
 - Released gallery art is served by Kisekae's same-origin Host route from packaged browser copies; do not rely on emitted Client siblings, inbox originals, or a remote CDN.
 - The product-neutral `conversation.backdrop`, `conversation.composer.bar.decoration`, `sidebar.backdrop`, `sidebar.newSession.decoration`, `sidebar.newSession.icon`, and `settings.trigger.decoration` slots carry main-canvas artwork, composer material, sidebar artwork, and themed button treatments. Any other visual surface still needs its own generic seam rather than private selectors.
 - Conversation backgrounds, composer styling, and sidebar styling remain separately optional. Busy artwork must not sit directly beneath messages or editable text; each surface needs a quiet fallback that preserves readability.
-- Keep definitions internal until independent release or ownership makes package separation useful.
+- Keep all artwork, color, typography, and text-effect definitions in the theme package. The conversation replacement may expose generic presentation controls but must not contain a Kisekae palette or font choice.
 - While Harness exposes only an allowlisted set of settings namespaces, keep the choice in Kisekae-owned versioned browser storage. Do not patch the upstream allowlist; reconsider Host persistence only after a generic out-of-tree extension point exists.
 - Any upstream API change needs its own DeepSeek Harness design record, current-state documentation, reversible effects, and an assembled Web test.
 
