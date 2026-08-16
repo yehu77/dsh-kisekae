@@ -27,15 +27,23 @@ export const DEEPSEEK_BLUE_WHALE_CHAN = {
     '--dsw-alias-button-primary-hover': { light: '#104B61', dark: '#8ADFF5' },
     '--dsw-alias-state-business-primary': { light: '#12627F', dark: '#6CD5F2' },
     '--dsw-alias-state-business-tertiary': { light: '#D8EEF7', dark: '#153E52' },
-    '--dsw-alias-label-primary': { light: '#163247', dark: '#EAF8FE' },
-    '--dsw-alias-label-secondary': { light: '#4C687A', dark: '#A6C8D8' },
+    '--dsw-alias-label-caption': { light: '#83A9B9', dark: '#5D91A6' },
+    '--dsw-alias-label-dimmed': { light: '#BDD5DE', dark: '#365D72' },
+    '--dsw-alias-label-primary': { light: '#0E5872', dark: '#C9F4FF' },
+    '--dsw-alias-label-primary-dimmed': { light: '#1B607C', dark: '#B2E2F1' },
+    '--dsw-alias-label-secondary': { light: '#386A80', dark: '#96CBDD' },
+    '--dsw-alias-label-tertiary': { light: '#5E8799', dark: '#78B2C5' },
     '--dsw-specific-input-major': {
       light: 'rgba(250, 254, 255, 0.94)',
       dark: 'rgba(10, 32, 47, 0.94)',
     },
-    '--dsw-specific-conversation-message-prose-color': {
+    '--dsw-specific-conversation-user-message-prose-color': {
       light: '#6A1B8C',
       dark: '#E8C4FF',
+    },
+    '--dsw-specific-conversation-assistant-message-prose-color': {
+      light: '#075C78',
+      dark: '#BDEEFF',
     },
     '--dsw-specific-conversation-message-prose-font-weight': {
       light: '500',

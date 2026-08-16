@@ -6,9 +6,9 @@
 
 ## 当前状态
 
-首个可用皮肤是“DeepSeek蓝鲸娘”：一套以清冷海面和深海夜色为方向的非官方社区主题。安装后会立即叠加 18 个语义颜色令牌和 1 个仅作用于对话正文的排版令牌，同时保留 Harness 官方的浅色、深色和跟随系统偏好。设置页还包含 42 张图片的图鉴、随会话阶段变化的主对话背景、“蓝鲸玻璃侧栏·雨幕”，以及主题化输入框、“新会话”和“设置”入口。
+首个可用皮肤是“DeepSeek蓝鲸娘”：一套以清冷海面和深海夜色为方向的非官方社区主题。安装后会立即叠加 23 个语义颜色令牌和 1 个仅作用于对话正文的字重令牌，同时保留 Harness 官方的浅色、深色和跟随系统偏好。设置页还包含 42 张图片的图鉴、随会话阶段变化的主对话背景、“蓝鲸玻璃侧栏·雨幕”，以及主题化输入框、“新会话”和“设置”入口。
 
-普通对话正文使用清晰的紫色半粗字：浅色模式为深紫色，深色模式为淡丁香紫。这是本主题的原创视觉处理；插件没有内置第三方字体文件。代码、终端输出、错误及状态语义继续使用 Harness 官方样式。
+用户消息正文在浅色模式使用深紫色、深色模式使用淡丁香紫；assistant 正文分别使用深冰蓝与浅冰蓝。两者都保留清晰的系统字体，字重为 500，不添加主题文字阴影；插件也没有内置第三方字体。从主标签到淡化标签的全局调色板同样转为冰蓝色，因此已经使用这些别名的中性代码和工具文案也会跟随变化；caption 与 dimmed 仍是有意保留的较弱信息层级。前景、反相、错误、警告和成功颜色继续由 Harness 各自独立的语义负责。
 
 设置中现在会显示独立的**外观与皮肤**页面，其中有**官方外观**和 **DeepSeek蓝鲸娘**两张卡片。点击卡片会立即预览，但不会自动保存；点击**取消**会恢复上次已应用的选择，点击**应用**会把选择写入当前浏览器、当前 Harness origin 下的版本化存储键 `@yehu77/dsh-kisekae:skin:v1`。同源标签页会自动同步，不同浏览器或 origin 各自保存。该实现不修改 Harness 的设置 namespace allowlist。
 
@@ -22,7 +22,7 @@
 
 主对话背景、输入框装饰、侧栏背景、“新会话”装饰、海浪对话图标和“设置”入口装饰组成一组由设置页当前 draft 驱动的可逆视觉贡献。预览官方外观会立即移除六者；如果已保存的是蓝鲸娘，点击“取消”会全部恢复。隐藏期间，美术偏好保持不变。
 
-项目当前针对 DeepSeek Harness commit `22820d35413817b6085ecb003389a8273745cff4`（`0.1.0-rc.5`）开发；该版本提供 `conversation.composer.bar.decoration`、`conversation.backdrop`、`settings.trigger.decoration`、`sidebar.backdrop`、`sidebar.newSession.decoration` 和 `sidebar.newSession.icon`。DeepSeek Harness 仍处于开发者预览期，因此兼容性要显式固定和审查，不能默认成立。
+项目当前针对 DeepSeek Harness commit `af3abeef179d9b9c3c1a245aeb92955d88e46f36`（`0.1.0-rc.5`）开发；该版本提供 `conversation.composer.bar.decoration`、`conversation.backdrop`、`settings.trigger.decoration`、`sidebar.backdrop`、`sidebar.newSession.decoration`、`sidebar.newSession.icon`，以及分别作用于用户和助手正文的颜色令牌与共享字重令牌。DeepSeek Harness 仍处于开发者预览期，因此兼容性要显式固定和审查，不能默认成立。
 
 完整产品范围、交付阶段、决策门和发布标准见[路线图](ROADMAP.zh.md)。
 

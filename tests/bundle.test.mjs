@@ -23,12 +23,17 @@ const EXPECTED_THEME_TOKENS = [
   '--dsw-alias-border-l2',
   '--dsw-alias-brand-primary',
   '--dsw-alias-button-primary-hover',
+  '--dsw-alias-label-caption',
+  '--dsw-alias-label-dimmed',
   '--dsw-alias-label-primary',
+  '--dsw-alias-label-primary-dimmed',
   '--dsw-alias-label-secondary',
+  '--dsw-alias-label-tertiary',
   '--dsw-alias-state-business-primary',
   '--dsw-alias-state-business-tertiary',
-  '--dsw-specific-conversation-message-prose-color',
+  '--dsw-specific-conversation-assistant-message-prose-color',
   '--dsw-specific-conversation-message-prose-font-weight',
+  '--dsw-specific-conversation-user-message-prose-color',
   '--dsw-specific-input-major',
   '--dsw-specific-sidebar-fill',
   '--dsw-specific-sidebar-nav-item-active',
@@ -382,6 +387,8 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   const [{ sourceId: overrideSource, tokens: overrideTokens }] = overrideHistory
   assert.equal(overrideSource, PACKAGE_NAME)
   assert.deepEqual(Object.keys(overrideTokens).sort(), [...EXPECTED_THEME_TOKENS].sort())
+  assert.equal(EXPECTED_THEME_TOKENS.length, 24)
+  assert.equal(Object.keys(overrideTokens).filter(name => !name.endsWith('font-weight')).length, 23)
   for (const [name, modes] of Object.entries(overrideTokens)) {
     assert.match(name, /^--dsw-(?:alias|specific)-/)
     assert.equal(typeof modes.light, 'string')
@@ -391,26 +398,67 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   }
   assert.equal(overrideTokens['--dsw-alias-bg-base'].light, '#F6FBFE')
   assert.equal(overrideTokens['--dsw-alias-bg-base'].dark, '#091824')
+  assert.equal(overrideTokens['--dsw-alias-label-caption'].light, '#83A9B9')
+  assert.equal(overrideTokens['--dsw-alias-label-caption'].dark, '#5D91A6')
+  assert.equal(overrideTokens['--dsw-alias-label-dimmed'].light, '#BDD5DE')
+  assert.equal(overrideTokens['--dsw-alias-label-dimmed'].dark, '#365D72')
+  assert.equal(overrideTokens['--dsw-alias-label-primary'].light, '#0E5872')
+  assert.equal(overrideTokens['--dsw-alias-label-primary'].dark, '#C9F4FF')
+  assert.equal(overrideTokens['--dsw-alias-label-primary-dimmed'].light, '#1B607C')
+  assert.equal(overrideTokens['--dsw-alias-label-primary-dimmed'].dark, '#B2E2F1')
+  assert.equal(overrideTokens['--dsw-alias-label-secondary'].light, '#386A80')
+  assert.equal(overrideTokens['--dsw-alias-label-secondary'].dark, '#96CBDD')
+  assert.equal(overrideTokens['--dsw-alias-label-tertiary'].light, '#5E8799')
+  assert.equal(overrideTokens['--dsw-alias-label-tertiary'].dark, '#78B2C5')
   assert.equal(overrideTokens['--dsw-specific-input-major'].light, 'rgba(250, 254, 255, 0.94)')
   assert.equal(overrideTokens['--dsw-specific-input-major'].dark, 'rgba(10, 32, 47, 0.94)')
-  assert.equal(overrideTokens['--dsw-specific-conversation-message-prose-color'].light, '#6A1B8C')
-  assert.equal(overrideTokens['--dsw-specific-conversation-message-prose-color'].dark, '#E8C4FF')
+  assert.equal(overrideTokens['--dsw-specific-conversation-user-message-prose-color'].light, '#6A1B8C')
+  assert.equal(overrideTokens['--dsw-specific-conversation-user-message-prose-color'].dark, '#E8C4FF')
+  assert.equal(overrideTokens['--dsw-specific-conversation-assistant-message-prose-color'].light, '#075C78')
+  assert.equal(overrideTokens['--dsw-specific-conversation-assistant-message-prose-color'].dark, '#BDEEFF')
   assert.equal(overrideTokens['--dsw-specific-conversation-message-prose-font-weight'].light, '500')
   assert.equal(overrideTokens['--dsw-specific-conversation-message-prose-font-weight'].dark, '500')
+  for (const token of [
+    '--dsw-alias-label-primary-foreground',
+    '--dsw-alias-label-primary-inverted',
+    '--dsw-alias-state-error-primary',
+    '--dsw-alias-state-success-primary',
+    '--dsw-alias-state-warn-primary',
+    '--dsw-specific-conversation-transcript-text-shadow',
+  ]) {
+    assert.equal(overrideTokens[token], undefined)
+  }
   assert.ok(Object.values(overrideTokens).some(modes => modes.light !== modes.dark))
 
   const contrastPairs = [
     ['--dsw-alias-label-primary', '--dsw-alias-bg-base'],
+    ['--dsw-alias-label-primary', '--dsw-alias-bg-overlay'],
     ['--dsw-alias-label-secondary', '--dsw-alias-bg-base'],
     ['--dsw-alias-state-business-primary', '--dsw-alias-state-business-tertiary'],
     ['--dsw-alias-label-secondary', '--dsw-alias-bg-overlay'],
-    ['--dsw-specific-conversation-message-prose-color', '--dsw-alias-bg-base'],
+    ['--dsw-specific-conversation-user-message-prose-color', '--dsw-alias-bg-base'],
+    ['--dsw-specific-conversation-user-message-prose-color', '--dsw-alias-bg-overlay'],
+    ['--dsw-specific-conversation-assistant-message-prose-color', '--dsw-alias-bg-base'],
+    ['--dsw-specific-conversation-assistant-message-prose-color', '--dsw-alias-bg-overlay'],
   ]
   for (const mode of ['light', 'dark']) {
     for (const [foreground, background] of contrastPairs) {
       const ratio = contrastRatio(overrideTokens[foreground][mode], overrideTokens[background][mode])
       assert.ok(ratio >= 4.5, `${mode} ${foreground} on ${background} has ${ratio.toFixed(2)}:1 contrast`)
     }
+
+    const labelHierarchy = [
+      '--dsw-alias-label-primary',
+      '--dsw-alias-label-primary-dimmed',
+      '--dsw-alias-label-secondary',
+      '--dsw-alias-label-tertiary',
+      '--dsw-alias-label-caption',
+      '--dsw-alias-label-dimmed',
+    ].map(name => contrastRatio(
+      overrideTokens[name][mode],
+      overrideTokens['--dsw-alias-bg-base'][mode],
+    ))
+    assert.deepEqual(labelHierarchy, [...labelHierarchy].sort((a, b) => b - a))
   }
 
   const heroComposerDecoration = collectElements(composerDecorationSlot.component({ variant: 'hero' }))
