@@ -6,7 +6,7 @@ Anime-inspired Web themes and delightful UI extensions for DeepSeek Harness.
 
 ## Status
 
-The first working skin is “DeepSeek Blue Whale-chan,” an unofficial community theme built around cool ocean daylight and a deep-sea night palette. Installing the package immediately overlays 17 semantic color tokens while preserving the official Harness Light, Dark, and System preferences. The settings page also includes a 42-image gallery, a phase-aware main conversation background, the “Blue Whale glass sidebar · Rain veil,” and themed composer, New Session, and Settings surfaces.
+The first working skin is “DeepSeek Blue Whale-chan,” an unofficial community theme built around cool ocean daylight and a deep-sea night palette. Installing the package immediately overlays 17 semantic color tokens and one conversation text effect while preserving the official Harness Light, Dark, and System preferences. The crisp moonlit outline applies only to conversation transcript text; code and buttons keep the official appearance. The settings page also includes a 42-image gallery, a phase-aware main conversation background, the “Blue Whale glass sidebar · Rain veil,” and themed composer, New Session, and Settings surfaces.
 
 Settings now includes an **Appearance & Skins** section with **Official appearance** and **DeepSeek Blue Whale-chan** cards. Choosing a card previews it immediately without saving; **Cancel** restores the last applied choice, and **Apply** saves it under the versioned browser-storage key `@yehu77/dsh-kisekae:skin:v1` for the current Harness origin. Tabs on the same origin synchronize automatically, while different browsers and origins keep independent choices. This implementation does not modify Harness's settings-namespace allowlist.
 
