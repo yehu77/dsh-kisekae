@@ -32,8 +32,10 @@ const EXPECTED_THEME_TOKENS = [
   '--dsw-alias-state-business-primary',
   '--dsw-alias-state-business-tertiary',
   '--dsw-specific-conversation-assistant-message-prose-color',
+  '--dsw-specific-conversation-assistant-message-prose-text-shadow',
   '--dsw-specific-conversation-message-prose-font-weight',
   '--dsw-specific-conversation-user-message-prose-color',
+  '--dsw-specific-conversation-user-message-prose-text-shadow',
   '--dsw-specific-input-major',
   '--dsw-specific-sidebar-fill',
   '--dsw-specific-sidebar-nav-item-active',
@@ -387,8 +389,8 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   const [{ sourceId: overrideSource, tokens: overrideTokens }] = overrideHistory
   assert.equal(overrideSource, PACKAGE_NAME)
   assert.deepEqual(Object.keys(overrideTokens).sort(), [...EXPECTED_THEME_TOKENS].sort())
-  assert.equal(EXPECTED_THEME_TOKENS.length, 24)
-  assert.equal(Object.keys(overrideTokens).filter(name => !name.endsWith('font-weight')).length, 23)
+  assert.equal(EXPECTED_THEME_TOKENS.length, 26)
+  assert.equal(Object.keys(overrideTokens).filter(name => !name.endsWith('font-weight')).length, 25)
   for (const [name, modes] of Object.entries(overrideTokens)) {
     assert.match(name, /^--dsw-(?:alias|specific)-/)
     assert.equal(typeof modes.light, 'string')
@@ -414,8 +416,18 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(overrideTokens['--dsw-specific-input-major'].dark, 'rgba(10, 32, 47, 0.94)')
   assert.equal(overrideTokens['--dsw-specific-conversation-user-message-prose-color'].light, '#6A1B8C')
   assert.equal(overrideTokens['--dsw-specific-conversation-user-message-prose-color'].dark, '#E8C4FF')
-  assert.equal(overrideTokens['--dsw-specific-conversation-assistant-message-prose-color'].light, '#075C78')
-  assert.equal(overrideTokens['--dsw-specific-conversation-assistant-message-prose-color'].dark, '#BDEEFF')
+  assert.equal(overrideTokens['--dsw-specific-conversation-assistant-message-prose-color'].light, '#F8FDFF')
+  assert.equal(overrideTokens['--dsw-specific-conversation-assistant-message-prose-color'].dark, '#F4FCFF')
+  assert.equal(
+    overrideTokens['--dsw-specific-conversation-assistant-message-prose-text-shadow'].light,
+    '-1px 0 0 #1683B5, 1px 0 0 #1683B5, 0 -1px 0 #1683B5, 0 1px 0 #1683B5, 0 2px 0 #075E8E',
+  )
+  assert.equal(
+    overrideTokens['--dsw-specific-conversation-assistant-message-prose-text-shadow'].dark,
+    '-1px 0 0 #279AC8, 1px 0 0 #279AC8, 0 -1px 0 #279AC8, 0 1px 0 #279AC8, 0 2px 0 #074B70',
+  )
+  assert.equal(overrideTokens['--dsw-specific-conversation-user-message-prose-text-shadow'].light, 'none')
+  assert.equal(overrideTokens['--dsw-specific-conversation-user-message-prose-text-shadow'].dark, 'none')
   assert.equal(overrideTokens['--dsw-specific-conversation-message-prose-font-weight'].light, '500')
   assert.equal(overrideTokens['--dsw-specific-conversation-message-prose-font-weight'].dark, '500')
   for (const token of [
@@ -438,8 +450,6 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
     ['--dsw-alias-label-secondary', '--dsw-alias-bg-overlay'],
     ['--dsw-specific-conversation-user-message-prose-color', '--dsw-alias-bg-base'],
     ['--dsw-specific-conversation-user-message-prose-color', '--dsw-alias-bg-overlay'],
-    ['--dsw-specific-conversation-assistant-message-prose-color', '--dsw-alias-bg-base'],
-    ['--dsw-specific-conversation-assistant-message-prose-color', '--dsw-alias-bg-overlay'],
   ]
   for (const mode of ['light', 'dark']) {
     for (const [foreground, background] of contrastPairs) {
@@ -459,6 +469,15 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
       overrideTokens['--dsw-alias-bg-base'][mode],
     ))
     assert.deepEqual(labelHierarchy, [...labelHierarchy].sort((a, b) => b - a))
+  }
+
+  const assistantIceEdges = { light: '#1683B5', dark: '#279AC8' }
+  for (const mode of ['light', 'dark']) {
+    const fill = overrideTokens['--dsw-specific-conversation-assistant-message-prose-color'][mode]
+    const edge = assistantIceEdges[mode]
+    const background = overrideTokens['--dsw-alias-bg-base'][mode]
+    assert.ok(contrastRatio(fill, edge) >= 3, `${mode} ice fill must separate from its hard edge`)
+    assert.ok(contrastRatio(edge, background) >= 3, `${mode} ice edge must separate from the base background`)
   }
 
   const heroComposerDecoration = collectElements(composerDecorationSlot.component({ variant: 'hero' }))

@@ -41,9 +41,17 @@ export const DEEPSEEK_BLUE_WHALE_CHAN = {
       light: '#6A1B8C',
       dark: '#E8C4FF',
     },
+    '--dsw-specific-conversation-user-message-prose-text-shadow': {
+      light: 'none',
+      dark: 'none',
+    },
     '--dsw-specific-conversation-assistant-message-prose-color': {
-      light: '#075C78',
-      dark: '#BDEEFF',
+      light: '#F8FDFF',
+      dark: '#F4FCFF',
+    },
+    '--dsw-specific-conversation-assistant-message-prose-text-shadow': {
+      light: '-1px 0 0 #1683B5, 1px 0 0 #1683B5, 0 -1px 0 #1683B5, 0 1px 0 #1683B5, 0 2px 0 #075E8E',
+      dark: '-1px 0 0 #279AC8, 1px 0 0 #279AC8, 0 -1px 0 #279AC8, 0 1px 0 #279AC8, 0 2px 0 #074B70',
     },
     '--dsw-specific-conversation-message-prose-font-weight': {
       light: '500',
