@@ -51,7 +51,7 @@ Exit when selection survives reload and server restart in the same browser and o
 
 ### 3. Optional richness and guidance
 
-- Keep the shipped main `conversation.backdrop` optional through Fixed, Random, and Off controls. Hero uses strong right/lower edge artwork and semantic sea fog around the composer, Active reduces artwork to 14% behind a protected central reading lane, and Settling provides a quiet intermediate state without blur.
+- Keep the shipped main `conversation.backdrop` optional through Fixed, Random, and Off controls. Hero uses 82% full-bleed artwork, a lighter central lane, semantic sea fog around the composer, and no top veil. Active keeps 88% full-bleed artwork behind a centered 900px-max lane whose 92% semantic base-color core fades near both edges; a 120px veil protects the conversation header controls without washing the full canvas. Settling uses 64% artwork with an 88% lane core and matching top veil, without blur.
 - Keep the shipped glass sidebar optional through Clear, Immersive, and Off controls. Wide mode uses one fixed catalog image with an upward fade; the narrow rail uses only a quiet semantic gradient.
 - Keep the shipped New Session treatment responsive through the host-provided wide state: wide mode combines low-opacity right-side artwork with semantic glass, while the rail uses compact glass. The wave-chat glyph changes only the icon; neither contribution replaces the official button or action.
 - Keep the shipped Settings trigger treatment responsive without replacing its official gear, label, button, or dialog behavior. Wide mode uses low-opacity right-side artwork and a semantic readability scrim; the rail uses image-free glass and subtle ripples.
