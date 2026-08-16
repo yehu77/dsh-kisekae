@@ -22,7 +22,7 @@
 
 主对话背景、输入框装饰、侧栏背景、“新会话”装饰、海浪对话图标和“设置”入口装饰组成一组由设置页当前 draft 驱动的可逆视觉贡献。预览官方外观会立即移除六者；如果已保存的是蓝鲸娘，点击“取消”会全部恢复。隐藏期间，美术偏好保持不变。
 
-项目当前针对 DeepSeek Harness commit `18c22363d7c8655603a065909c05c5222736d5d1`（`0.1.0-rc.5`）开发；该版本提供 `conversation.composer.bar.decoration`、`conversation.backdrop`、`settings.trigger.decoration`、`sidebar.backdrop`、`sidebar.newSession.decoration`、`sidebar.newSession.icon`，以及分别作用于用户和助手正文的颜色与文字阴影令牌和共享字重令牌。DeepSeek Harness 仍处于开发者预览期，因此兼容性要显式固定和审查，不能默认成立。
+项目当前针对 DeepSeek Harness commit `18c22363d7c8655603a065909c05c5222736d5d1`（`0.1.0-rc.5`）开发；该版本提供 `conversation.composer.bar.decoration`、`conversation.backdrop`、`settings.trigger.decoration`、`sidebar.backdrop`、`sidebar.newSession.decoration`、`sidebar.newSession.icon`，以及分别作用于用户和助手正文的颜色与文字阴影令牌和共享字重令牌。现在由社区维护的 [`dsh-kisekae-conversation`](https://github.com/yehu77/dsh-kisekae-conversation) 插件发布包含这些能力的完整替换对话底座。DeepSeek Harness 仍处于开发者预览期，因此两个包都会显式固定和审查兼容性，不能默认成立。
 
 完整产品范围、交付阶段、决策门和发布标准见[路线图](ROADMAP.zh.md)。
 
@@ -51,6 +51,7 @@ pnpm run check
 
 ```sh
 cd ../deepseek-harness
+pnpm dsh plugin --profile web add ../dsh-kisekae-conversation
 pnpm dsh plugin --profile web add ../dsh-kisekae
 pnpm dsh --profile web --dump-config
 pnpm dsh --profile web
@@ -60,15 +61,19 @@ pnpm dsh --profile web
 
 ```sh
 pnpm dsh plugin --profile web remove @yehu77/dsh-kisekae
+pnpm dsh plugin --profile web remove @deepseek-ai/dsh-client-ui-conversation
 ```
 
 ## 从 GitHub 安装
 
 ```sh
+dsh plugin --profile web add github:yehu77/dsh-kisekae-conversation#v0.1.0-rc.5-kisekae.1
 dsh plugin --profile web add github:yehu77/dsh-kisekae
 ```
 
-Git 依赖以源码到达，因此 pnpm 必须获准运行本包的 `prepare` 构建。需要可复现安装时应固定 commit。未来的 npm 与 tarball 版本会携带构建产物，不需要安装时构建权限。
+请先安装对话底座；它保留官方包身份，因此 Web profile 会用它替换 Harness 内置的对话插件。仓库已经包含预构建产物，不需要安装时构建权限。CLI 提示它没有 `dsh.bundle` 属于正常现象，因为现有 `ui-conversation` 配置行已经挂载该包身份。
+
+Kisekae 的 Git 依赖以源码到达，因此 pnpm 必须获准运行它的 `prepare` 构建。需要可复现安装时应固定 commit。未来的 npm 与 tarball Kisekae 版本会携带构建产物，不需要安装时构建权限。
 
 pnpm 报告构建被阻止后，把准确的包 key 加入 Web profile 的 `pnpm-workspace.yaml`，再重复安装：
 

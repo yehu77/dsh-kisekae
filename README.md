@@ -22,7 +22,7 @@ The composer keeps the official textarea, controls, focus, file-drop, and resizi
 
 The main conversation background, composer decoration, sidebar backdrop, New Session decoration, wave-chat glyph, and Settings trigger decoration are one reversible visual group driven by the current settings draft. Previewing Official appearance removes all six immediately; Cancel restores them when Blue Whale-chan is the saved skin. Their artwork preferences remain intact while hidden.
 
-The project is developed against DeepSeek Harness commit `18c22363d7c8655603a065909c05c5222736d5d1` (`0.1.0-rc.5`), which exposes `conversation.composer.bar.decoration`, `conversation.backdrop`, `settings.trigger.decoration`, `sidebar.backdrop`, `sidebar.newSession.decoration`, and `sidebar.newSession.icon`, plus separate user and assistant message-prose color and text-shadow tokens and their shared font-weight token. DeepSeek Harness is still in developer preview, so compatibility is pinned and reviewed explicitly rather than assumed.
+The project is developed against DeepSeek Harness commit `18c22363d7c8655603a065909c05c5222736d5d1` (`0.1.0-rc.5`), which exposes `conversation.composer.bar.decoration`, `conversation.backdrop`, `settings.trigger.decoration`, `sidebar.backdrop`, `sidebar.newSession.decoration`, and `sidebar.newSession.icon`, plus separate user and assistant message-prose color and text-shadow tokens and their shared font-weight token. The community-maintained [`dsh-kisekae-conversation`](https://github.com/yehu77/dsh-kisekae-conversation) plugin now distributes the complete replacement conversation base with those capabilities. DeepSeek Harness is still in developer preview, so both packages pin and review compatibility explicitly rather than assuming it.
 
 See the [roadmap](ROADMAP.md) for product scope, delivery stages, decision gates, and release criteria.
 
@@ -51,6 +51,7 @@ Install the linked checkout into a source-built DeepSeek Harness Web profile:
 
 ```sh
 cd ../deepseek-harness
+pnpm dsh plugin --profile web add ../dsh-kisekae-conversation
 pnpm dsh plugin --profile web add ../dsh-kisekae
 pnpm dsh --profile web --dump-config
 pnpm dsh --profile web
@@ -60,15 +61,19 @@ Remove it cleanly:
 
 ```sh
 pnpm dsh plugin --profile web remove @yehu77/dsh-kisekae
+pnpm dsh plugin --profile web remove @deepseek-ai/dsh-client-ui-conversation
 ```
 
 ## Install from GitHub
 
 ```sh
+dsh plugin --profile web add github:yehu77/dsh-kisekae-conversation#v0.1.0-rc.5-kisekae.1
 dsh plugin --profile web add github:yehu77/dsh-kisekae
 ```
 
-Git dependencies arrive as source, so pnpm must be allowed to run this package's `prepare` build. Pin a commit for a reproducible installation. npm and tarball releases will carry built artifacts and will not need install-time build permission.
+Install the conversation base first; it keeps the official package identity so the Web profile resolves it in place of Harness's bundled conversation plugin. Its prebuilt artifacts need no install-time build permission. The CLI's notice that it has no `dsh.bundle` is expected because the existing `ui-conversation` configuration row already mounts that package identity.
+
+The Kisekae Git dependency arrives as source, so pnpm must be allowed to run its `prepare` build. Pin a commit for a reproducible installation. Future npm and tarball Kisekae releases will carry built artifacts and will not need install-time build permission.
 
 After pnpm reports the blocked build, add the exact package key to the Web profile's `pnpm-workspace.yaml`, then repeat the install:
 
