@@ -621,100 +621,39 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
 
   assert.equal(mainBackgroundStore.getSnapshot().mode, 'random')
   assert.equal(mainBackgroundStore.getSnapshot().shownArtworkId, releaseArtworkIds[0])
-  const heroBackground = collectElements(conversationBackdropSlot.component({
-    phase: 'hero',
-    mainBackgroundStore,
-  }))
-  const heroBackgroundRoot = heroBackground.find(
-    element => element.props?.['data-kisekae-conversation-backdrop'] !== undefined,
-  )
-  const heroArtwork = heroBackground.find(
-    element => element.props?.['data-kisekae-conversation-artwork'] !== undefined,
-  )
-  assert.equal(heroBackgroundRoot.props['data-kisekae-conversation-backdrop'], 'hero')
-  assert.equal(heroBackgroundRoot.props['aria-hidden'], 'true')
-  assert.equal(heroArtwork.props.style.opacity, 0.82)
-  assert.equal(heroArtwork.props.style.backgroundSize, 'cover')
-  assert.equal(heroArtwork.props.style.backgroundPosition, 'center')
-  assert.equal(heroArtwork.props.style.maskImage, undefined)
-  assert.equal(heroArtwork.props.style.WebkitMaskImage, undefined)
-  assert.equal(
-    heroArtwork.props.style.backgroundImage,
-    `url(${artworkUrl(releaseArtworkIds[0])})`,
-  )
-  const heroReadingLane = heroBackground.find(
-    element => element.props?.['data-kisekae-conversation-reading-lane'] === 'true',
-  )
-  assert.equal(heroReadingLane.props.style.width, 'min(100%, 920px)')
-  assert.ok(heroBackground.some(
-    element => element.props?.['data-kisekae-conversation-sea-fog'] === 'true',
-  ))
-  assert.equal(heroBackground.some(
-    element => element.props?.['data-kisekae-conversation-chrome-veil'] === 'true',
-  ), false)
-  const phaseTransition = heroBackground.find(element => element.type === 'style').props.children
-  assert.match(phaseTransition, /opacity 180ms ease/)
-  assert.match(phaseTransition, /prefers-reduced-motion/)
-  assert.equal(heroBackground.some(element =>
-    element.props?.style?.filter !== undefined
-    || element.props?.style?.backdropFilter !== undefined
-    || element.props?.style?.WebkitBackdropFilter !== undefined), false)
-
-  const activeBackground = collectElements(conversationBackdropSlot.component({
-    phase: 'active',
-    mainBackgroundStore,
-  }))
-  const activeArtwork = activeBackground.find(
-    element => element.props?.['data-kisekae-conversation-artwork'] !== undefined,
-  )
-  const activeReadingLane = activeBackground.find(
-    element => element.props?.['data-kisekae-conversation-reading-lane'] === 'true',
-  )
-  const activeChromeVeil = activeBackground.find(
-    element => element.props?.['data-kisekae-conversation-chrome-veil'] === 'true',
-  )
-  assert.equal(activeArtwork.props.style.opacity, 0.88)
-  assert.equal(activeArtwork.props.style.backgroundSize, 'cover')
-  assert.equal(activeArtwork.props.style.backgroundPosition, 'center')
-  assert.equal(activeArtwork.props.style.maskImage, undefined)
-  assert.equal(activeArtwork.props.style.WebkitMaskImage, undefined)
-  assert.equal(activeReadingLane.props.style.left, '50%')
-  assert.equal(activeReadingLane.props.style.transform, 'translateX(-50%)')
-  assert.equal(activeReadingLane.props.style.width, 'min(100%, 900px)')
-  assert.match(activeReadingLane.props.style.background, /--dsw-alias-bg-base\) 74%, transparent\) 4%/)
-  assert.match(activeReadingLane.props.style.background, /--dsw-alias-bg-base\) 92%, transparent\) 9%/)
-  assert.match(activeReadingLane.props.style.background, /--dsw-alias-bg-base\) 92%, transparent\) 91%/)
-  assert.match(activeReadingLane.props.style.background, /--dsw-alias-bg-base\) 74%, transparent\) 96%/)
-  assert.equal(activeChromeVeil.props.style.height, 120)
-  assert.match(activeChromeVeil.props.style.background, /--dsw-alias-bg-base\) 92%/)
-  assert.equal(activeBackground.some(
-    element => element.props?.['data-kisekae-conversation-sea-fog'] === 'true',
-  ), false)
-  assert.equal(activeBackground.some(element =>
-    element.props?.style?.filter !== undefined
-    || element.props?.style?.backdropFilter !== undefined
-    || element.props?.style?.WebkitBackdropFilter !== undefined), false)
-  const settlingBackground = collectElements(conversationBackdropSlot.component({
-    phase: 'settling',
-    mainBackgroundStore,
-  }))
-  const settlingArtwork = settlingBackground.find(
-    element => element.props?.['data-kisekae-conversation-artwork'] !== undefined,
-  )
-  const settlingReadingLane = settlingBackground.find(
-    element => element.props?.['data-kisekae-conversation-reading-lane'] === 'true',
-  )
-  const settlingChromeVeil = settlingBackground.find(
-    element => element.props?.['data-kisekae-conversation-chrome-veil'] === 'true',
-  )
-  assert.equal(settlingArtwork.props.style.opacity, 0.64)
-  assert.equal(settlingReadingLane.props.style.width, 'min(100%, 900px)')
-  assert.match(settlingReadingLane.props.style.background, /--dsw-alias-bg-base\) 88%/)
-  assert.equal(settlingChromeVeil.props.style.height, 120)
-  assert.match(settlingChromeVeil.props.style.background, /--dsw-alias-bg-base\) 88%/)
-  assert.equal(settlingBackground.some(
-    element => element.props?.['data-kisekae-conversation-sea-fog'] === 'true',
-  ), false)
+  for (const phase of ['hero', 'active', 'settling']) {
+    const background = collectElements(conversationBackdropSlot.component({
+      phase,
+      mainBackgroundStore,
+    }))
+    const root = background.find(
+      element => element.props?.['data-kisekae-conversation-backdrop'] !== undefined,
+    )
+    const artwork = background.find(
+      element => element.props?.['data-kisekae-conversation-artwork'] !== undefined,
+    )
+    assert.equal(root.props['data-kisekae-conversation-backdrop'], phase)
+    assert.equal(root.props['aria-hidden'], 'true')
+    assert.equal(artwork.props.style.opacity, undefined)
+    assert.equal(artwork.props.style.backgroundSize, 'cover')
+    assert.equal(artwork.props.style.backgroundPosition, 'center')
+    assert.equal(artwork.props.style.maskImage, undefined)
+    assert.equal(artwork.props.style.WebkitMaskImage, undefined)
+    assert.equal(
+      artwork.props.style.backgroundImage,
+      `url(${artworkUrl(releaseArtworkIds[0])})`,
+    )
+    assert.equal(background.some(element => element.type === 'style'), false)
+    for (const layer of ['reading-lane', 'chrome-veil', 'sea-fog']) {
+      assert.equal(background.some(
+        element => element.props?.[`data-kisekae-conversation-${layer}`] === 'true',
+      ), false)
+    }
+    assert.equal(background.some(element =>
+      element.props?.style?.filter !== undefined
+      || element.props?.style?.backdropFilter !== undefined
+      || element.props?.style?.WebkitBackdropFilter !== undefined), false)
+  }
 
   mainBackgroundStore.setMode('off')
   assert.equal(mainBackgroundStore.getSnapshot().shownArtworkId, null)
