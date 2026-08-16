@@ -10,7 +10,7 @@ const BACKDROP_STORAGE_KEY = '@yehu77/dsh-kisekae:sidebar-backdrop:v1'
 const DEFAULT_BACKDROP_ARTWORK_ID = '7fd9fafc-aa19-449d-a92d-338a9bce7db5'
 const NEW_SESSION_ARTWORK_ID = '7a9c4fae-6fca-4c5e-b232-5c802f788dae'
 const SETTINGS_TRIGGER_ARTWORK_ID = 'd5dd1b2f-ecdc-4be7-abef-ce9a0cfc6f97'
-const MASCOT_STORAGE_KEY = '@yehu77/dsh-kisekae:mascot:v1'
+const MAIN_BACKGROUND_STORAGE_KEY = '@yehu77/dsh-kisekae:main-background:v1'
 const SKIN_STORAGE_KEY = '@yehu77/dsh-kisekae:skin:v1'
 const RELEASE_ARTWORK_DIRECTORY = new URL('../assets/release/deepseek-blue-whale-chan/', import.meta.url)
 const EXPECTED_THEME_TOKENS = [
@@ -80,6 +80,7 @@ test('declares matching bundle and Client Plugin manifests', async () => {
     '@deepseek-ai/dsh-client-ui-theme',
     '@deepseek-ai/dsh-client-runtime',
     '@deepseek-ai/dsh-client-locale',
+    '@deepseek-ai/dsh-client-ui-conversation',
     '@deepseek-ai/dsh-client-ui-settings',
     '@deepseek-ai/dsh-client-ui-layout',
     '@deepseek-ai/dsh-client-ui-sidebar',
@@ -166,24 +167,25 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
     assert.doesNotMatch(artifact, /LOCAL ART PROTOTYPE/)
   }
   assert.match(source, /settings\.section/)
+  assert.match(source, /conversation\.backdrop/)
   assert.match(source, /settings\.trigger\.decoration/)
   assert.match(source, /sidebar\.backdrop/)
   assert.match(source, /sidebar\.newSession\.decoration/)
   assert.match(source, /sidebar\.newSession\.icon/)
-  assert.match(source, /shell\.overlay/)
+  assert.doesNotMatch(source, /shell\.overlay/)
   assert.doesNotMatch(source, /blur\(1\.5px\)/)
   const storageListeners = new Set()
   const skinStorageWrites = []
-  const mascotStorageWrites = []
+  const mainBackgroundStorageWrites = []
   const backdropStorageWrites = []
   let storedSkin = null
-  let storedMascot = null
+  let storedMainBackground = null
   let storedBackdrop = null
   let rejectStorageWrites = false
   const localStorage = {
     getItem(key) {
       if (key === SKIN_STORAGE_KEY) return storedSkin
-      if (key === MASCOT_STORAGE_KEY) return storedMascot
+      if (key === MAIN_BACKGROUND_STORAGE_KEY) return storedMainBackground
       if (key === BACKDROP_STORAGE_KEY) return storedBackdrop
       assert.fail(`unexpected browser storage key: ${key}`)
     },
@@ -194,9 +196,9 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
         skinStorageWrites.push({ key, value })
         return
       }
-      if (key === MASCOT_STORAGE_KEY) {
-        storedMascot = value
-        mascotStorageWrites.push({ key, value })
+      if (key === MAIN_BACKGROUND_STORAGE_KEY) {
+        storedMainBackground = value
+        mainBackgroundStorageWrites.push({ key, value })
         return
       }
       if (key === BACKDROP_STORAGE_KEY) {
@@ -332,16 +334,16 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
     'dsh-kisekae: skin visual contributions',
   ])
   assert.deepEqual([...slotRegistrations.keys()].sort(), [
+    'conversation.backdrop',
     'settings.section',
     'settings.trigger.decoration',
-    'shell.overlay',
     'sidebar.backdrop',
     'sidebar.newSession.decoration',
     'sidebar.newSession.icon',
   ])
+  const conversationBackdropSlot = slotRegistrations.get('conversation.backdrop')
   const settingsSlot = slotRegistrations.get('settings.section')
   const settingsTriggerDecorationSlot = slotRegistrations.get('settings.trigger.decoration')
-  const overlaySlot = slotRegistrations.get('shell.overlay')
   const backdropSlot = slotRegistrations.get('sidebar.backdrop')
   const newSessionDecorationSlot = slotRegistrations.get('sidebar.newSession.decoration')
   const newSessionIconSlot = slotRegistrations.get('sidebar.newSession.icon')
@@ -354,9 +356,8 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(typeof slotComponent, 'function')
   assert.deepEqual(Object.keys(settingsTriggerDecorationSlot.options), ['name'])
   assert.equal(typeof settingsTriggerDecorationSlot.component, 'function')
-  assert.equal(overlaySlot.options.id, 'dsh-kisekae.blue-whale')
-  assert.equal(overlaySlot.options.order, 100)
-  assert.equal(typeof overlaySlot.component, 'function')
+  assert.deepEqual(Object.keys(conversationBackdropSlot.options).sort(), ['inject', 'name'])
+  assert.equal(typeof conversationBackdropSlot.component, 'function')
   assert.deepEqual(Object.keys(backdropSlot.options).sort(), ['inject', 'name'])
   assert.equal(typeof backdropSlot.component, 'function')
   assert.deepEqual(Object.keys(newSessionDecorationSlot.options), ['name'])
@@ -397,11 +398,11 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
     }
   }
 
-  const { controller, mascotStore, backdropStore } = slotOptions.inject()
-  assert.equal(overlaySlot.options.inject().mascotStore, mascotStore)
+  const { controller, mainBackgroundStore, backdropStore } = slotOptions.inject()
+  assert.equal(conversationBackdropSlot.options.inject().mainBackgroundStore, mainBackgroundStore)
   assert.equal(backdropSlot.options.inject().backdropStore, backdropStore)
   const t = key => registeredDictionaries.zh[key]
-  const tree = slotComponent({ controller, mascotStore, backdropStore, t })
+  const tree = slotComponent({ controller, mainBackgroundStore, backdropStore, t })
   const elements = collectElements(tree)
   const section = elements.find(element => element.props?.['data-kisekae-skin-section'] === 'true')
   const cards = elements.filter(element => element.props?.['data-kisekae-skin'] !== undefined)
@@ -416,10 +417,17 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   const gallery = elements.find(element => element.props?.['data-kisekae-gallery'] === 'true')
   const galleryCards = elements.filter(element => element.props?.['data-kisekae-artwork'] !== undefined)
   const galleryIds = galleryCards.map(card => card.props['data-kisekae-artwork']).sort()
+  const mainBackgroundModeButtons = elements.filter(
+    element => element.props?.['data-kisekae-main-background-mode'] !== undefined,
+  )
   assert.ok(gallery)
   assert.equal(releaseArtworkIds.length, 42)
   assert.equal(galleryCards.length, 42)
   assert.deepEqual(galleryIds, releaseArtworkIds)
+  assert.deepEqual(
+    mainBackgroundModeButtons.map(button => button.props['data-kisekae-main-background-mode']),
+    ['random', 'fixed', 'off'],
+  )
 
   const backdropSettings = elements.find(element => element.props?.['data-kisekae-sidebar-settings'] === 'true')
   const backdropModeButtons = elements.filter(element => element.props?.['data-kisekae-backdrop-mode'] !== undefined)
@@ -559,28 +567,66 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
     value: JSON.stringify({ mode: 'off', artworkId: fixedBackdropId }),
   })
 
-  assert.equal(mascotStore.getSnapshot().mode, 'random')
-  assert.equal(mascotStore.getSnapshot().shownArtworkId, releaseArtworkIds[0])
-  mascotStore.setMode('off')
-  assert.equal(mascotStore.getSnapshot().shownArtworkId, null)
-  assert.equal(overlaySlot.component({ mascotStore }), null)
+  assert.equal(mainBackgroundStore.getSnapshot().mode, 'random')
+  assert.equal(mainBackgroundStore.getSnapshot().shownArtworkId, releaseArtworkIds[0])
+  const heroBackground = collectElements(conversationBackdropSlot.component({
+    phase: 'hero',
+    mainBackgroundStore,
+  }))
+  const heroBackgroundRoot = heroBackground.find(
+    element => element.props?.['data-kisekae-conversation-backdrop'] !== undefined,
+  )
+  const heroArtwork = heroBackground.find(
+    element => element.props?.['data-kisekae-conversation-artwork'] !== undefined,
+  )
+  assert.equal(heroBackgroundRoot.props['data-kisekae-conversation-backdrop'], 'hero')
+  assert.equal(heroBackgroundRoot.props['aria-hidden'], 'true')
+  assert.equal(heroArtwork.props.style.opacity, 0.66)
+  assert.equal(heroArtwork.props.style.backgroundSize, 'auto min(92%, 760px)')
+  assert.equal(
+    heroArtwork.props.style.backgroundImage,
+    `url(${artworkUrl(releaseArtworkIds[0])})`,
+  )
+  assert.ok(heroBackground.some(
+    element => element.props?.['data-kisekae-conversation-reading-lane'] === 'true',
+  ))
+  assert.ok(heroBackground.some(
+    element => element.props?.['data-kisekae-conversation-sea-fog'] === 'true',
+  ))
+  const phaseTransition = heroBackground.find(element => element.type === 'style').props.children
+  assert.match(phaseTransition, /opacity 180ms ease/)
+  assert.match(phaseTransition, /prefers-reduced-motion/)
+  assert.equal(heroBackground.some(element =>
+    element.props?.style?.filter !== undefined
+    || element.props?.style?.backdropFilter !== undefined
+    || element.props?.style?.WebkitBackdropFilter !== undefined), false)
+
+  const activeArtwork = collectElements(conversationBackdropSlot.component({
+    phase: 'active',
+    mainBackgroundStore,
+  })).find(element => element.props?.['data-kisekae-conversation-artwork'] !== undefined)
+  assert.equal(activeArtwork.props.style.opacity, 0.14)
+  const settlingArtwork = collectElements(conversationBackdropSlot.component({
+    phase: 'settling',
+    mainBackgroundStore,
+  })).find(element => element.props?.['data-kisekae-conversation-artwork'] !== undefined)
+  assert.equal(settlingArtwork.props.style.opacity, 0.28)
+
+  mainBackgroundStore.setMode('off')
+  assert.equal(mainBackgroundStore.getSnapshot().shownArtworkId, null)
+  assert.equal(conversationBackdropSlot.component({ phase: 'active', mainBackgroundStore }), null)
 
   const fixedArtworkId = releaseArtworkIds.at(-1)
-  mascotStore.fix(fixedArtworkId)
-  assert.equal(mascotStore.getSnapshot().mode, 'fixed')
-  assert.equal(mascotStore.getSnapshot().fixedArtworkId, fixedArtworkId)
-  assert.equal(mascotStore.getSnapshot().shownArtworkId, fixedArtworkId)
-  const overlayElements = collectElements(overlaySlot.component({ mascotStore }))
-  const overlayRoot = overlayElements.find(element => element.props?.['data-kisekae-mascot'] !== undefined)
-  const overlayImage = overlayElements.find(element => element.type === 'img')
-  assert.equal(overlayRoot.props['data-kisekae-mascot'], fixedArtworkId)
-  assert.equal(overlayImage.props.src, artworkUrl(fixedArtworkId))
-  assert.equal(mascotStorageWrites.length, 2)
-  assert.deepEqual(mascotStorageWrites.at(-1), {
-    key: MASCOT_STORAGE_KEY,
+  mainBackgroundStore.fix(fixedArtworkId)
+  assert.equal(mainBackgroundStore.getSnapshot().mode, 'fixed')
+  assert.equal(mainBackgroundStore.getSnapshot().fixedArtworkId, fixedArtworkId)
+  assert.equal(mainBackgroundStore.getSnapshot().shownArtworkId, fixedArtworkId)
+  assert.equal(mainBackgroundStorageWrites.length, 2)
+  assert.deepEqual(mainBackgroundStorageWrites.at(-1), {
+    key: MAIN_BACKGROUND_STORAGE_KEY,
     value: JSON.stringify({ mode: 'fixed', fixedArtworkId }),
   })
-  assert.equal(storedMascot, mascotStorageWrites.at(-1).value)
+  assert.equal(storedMainBackground, mainBackgroundStorageWrites.at(-1).value)
   assert.equal(componentCleanups.length, 1)
 
   controller.preview('official')
@@ -596,9 +642,9 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(controller.getSnapshot().dirty, false)
   assert.equal(overrideHistory.length, 2)
   assert.deepEqual([...slotRegistrations.keys()].sort(), [
+    'conversation.backdrop',
     'settings.section',
     'settings.trigger.decoration',
-    'shell.overlay',
     'sidebar.backdrop',
     'sidebar.newSession.decoration',
     'sidebar.newSession.icon',
@@ -665,7 +711,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(controller.getSnapshot().error, 'save-failed')
   assert.equal(controller.getSnapshot().committed, 'official')
   assert.equal(controller.getSnapshot().draft, 'deepseek-blue-whale-chan')
-  assert.equal(slotRegistrations.has('shell.overlay'), true)
+  assert.equal(slotRegistrations.has('conversation.backdrop'), true)
   controller.cancelPreview()
   assert.equal(controller.getSnapshot().draft, 'official')
   assert.equal(controller.getSnapshot().error, null)
@@ -686,9 +732,9 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.deepEqual(
     [...slotInjectionDisposers.keys()].sort(),
     [
+      'conversation.backdrop',
       'settings.section',
       'settings.trigger.decoration',
-      'shell.overlay',
       'sidebar.backdrop',
       'sidebar.newSession.decoration',
       'sidebar.newSession.icon',
@@ -699,8 +745,8 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(localeDisposeCalls, 1)
   assert.equal(slotDisposeCalls.get('settings.section'), 1)
   for (const name of [
+    'conversation.backdrop',
     'settings.trigger.decoration',
-    'shell.overlay',
     'sidebar.backdrop',
     'sidebar.newSession.decoration',
     'sidebar.newSession.icon',

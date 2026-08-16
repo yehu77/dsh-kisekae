@@ -5,7 +5,7 @@ export const KISEKAE_ARTWORK_ROUTE = '/plugins/@yehu77/dsh-kisekae/assets'
 
 const KISEKAE_ARTWORK_RELEASE = 'source-q80-v1'
 
-/** Stable ids shared by the gallery, mascot controls, and asset route. */
+/** Stable ids shared by the gallery, main-background controls, and asset route. */
 export const KISEKAE_ARTWORK_IDS = [
   '1eaed38d-0bc6-46bb-a87f-a8e604392773',
   '2680c583-7b93-43ec-96a1-fd8fd641654b',
@@ -60,27 +60,16 @@ export interface KisekaeArtwork {
   readonly id: string
   /** Released JPEG filename. */
   readonly file: string
-  /** Whether the artwork is suitable for the corner mascot. */
-  readonly mascot: boolean
 }
-
-const NON_MASCOT_IDS = new Set<ArtworkId>([
-  '7a9c4fae-6fca-4c5e-b232-5c802f788dae',
-  'bda63704-128f-4690-8077-96e9feb048ec',
-])
 
 /** All artwork shown by the gallery, sorted by id. */
 export const KISEKAE_ARTWORKS: readonly KisekaeArtwork[] = KISEKAE_ARTWORK_IDS.map(id => ({
   id,
   file: `${id}.jpg`,
-  mascot: !NON_MASCOT_IDS.has(id),
 }))
 
-/** Artwork available to random corner-mascot mode. */
-export const KISEKAE_MASCOT_ARTWORKS = KISEKAE_ARTWORKS.filter(artwork => artwork.mascot)
-
-/** Initial artwork used by fixed mascot mode. */
-export const DEFAULT_MASCOT_ARTWORK_ID: ArtworkId = 'd5dd1b2f-ecdc-4be7-abef-ce9a0cfc6f97'
+/** Initial artwork used by fixed main-background mode. */
+export const DEFAULT_MAIN_BACKGROUND_ARTWORK_ID: ArtworkId = 'd5dd1b2f-ecdc-4be7-abef-ce9a0cfc6f97'
 
 /**
  * Build the public URL for released artwork.

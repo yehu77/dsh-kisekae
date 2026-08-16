@@ -16,10 +16,10 @@ DSH Kisekae is an out-of-tree DeepSeek Harness Web Client Plugin. Keep the offic
 - `package.json` declares both `dsh.bundle` and `dsh.client`; `cordis.patch.yml` mounts the package's Host entry.
 - The browser artifact is a Harness loader factory registered through `window.__ModuleLoader__.load(...)`, not an ordinary browser ESM bundle.
 - Client collaboration with Harness plugins goes through injected `ctx` services. Imports from other Client Plugins are type-only; do not inline or duplicate their runtime values.
-- The release entry may use React for settings UI and the official `shell.overlay` slot. Keep the self-contained tsdown config's Harness platform externals, dependency-inlining rule, bundle-purity gate, and environment substitutions aligned with the pinned Harness revision. Before adding CSS Modules, port the official effect-owned style injection and cover cleanup in bundle tests.
+- The release entry may use React for settings UI and public decorative slots such as `conversation.backdrop`. Keep the self-contained tsdown config's Harness platform externals, dependency-inlining rule, bundle-purity gate, and environment substitutions aligned with the pinned Harness revision. Before adding CSS Modules, port the official effect-owned style injection and cover cleanup in bundle tests.
 - Start with semantic `--dsw-*` token overrides. Add CSS Modules only when tokens cannot express component-local layout, and keep literal colors out of feature CSS.
 - Persist the applied skin under the versioned, origin-scoped browser key owned by Kisekae and synchronize same-origin tabs. Do not patch Harness's settings-namespace allowlist for project-specific persistence.
-- Settings, overlay decoration, and onboarding remain independent contributions so users can disable them separately.
+- Settings, optional surface decoration, and onboarding remain independent contributions so users can disable them separately.
 
 ## Assets
 

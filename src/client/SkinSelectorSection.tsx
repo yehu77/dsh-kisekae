@@ -5,7 +5,7 @@ import type { CSSProperties, ReactElement } from 'react'
 import { KISEKAE_ARTWORKS, artworkUrl } from '../artworks'
 import type { KisekaeSkinId } from '../settings-contract'
 import type { KisekaeLocaleKey } from './locales'
-import type { MascotMode, MascotStore } from './mascot-store'
+import type { MainBackgroundMode, MainBackgroundStore } from './main-background-store'
 import { SidebarBackdrop } from './SidebarBackdrop'
 import type { SidebarBackdropMode, SidebarBackdropStore } from './sidebar-backdrop-store'
 import type { SkinSelectionController, SkinSelectionSnapshot } from './skin-controller'
@@ -359,10 +359,13 @@ const CARDS: readonly SkinCardDefinition[] = [
   },
 ]
 
-const MASCOT_MODES: readonly { readonly id: MascotMode; readonly label: KisekaeLocaleKey }[] = [
-  { id: 'random', label: 'mascotRandom' },
-  { id: 'fixed', label: 'mascotFixed' },
-  { id: 'off', label: 'mascotOff' },
+const MAIN_BACKGROUND_MODES: readonly {
+  readonly id: MainBackgroundMode
+  readonly label: KisekaeLocaleKey
+}[] = [
+  { id: 'random', label: 'mainBackgroundRandom' },
+  { id: 'fixed', label: 'mainBackgroundFixed' },
+  { id: 'off', label: 'mainBackgroundOff' },
 ]
 
 const BACKDROP_MODES: readonly { readonly id: SidebarBackdropMode; readonly label: KisekaeLocaleKey }[] = [
@@ -374,7 +377,7 @@ const BACKDROP_MODES: readonly { readonly id: SidebarBackdropMode; readonly labe
 /** Props composed by the settings section slot. */
 export interface SkinSelectorSectionProps {
   readonly controller: SkinSelectionController
-  readonly mascotStore: MascotStore
+  readonly mainBackgroundStore: MainBackgroundStore
   readonly backdropStore: SidebarBackdropStore
   readonly t: (key: KisekaeLocaleKey) => string
 }
@@ -396,16 +399,20 @@ function statusKey(snapshot: SkinSelectionSnapshot): KisekaeLocaleKey {
  */
 export function SkinSelectorSection({
   controller,
-  mascotStore,
+  mainBackgroundStore,
   backdropStore,
   t,
 }: SkinSelectorSectionProps): ReactElement {
   const snapshot = useSyncExternalStore(controller.subscribe, controller.getSnapshot, controller.getSnapshot)
-  const mascot = useSyncExternalStore(mascotStore.subscribe, mascotStore.getSnapshot, mascotStore.getSnapshot)
+  const mainBackground = useSyncExternalStore(
+    mainBackgroundStore.subscribe,
+    mainBackgroundStore.getSnapshot,
+    mainBackgroundStore.getSnapshot,
+  )
   const backdrop = useSyncExternalStore(backdropStore.subscribe, backdropStore.getSnapshot, backdropStore.getSnapshot)
   const headingId = useId()
   const backdropHeadingId = useId()
-  const mascotHeadingId = useId()
+  const mainBackgroundHeadingId = useId()
   const galleryHeadingId = useId()
 
   useEffect(() => () => { controller.cancelPreview() }, [controller])
@@ -562,29 +569,29 @@ export function SkinSelectorSection({
         </div>
       </section>
 
-      <section aria-labelledby={mascotHeadingId} style={SUBSECTION_STYLE}>
+      <section aria-labelledby={mainBackgroundHeadingId} style={SUBSECTION_STYLE}>
         <div style={HEADER_STYLE}>
-          <h3 id={mascotHeadingId} style={SUBTITLE_STYLE}>{t('mascotTitle')}</h3>
+          <h3 id={mainBackgroundHeadingId} style={SUBTITLE_STYLE}>{t('mainBackgroundTitle')}</h3>
           <p data-kisekae-subsection-description="true" style={DESCRIPTION_STYLE}>
-            {t('mascotDescription')}
+            {t('mainBackgroundDescription')}
           </p>
         </div>
         <div
           role="group"
-          aria-labelledby={mascotHeadingId}
+          aria-labelledby={mainBackgroundHeadingId}
           data-kisekae-mode-group="true"
           style={MODE_GROUP_STYLE}
         >
-          {MASCOT_MODES.map(mode => {
-            const selected = mascot.mode === mode.id
+          {MAIN_BACKGROUND_MODES.map(mode => {
+            const selected = mainBackground.mode === mode.id
             return (
               <button
                 key={mode.id}
                 type="button"
                 aria-pressed={selected}
-                data-kisekae-mascot-mode={mode.id}
+                data-kisekae-main-background-mode={mode.id}
                 style={{ ...BUTTON_BASE_STYLE, ...(selected ? MODE_SELECTED_STYLE : {}) }}
-                onClick={() => { mascotStore.setMode(mode.id) }}
+                onClick={() => { mainBackgroundStore.setMode(mode.id) }}
               >
                 {t(mode.label)}
               </button>
@@ -602,8 +609,8 @@ export function SkinSelectorSection({
         </div>
         <div data-kisekae-gallery="true" style={GALLERY_GRID_STYLE}>
           {KISEKAE_ARTWORKS.map((artwork, index) => {
-            const fixed = mascot.mode === 'fixed' && mascot.fixedArtworkId === artwork.id
-            const shown = mascot.mode === 'random' && mascot.shownArtworkId === artwork.id
+            const fixed = mainBackground.mode === 'fixed' && mainBackground.fixedArtworkId === artwork.id
+            const shown = mainBackground.mode === 'random' && mainBackground.shownArtworkId === artwork.id
             return (
               <button
                 key={artwork.id}
@@ -612,7 +619,7 @@ export function SkinSelectorSection({
                 aria-pressed={fixed}
                 data-kisekae-artwork={artwork.id}
                 style={{ ...ARTWORK_BUTTON_STYLE, ...(fixed ? CARD_SELECTED_STYLE : {}) }}
-                onClick={() => { mascotStore.fix(artwork.id) }}
+                onClick={() => { mainBackgroundStore.fix(artwork.id) }}
               >
                 <img
                   alt=""

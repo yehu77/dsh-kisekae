@@ -1,27 +1,27 @@
-/** Browser-local preference store for the corner mascot. */
+/** Browser-local preference store for the main conversation background. */
 
 import {
-  DEFAULT_MASCOT_ARTWORK_ID,
+  DEFAULT_MAIN_BACKGROUND_ARTWORK_ID,
   KISEKAE_ARTWORK_IDS,
-  KISEKAE_MASCOT_ARTWORKS,
+  KISEKAE_ARTWORKS,
   type ArtworkId,
 } from '../artworks'
 
-/** Versioned browser preference key for mascot controls. */
-export const KISEKAE_MASCOT_STORAGE_KEY = '@yehu77/dsh-kisekae:mascot:v1'
+/** Versioned browser preference key for main-background controls. */
+export const KISEKAE_MAIN_BACKGROUND_STORAGE_KEY = '@yehu77/dsh-kisekae:main-background:v1'
 
-/** Available mascot display modes. */
-export type MascotMode = 'fixed' | 'random' | 'off'
+/** Available main-background display modes. */
+export type MainBackgroundMode = 'fixed' | 'random' | 'off'
 
-/** Current mascot controls and resolved artwork. */
-export interface MascotSnapshot {
-  readonly mode: MascotMode
+/** Current main-background controls and resolved artwork. */
+export interface MainBackgroundSnapshot {
+  readonly mode: MainBackgroundMode
   readonly fixedArtworkId: ArtworkId
   readonly shownArtworkId: ArtworkId | null
 }
 
-interface StoredMascotPreference {
-  mode: MascotMode
+interface StoredMainBackgroundPreference {
+  mode: MainBackgroundMode
   fixedArtworkId: ArtworkId
 }
 
@@ -32,11 +32,11 @@ interface StorageLike {
 
 const ARTWORK_IDS = new Set<string>(KISEKAE_ARTWORK_IDS)
 
-/** Small localStorage-backed store used by the settings page and mascot overlay. */
-export class MascotStore {
+/** Small localStorage-backed store shared by settings and the conversation backdrop. */
+export class MainBackgroundStore {
   private readonly listeners = new Set<() => void>()
   private readonly storage: StorageLike | undefined
-  private snapshot: MascotSnapshot
+  private snapshot: MainBackgroundSnapshot
 
   /**
    * @param storage - Browser storage; omitted callers use the current window.
@@ -56,11 +56,11 @@ export class MascotStore {
     this.snapshot = this.resolve(preference.mode, preference.fixedArtworkId)
   }
 
-  /** @returns the current mascot snapshot. */
-  readonly getSnapshot = (): MascotSnapshot => this.snapshot
+  /** @returns the current main-background snapshot. */
+  readonly getSnapshot = (): MainBackgroundSnapshot => this.snapshot
 
   /**
-   * Observe mascot preference changes.
+   * Observe main-background preference changes.
    * @param listener - Subscriber notified after a local change.
    * @returns disposer removing the subscriber.
    */
@@ -70,10 +70,10 @@ export class MascotStore {
   }
 
   /**
-   * Change how the corner mascot is selected.
+   * Change how the main background is selected.
    * @param mode - Fixed, random, or hidden mode.
    */
-  setMode(mode: MascotMode): void {
+  setMode(mode: MainBackgroundMode): void {
     this.replace(this.resolve(mode, this.snapshot.fixedArtworkId))
   }
 
@@ -86,46 +86,46 @@ export class MascotStore {
     this.replace(this.resolve('fixed', artworkId as ArtworkId))
   }
 
-  private read(): StoredMascotPreference {
-    const fallback: StoredMascotPreference = {
+  private read(): StoredMainBackgroundPreference {
+    const fallback: StoredMainBackgroundPreference = {
       mode: 'random',
-      fixedArtworkId: DEFAULT_MASCOT_ARTWORK_ID,
+      fixedArtworkId: DEFAULT_MAIN_BACKGROUND_ARTWORK_ID,
     }
     if (this.storage === undefined) return fallback
 
     try {
-      const raw = this.storage.getItem(KISEKAE_MASCOT_STORAGE_KEY)
+      const raw = this.storage.getItem(KISEKAE_MAIN_BACKGROUND_STORAGE_KEY)
       if (raw === null) return fallback
-      const value = JSON.parse(raw) as Partial<StoredMascotPreference>
+      const value = JSON.parse(raw) as Partial<StoredMainBackgroundPreference>
       if (!this.isMode(value.mode) || !ARTWORK_IDS.has(value.fixedArtworkId ?? '')) return fallback
-      return value as StoredMascotPreference
+      return value as StoredMainBackgroundPreference
     } catch (_storedPreferenceUnavailable) {
       return fallback
     }
   }
 
-  private resolve(mode: MascotMode, fixedArtworkId: ArtworkId): MascotSnapshot {
+  private resolve(mode: MainBackgroundMode, fixedArtworkId: ArtworkId): MainBackgroundSnapshot {
     if (mode === 'off') return { mode, fixedArtworkId, shownArtworkId: null }
     if (mode === 'fixed') return { mode, fixedArtworkId, shownArtworkId: fixedArtworkId }
 
-    const index = Math.floor(Math.random() * KISEKAE_MASCOT_ARTWORKS.length)
-    return { mode, fixedArtworkId, shownArtworkId: KISEKAE_MASCOT_ARTWORKS[index]!.id as ArtworkId }
+    const index = Math.floor(Math.random() * KISEKAE_ARTWORKS.length)
+    return { mode, fixedArtworkId, shownArtworkId: KISEKAE_ARTWORKS[index]!.id as ArtworkId }
   }
 
-  private replace(snapshot: MascotSnapshot): void {
+  private replace(snapshot: MainBackgroundSnapshot): void {
     this.snapshot = snapshot
     try {
-      this.storage?.setItem(KISEKAE_MASCOT_STORAGE_KEY, JSON.stringify({
+      this.storage?.setItem(KISEKAE_MAIN_BACKGROUND_STORAGE_KEY, JSON.stringify({
         mode: snapshot.mode,
         fixedArtworkId: snapshot.fixedArtworkId,
-      } satisfies StoredMascotPreference))
+      } satisfies StoredMainBackgroundPreference))
     } catch (_browserStorageUnavailable) {
       // The current in-memory choice remains active.
     }
     for (const listener of [...this.listeners]) listener()
   }
 
-  private isMode(value: unknown): value is MascotMode {
+  private isMode(value: unknown): value is MainBackgroundMode {
     return value === 'fixed' || value === 'random' || value === 'off'
   }
 }

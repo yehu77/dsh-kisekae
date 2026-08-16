@@ -6,19 +6,19 @@ Anime-inspired Web themes and delightful UI extensions for DeepSeek Harness.
 
 ## Status
 
-The first working skin is “DeepSeek Blue Whale-chan,” an unofficial community theme built around cool ocean daylight and a deep-sea night palette. Installing the package immediately overlays 16 semantic color tokens while preserving the official Harness Light, Dark, and System preferences. The settings page also includes a 42-image gallery, a framed lower-right decoration, the “Blue Whale glass sidebar · Rain veil,” and themed New Session and Settings triggers.
+The first working skin is “DeepSeek Blue Whale-chan,” an unofficial community theme built around cool ocean daylight and a deep-sea night palette. Installing the package immediately overlays 16 semantic color tokens while preserving the official Harness Light, Dark, and System preferences. The settings page also includes a 42-image gallery, a phase-aware main conversation background, the “Blue Whale glass sidebar · Rain veil,” and themed New Session and Settings triggers.
 
 Settings now includes an **Appearance & Skins** section with **Official appearance** and **DeepSeek Blue Whale-chan** cards. Choosing a card previews it immediately without saving; **Cancel** restores the last applied choice, and **Apply** saves it under the versioned browser-storage key `@yehu77/dsh-kisekae:skin:v1` for the current Harness origin. Tabs on the same origin synchronize automatically, while different browsers and origins keep independent choices. This implementation does not modify Harness's settings-namespace allowlist.
 
-Artwork controls save immediately under `@yehu77/dsh-kisekae:mascot:v1`. Random chooses one suitable illustration per page load, Fixed uses the image selected in the gallery, and Off removes the decoration. The framed corner artwork appears only while Blue Whale-chan is the visible skin; its preference remains available when Official appearance is previewed. The 104 MiB source library remains untouched; the plugin ships about 22 MiB of source-resolution JPEG copies and lazy-loads gallery images.
+Main-background controls save immediately under `@yehu77/dsh-kisekae:main-background:v1`. Random chooses one illustration per page load, Fixed uses the image selected in the gallery, and Off removes the background. Hero places clear edge artwork at the right and lower edge under semantic sea fog near the composer; Active lowers it to 14% behind a protected central reading lane; Settling provides a quiet intermediate state. The background appears only while Blue Whale-chan is visible, while its preference remains available during Official appearance preview. The 104 MiB source library remains untouched; the plugin ships about 22 MiB of source-resolution JPEG copies and lazy-loads gallery images.
 
 The sidebar backdrop saves immediately under `@yehu77/dsh-kisekae:sidebar-backdrop:v1`. Clear and Immersive use one fixed gallery image—the rainy `7fd9fafc…` scene by default—with an upward fade and a semantic-color glass scrim; Off removes it. The 56 px rail renders only a quiet gradient. Settings uses the same component for its live sidebar preview, and the theme supplies translucent semantic hover and active colors instead of styling session rows directly. The New Session button keeps the official element, label, action, focus behavior, and tooltip: Blue Whale-chan adds low-opacity right-side artwork under semantic glass in wide mode, compact glass in the rail, and a responsive `currentColor` wave-chat glyph.
 
 The Settings trigger likewise retains the official button, gear, label, and dialog behavior. Wide mode shows the nautical-room `d5dd1b2f…` artwork quietly at the right under a semantic readability scrim; the rail uses image-free glass and two subtle ripples.
 
-The sidebar backdrop, New Session decoration, wave-chat glyph, Settings trigger decoration, and framed corner artwork are one reversible visual group driven by the current settings draft. Previewing Official appearance removes all five immediately; Cancel restores them when Blue Whale-chan is the saved skin. Their artwork preferences remain intact while hidden.
+The main conversation background, sidebar backdrop, New Session decoration, wave-chat glyph, and Settings trigger decoration are one reversible visual group driven by the current settings draft. Previewing Official appearance removes all five immediately; Cancel restores them when Blue Whale-chan is the saved skin. Their artwork preferences remain intact while hidden.
 
-The project is developed against DeepSeek Harness commit `73389381946c78b5db758239c986005faa0fdccf` (`0.1.0-rc.5`), which exposes `settings.trigger.decoration` alongside the public `sidebar.backdrop`, `sidebar.newSession.decoration`, and `sidebar.newSession.icon` slots. DeepSeek Harness is still in developer preview, so compatibility is pinned and reviewed explicitly rather than assumed.
+The project is developed against DeepSeek Harness commit `074f8b43993d44936bd383e8f08ace303343ab8b` (`0.1.0-rc.5`), which exposes `conversation.backdrop`, `settings.trigger.decoration`, `sidebar.backdrop`, `sidebar.newSession.decoration`, and `sidebar.newSession.icon`. DeepSeek Harness is still in developer preview, so compatibility is pinned and reviewed explicitly rather than assumed.
 
 See the [roadmap](ROADMAP.md) for product scope, delivery stages, decision gates, and release criteria.
 
@@ -83,8 +83,8 @@ src/client/index.ts   Release browser entry and settings contribution
 src/client/browser-skin-store.ts  Per-origin persistence and cross-tab synchronization
 src/client/SkinSelectorSection.tsx  Responsive two-card selector
 src/client/skin-controller.ts  Preview, cancel, persistence, and token lifecycle
-src/client/mascot-store.ts  Fixed, random, and off artwork preference
-src/client/KisekaeMascotOverlay.tsx  Framed lower-right artwork
+src/client/main-background-store.ts  Fixed, random, and off main-background preference
+src/client/BlueWhaleConversationBackdrop.tsx  Phase-aware conversation edge artwork
 src/client/sidebar-backdrop-store.ts  Clear, immersive, off, and fixed-background preference
 src/client/SidebarBackdrop.tsx  Rain artwork for the official sidebar backdrop slot
 src/client/BlueWhaleNewSessionDecoration.tsx  Glass-and-art layer behind New Session content

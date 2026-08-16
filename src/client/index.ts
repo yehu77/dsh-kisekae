@@ -1,16 +1,16 @@
 /** Browser half: durable skin selection over the official color mode. */
 
 import { BrowserSkinStore } from './browser-skin-store'
+import { BlueWhaleConversationBackdrop } from './BlueWhaleConversationBackdrop'
+import type { BlueWhaleConversationBackdropProps } from './BlueWhaleConversationBackdrop'
 import { BlueWhaleNewSessionDecoration } from './BlueWhaleNewSessionDecoration'
 import type { BlueWhaleNewSessionDecorationProps } from './BlueWhaleNewSessionDecoration'
 import { BlueWhaleNewSessionIcon } from './BlueWhaleNewSessionIcon'
 import type { BlueWhaleNewSessionIconProps } from './BlueWhaleNewSessionIcon'
 import { BlueWhaleSettingsTriggerDecoration } from './BlueWhaleSettingsTriggerDecoration'
 import type { BlueWhaleSettingsTriggerDecorationProps } from './BlueWhaleSettingsTriggerDecoration'
-import { KisekaeMascotOverlay } from './KisekaeMascotOverlay'
-import type { KisekaeMascotOverlayProps } from './KisekaeMascotOverlay'
 import { KISEKAE_LOCALE_NAMESPACE, en, zh } from './locales'
-import { MascotStore } from './mascot-store'
+import { MainBackgroundStore } from './main-background-store'
 import { SidebarBackdrop } from './SidebarBackdrop'
 import type { SidebarBackdropProps } from './SidebarBackdrop'
 import { SidebarBackdropStore } from './sidebar-backdrop-store'
@@ -35,7 +35,7 @@ interface LocaleService {
 }
 
 interface OrderedSlotOptions {
-  readonly name: 'settings.section' | 'shell.overlay'
+  readonly name: 'settings.section'
   readonly id: string
   readonly order: number
   readonly label?: () => string
@@ -45,6 +45,7 @@ interface OrderedSlotOptions {
 
 interface SkinVisualSlotOptions {
   readonly name:
+    | 'conversation.backdrop'
     | 'settings.trigger.decoration'
     | 'sidebar.backdrop'
     | 'sidebar.newSession.decoration'
@@ -77,7 +78,7 @@ export const inject = ['theme', 'slots', 'locale']
 export function apply(ctx: KisekaeClientContext): void {
   const store = new BrowserSkinStore(window)
   const controller = new SkinSelectionController(ctx.theme, store)
-  const mascotStore = new MascotStore()
+  const mainBackgroundStore = new MainBackgroundStore()
   const backdropStore = new SidebarBackdropStore()
   ctx.effect(() => {
     const disposeStore = store.mount()
@@ -98,10 +99,14 @@ export function apply(ctx: KisekaeClientContext): void {
     order: 15,
     label: () => t('nav'),
     locale: KISEKAE_LOCALE_NAMESPACE,
-    inject: () => ({ controller, mascotStore, backdropStore }),
+    inject: () => ({ controller, mainBackgroundStore, backdropStore }),
   }, SkinSelectorSection))
   ctx.effect(() => mountSkinVisuals(controller, () => {
     const disposers = [
+      ctx.slots.inject('conversation.backdrop', () => ctx.slots.register<BlueWhaleConversationBackdropProps>({
+        name: 'conversation.backdrop',
+        inject: () => ({ mainBackgroundStore }),
+      }, BlueWhaleConversationBackdrop)),
       ctx.slots.inject('sidebar.backdrop', () => ctx.slots.register<SidebarBackdropProps>({
         name: 'sidebar.backdrop',
         inject: () => ({ backdropStore }),
@@ -115,12 +120,6 @@ export function apply(ctx: KisekaeClientContext): void {
       ctx.slots.inject('settings.trigger.decoration', () => ctx.slots.register<BlueWhaleSettingsTriggerDecorationProps>({
         name: 'settings.trigger.decoration',
       }, BlueWhaleSettingsTriggerDecoration)),
-      ctx.slots.inject('shell.overlay', () => ctx.slots.register<KisekaeMascotOverlayProps>({
-        name: 'shell.overlay',
-        id: 'dsh-kisekae.blue-whale',
-        order: 100,
-        inject: () => ({ mascotStore }),
-      }, KisekaeMascotOverlay)),
     ]
     return () => {
       for (const dispose of disposers.toReversed()) dispose()

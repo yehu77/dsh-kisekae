@@ -6,19 +6,19 @@
 
 ## 当前状态
 
-首个可用皮肤是“DeepSeek蓝鲸娘”：一套以清冷海面和深海夜色为方向的非官方社区主题。安装后会立即叠加 16 个语义颜色令牌，同时保留 Harness 官方的浅色、深色和跟随系统偏好。设置页还包含 42 张图片的图鉴、右下角画框装饰、“蓝鲸玻璃侧栏·雨幕”，以及主题化“新会话”和“设置”入口。
+首个可用皮肤是“DeepSeek蓝鲸娘”：一套以清冷海面和深海夜色为方向的非官方社区主题。安装后会立即叠加 16 个语义颜色令牌，同时保留 Harness 官方的浅色、深色和跟随系统偏好。设置页还包含 42 张图片的图鉴、随会话阶段变化的主对话背景、“蓝鲸玻璃侧栏·雨幕”，以及主题化“新会话”和“设置”入口。
 
 设置中现在会显示独立的**外观与皮肤**页面，其中有**官方外观**和 **DeepSeek蓝鲸娘**两张卡片。点击卡片会立即预览，但不会自动保存；点击**取消**会恢复上次已应用的选择，点击**应用**会把选择写入当前浏览器、当前 Harness origin 下的版本化存储键 `@yehu77/dsh-kisekae:skin:v1`。同源标签页会自动同步，不同浏览器或 origin 各自保存。该实现不修改 Harness 的设置 namespace allowlist。
 
-图片选项会立即保存到 `@yehu77/dsh-kisekae:mascot:v1`。“随机”在每次加载页面时选择一张合适图片，“固定”使用图鉴中点选的图片，“关闭”则移除装饰。右下角画框只在蓝鲸娘是当前可见皮肤时显示；预览官方外观时，其偏好仍会保留。104 MiB 原始素材保持不变；插件使用约 22 MiB 的原始像素尺寸 JPEG 发布副本，并在图鉴中懒加载。
+主背景选项会立即保存到 `@yehu77/dsh-kisekae:main-background:v1`。“随机”在每次加载页面时选择一张图片，“固定”使用图鉴中点选的图片，“关闭”则移除背景。Hero 阶段在右侧与下方清晰展示边绘，并在输入区附近铺语义海雾；Active 阶段把图片降到 14%，同时保护中央阅读航道；Settling 阶段使用安静的中间状态。主背景只在蓝鲸娘可见时出现；预览官方外观期间，其偏好仍会保留。104 MiB 原始素材保持不变；插件使用约 22 MiB 的原始像素尺寸 JPEG 发布副本，并在图鉴中懒加载。
 
 侧栏背景会立即保存到 `@yehu77/dsh-kisekae:sidebar-backdrop:v1`。“清爽”和“沉浸”使用一张固定的图鉴图片，默认是雨景 `7fd9fafc…`，并提供向上渐隐与基于语义颜色的玻璃遮罩；“关闭”会移除背景。56 px 窄栏只显示安静的纯渐变。设置页用同一个组件提供实时侧栏预览，主题则通过半透明的语义 hover／active 颜色适配会话行，不直接修改会话行样式。“新会话”按钮保留官方元素、文字、操作、焦点行为和提示：蓝鲸娘在宽栏使用右侧低透明图片与语义玻璃，窄栏使用紧凑玻璃，并配有响应式 `currentColor` 海浪对话图标。
 
 “设置”入口同样保留官方按钮、齿轮、文字和对话框行为。宽栏会在右侧安静显示航海房间图片 `d5dd1b2f…`，并用语义遮罩保证文字可读；窄栏则使用无图片玻璃与两道轻微涟漪。
 
-侧栏背景、“新会话”装饰、海浪对话图标、“设置”入口装饰和右下角画框组成一组由设置页当前 draft 驱动的可逆视觉贡献。预览官方外观会立即移除五者；如果已保存的是蓝鲸娘，点击“取消”会全部恢复。隐藏期间，美术偏好保持不变。
+主对话背景、侧栏背景、“新会话”装饰、海浪对话图标和“设置”入口装饰组成一组由设置页当前 draft 驱动的可逆视觉贡献。预览官方外观会立即移除五者；如果已保存的是蓝鲸娘，点击“取消”会全部恢复。隐藏期间，美术偏好保持不变。
 
-项目当前针对 DeepSeek Harness commit `73389381946c78b5db758239c986005faa0fdccf`（`0.1.0-rc.5`）开发；该版本提供 `settings.trigger.decoration`，并与公开的 `sidebar.backdrop`、`sidebar.newSession.decoration` 和 `sidebar.newSession.icon` 一起使用。DeepSeek Harness 仍处于开发者预览期，因此兼容性要显式固定和审查，不能默认成立。
+项目当前针对 DeepSeek Harness commit `074f8b43993d44936bd383e8f08ace303343ab8b`（`0.1.0-rc.5`）开发；该版本提供 `conversation.backdrop`、`settings.trigger.decoration`、`sidebar.backdrop`、`sidebar.newSession.decoration` 和 `sidebar.newSession.icon`。DeepSeek Harness 仍处于开发者预览期，因此兼容性要显式固定和审查，不能默认成立。
 
 完整产品范围、交付阶段、决策门和发布标准见[路线图](ROADMAP.zh.md)。
 
@@ -83,8 +83,8 @@ src/client/index.ts   正式浏览器入口与设置贡献
 src/client/browser-skin-store.ts  按 origin 持久化与跨标签页同步
 src/client/SkinSelectorSection.tsx  响应式双卡片选择器
 src/client/skin-controller.ts  预览、取消、持久化与令牌生命周期
-src/client/mascot-store.ts  固定、随机与关闭图片偏好
-src/client/KisekaeMascotOverlay.tsx  右下角画框装饰
+src/client/main-background-store.ts  固定、随机与关闭主背景偏好
+src/client/BlueWhaleConversationBackdrop.tsx  随会话阶段变化的边绘背景
 src/client/sidebar-backdrop-store.ts  清爽、沉浸、关闭与固定背景偏好
 src/client/SidebarBackdrop.tsx  官方侧栏背景 slot 中的雨幕图片
 src/client/BlueWhaleNewSessionDecoration.tsx  “新会话”内容背后的玻璃与图片层
