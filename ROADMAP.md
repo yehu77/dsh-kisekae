@@ -4,20 +4,20 @@ Status: in progress
 
 English | [中文](ROADMAP.zh.md)
 
-Current milestone: Stage 2 — browser-persistent selection for Official appearance and “DeepSeek Blue Whale-chan.” The rest of Stage 2 remains open until two more original skins prove the catalog is data-driven.
+Current milestone: Stage 2 — browser-persistent selection for Official appearance and “DeepSeek Blue Whale-chan,” alongside the Stage 6 desktop-shell foundation. The rest of Stage 2 remains open until two more original skins prove the catalog is data-driven.
 
-The first gallery, phase-aware main conversation background, and “Blue Whale glass sidebar · Rain veil” are implemented. All 41 released illustrations appear in the gallery; Fixed, Random, and Off control `conversation.backdrop`, while Clear, Immersive, and Off control a fixed-image `sidebar.backdrop`. The composer adds image-free sea glass through `conversation.composer.bar.decoration`; the New Session button adds `sidebar.newSession.decoration` and a wave-chat `sidebar.newSession.icon`; and the Settings trigger adds `settings.trigger.decoration`. These six visual contributions follow the currently previewed skin; their stored artwork preferences remain independent.
+The first gallery, phase-aware main conversation background, “Blue Whale glass sidebar · Rain veil,” and browser-local text-style selector are implemented. All 42 released illustrations appear in the gallery; Fixed, Random, and Off control `conversation.backdrop`, while Clear, Immersive, and Off control a fixed-image `sidebar.backdrop`. The composer adds image-free sea glass through `conversation.composer.bar.decoration`; the New Session button adds `sidebar.newSession.decoration` and a wave-chat `sidebar.newSession.icon`; and the Settings trigger adds `settings.trigger.decoration`. These six visual contributions follow the currently previewed skin; their stored artwork preferences remain independent. Text style can follow the theme default, restore official clear prose, or keep theme colors with text effects disabled.
 
 ## Goal
 
-Build a maintainable, open-source collection of anime-inspired Web skins for DeepSeek Harness without forking the official UI. Installation, selection, preview, and removal must be reversible, and richer art must never become necessary to use the agent.
+Build a maintainable, open-source collection of anime-inspired skins for DeepSeek Harness without splitting the Web and desktop experiences. Installation, selection, preview, and removal must be reversible, and richer art must never become necessary to use the agent.
 
 ## Boundaries
 
 - Official Light, Dark, and System preferences remain unchanged.
 - A Kisekae skin is one `theme.overrideTokens()` layer with light and dark values for every override.
 - The first release uses original or appropriately licensed art; recognizable franchise assets are excluded.
-- The first release has no remote marketplace, arbitrary user CSS, browser-downloaded code, model persona, desktop surface, or alternate conversation layout. The community conversation replacement preserves the official layout while adding theme presentation controls.
+- The first desktop baseline is a secure shell around the same local Web profile. It has no bundled runtime, updater, remote marketplace, arbitrary user CSS, browser-downloaded code, model persona, or alternate conversation layout yet.
 - Settings selection, decorative overlays, and onboarding are separate features even when they share one art direction.
 
 ## Delivery stages
@@ -44,6 +44,7 @@ Exit when Light, Dark, and System all work, hot disposal restores the official a
 - Persist the applied skin in versioned browser storage scoped to the current origin, and synchronize same-origin tabs through `storage` events.
 - Keep the standalone Client bundler aligned with the current Harness platform externals, dependency-purity checks, and environment substitutions. Add effect-owned CSS Modules before component-local styles require them.
 - Add a responsive settings selector with immediate local preview, Cancel, Apply, and Official appearance.
+- Add an immediately persisted text-style selector with Theme default, Official clear, and Turn off text effects choices.
 - Add two more original skins to prove that definitions are data-driven.
 - Fall back visibly to Official appearance when a stored skin is unavailable.
 
@@ -51,11 +52,12 @@ Exit when selection survives reload and server restart in the same browser and o
 
 ### 3. Optional richness and guidance
 
-- Keep the shipped main `conversation.backdrop` optional through Fixed, Random, and Off controls. Hero, Active, and Settling show an uncropped, full-opacity `contain` foreground over an unblurred low-opacity `cover` copy that fills the remaining canvas. Protect text through separate content surfaces rather than a backdrop-wide wash.
+- Keep the shipped main `conversation.backdrop` optional through Fixed, Random, and Off controls. Native landscape wallpapers use a full-opacity `cover` layer for an immersive canvas; ordinary illustrations keep an uncropped, full-opacity `contain` foreground over an unblurred low-opacity `cover` copy. Protect text through separate content surfaces rather than a backdrop-wide wash.
 - Keep the shipped glass sidebar optional through Clear, Immersive, and Off controls. Wide mode uses one fixed catalog image with an upward fade; the narrow rail uses only a quiet semantic gradient.
 - Keep the shipped New Session treatment responsive through the host-provided wide state: wide mode combines low-opacity right-side artwork with semantic glass, while the rail uses compact glass. The wave-chat glyph changes only the icon; neither contribution replaces the official button or action.
 - Keep the shipped Settings trigger treatment responsive without replacing its official gear, label, button, or dialog behavior. Wide mode uses low-opacity right-side artwork and a semantic readability scrim; the rail uses image-free glass and subtle ripples.
-- Keep the shipped composer treatment behind the official textarea and controls. Hero uses stronger semantic sea glass, an inner highlight, tide lines, and a whale-tail corner; the resident composer reduces the accents. It uses no raster artwork or blur and does not replace focus, file-drop, or resizing behavior.
+- Keep the shipped composer treatment behind the official textarea and controls. Hero uses mode-aware ocean glass, a double luminous rim, three tide lines, paired whale-tail corners, control halos, pearls, a star, and a shell; the resident composer reduces ornament intensity. It uses only scalable CSS and inline SVG, with no raster artwork or blur, and does not replace focus, file-drop, or resizing behavior.
+- Keep typography theme-owned. Theme default resolves to the active skin's font and effects; Official clear and Turn off text effects remain generic user overrides saved independently from the selected skin.
 - Mount the conversation backdrop, composer decoration, sidebar backdrop, New Session decoration, wave-chat glyph, and Settings trigger decoration only while Blue Whale-chan is the visible draft. Official preview removes the group, and Cancel restores the saved skin's group without clearing its preferences.
 - Keep the conversation backdrop click-through and protect transcript and composer readability; its short opacity transition must turn off under reduced-motion preferences.
 - Build any first-run guidance as a separate `settings.onboarding` contribution.
@@ -78,6 +80,16 @@ Exit when a clean Web profile can install, run, upgrade, and remove Kisekae usin
 
 Exit when a new pack can be built without importing Kisekae runtime internals. A hosted marketplace remains a separate proposal.
 
+### 6. Desktop distribution
+
+- Keep `apps/desktop` as an application beside the two independently installable plugins; do not turn desktop packaging into a third theme runtime.
+- During development, attach to an assembled Harness already serving the stable `127.0.0.1:3080` origin or start the sibling checkout there. Never silently create a second port or a second profile instance.
+- Bundle a reviewed Node 24 runtime, the supported Harness distribution, and both Kisekae packages for end users who do not have Node, pnpm, or source checkouts.
+- Keep the renderer sandboxed with Node integration disabled. Add native desktop features only through narrow main-process capabilities.
+- Produce signed and notarized macOS builds, signed Windows installers, crash-safe child-process cleanup, and an explicit update channel before calling the desktop app generally available.
+
+Exit when a clean supported machine can install, launch, update, and remove the desktop app by ordinary graphical workflows while the Web-only installation remains available.
+
 ## Decision gates
 
 - If tokens cannot express a credible first skin, list missing semantic roles and propose only generic aliases justified by two consumers; do not use private CSS as an escape hatch.
@@ -97,3 +109,4 @@ Exit when a new pack can be built without importing Kisekae runtime internals. A
 - Keyboard operation, visible focus, readable content, reduced motion, zoom, and narrow layouts work for every skin.
 - Tests cover definition validation, persistence, fallback, replacement, and disposal; a real Web profile proves assembled behavior.
 - Code and asset licenses remain separate, and every released non-code file has provenance metadata.
+- The desktop shell owns at most one Harness process, preserves one stable local origin, and exposes no unrestricted Node or Electron API to Web content.

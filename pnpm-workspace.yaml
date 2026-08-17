@@ -1,6 +1,10 @@
 packages:
   - packages/*
+  - apps/*
 
 # The conversation package is a prebuilt drop-in fork. Its optional Harness
 # peers are supplied by the target Web profile rather than this workspace.
 autoInstallPeers: false
+
+allowBuilds:
+  electron: true

@@ -3,11 +3,15 @@
 /** Public Host route that serves browser-ready artwork. */
 export const KISEKAE_ARTWORK_ROUTE = '/plugins/@yehu77/dsh-kisekae/assets'
 
-const KISEKAE_ARTWORK_RELEASE = 'source-q80-v1'
+const KISEKAE_ARTWORK_RELEASE = 'source-native-v2'
+
+/** Native 16:9 artwork intended to cover the main conversation canvas. */
+export const BLUE_WHALE_NIGHT_WALLPAPER_ID = '1eaed38d-0bc6-46bb-a87f-a8e604392773_wallpaper_3840x2160'
 
 /** Stable ids shared by the gallery, main-background controls, and asset route. */
 export const KISEKAE_ARTWORK_IDS = [
   '1eaed38d-0bc6-46bb-a87f-a8e604392773',
+  BLUE_WHALE_NIGHT_WALLPAPER_ID,
   '3888b0d1-58b7-49e8-a946-d2a3f61b5cc6',
   '461461e2-38aa-4dbe-8d89-8f149b95f2e7',
   '4b004ccc-af16-4274-9eaa-a71be4406d4c',
@@ -59,16 +63,19 @@ export interface KisekaeArtwork {
   readonly id: string
   /** Released JPEG filename. */
   readonly file: string
+  /** Main-canvas fitting policy chosen for the source composition. */
+  readonly fit: 'contain' | 'cover'
 }
 
 /** All artwork shown by the gallery, sorted by id. */
 export const KISEKAE_ARTWORKS: readonly KisekaeArtwork[] = KISEKAE_ARTWORK_IDS.map(id => ({
   id,
   file: `${id}.jpg`,
+  fit: id === BLUE_WHALE_NIGHT_WALLPAPER_ID ? 'cover' : 'contain',
 }))
 
 /** Initial artwork used by fixed main-background mode. */
-export const DEFAULT_MAIN_BACKGROUND_ARTWORK_ID: ArtworkId = 'd5dd1b2f-ecdc-4be7-abef-ce9a0cfc6f97'
+export const DEFAULT_MAIN_BACKGROUND_ARTWORK_ID: ArtworkId = BLUE_WHALE_NIGHT_WALLPAPER_ID
 
 /**
  * Build the public URL for released artwork.

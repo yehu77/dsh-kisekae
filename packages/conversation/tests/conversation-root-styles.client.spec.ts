@@ -43,4 +43,14 @@ describe('ConversationRoot.module.css', () => {
     expect(content?.get('position')).toBe('relative')
     expect(content?.has('z-index')).toBe(false)
   })
+
+  it('lets a theme replace the composer dock mask without changing its geometry', () => {
+    const composer = declarations(".root[data-phase='active'] .composerSeat")
+    expect(composer?.get('position')).toBe('sticky')
+    expect(composer?.get('bottom')).toBe('0')
+    expect(composer?.get('background')).toContain(
+      '--dsw-specific-conversation-composer-dock-background',
+    )
+    expect(composer?.get('background')).toContain('var(--dsw-alias-bg-base) 36px')
+  })
 })

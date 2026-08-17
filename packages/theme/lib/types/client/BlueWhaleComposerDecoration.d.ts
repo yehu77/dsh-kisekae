@@ -1,4 +1,4 @@
-/** Sea-glass artwork behind the official composer card content. */
+/** Luminous ocean-glass artwork behind the official composer card content. */
 import type { ReactElement } from 'react';
 /** Props owned by the official composer-card decoration slot. */
 export interface BlueWhaleComposerDecorationProps {
@@ -6,7 +6,7 @@ export interface BlueWhaleComposerDecorationProps {
     readonly variant: 'hero' | 'composer';
 }
 /**
- * Draw semantic sea glass, border light, tide lines, and a quiet whale-tail corner.
+ * Draw a scalable ocean-glass frame without changing the official composer controls.
  * @param props - Official composer placement variant.
  * @returns non-interactive composer-card artwork.
  */

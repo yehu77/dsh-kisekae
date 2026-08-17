@@ -20,7 +20,9 @@ import { SkinSelectionController } from './skin-controller'
 import { SkinSelectorSection } from './SkinSelectorSection'
 import type { SkinSelectorSectionProps } from './SkinSelectorSection'
 import { mountSkinVisuals } from './skin-visual-orchestrator'
+import { mountTextStyle, TextStyleStore } from './text-style-store'
 import type { ThemeTokenOverrides } from './theme-types'
+import { DEEPSEEK_BLUE_WHALE_CHAN_TEXT_STYLE_OVERRIDES } from './themes/deepseek-blue-whale-chan'
 
 export { DEEPSEEK_BLUE_WHALE_CHAN } from './themes/deepseek-blue-whale-chan'
 export type { ThemeTokenModes, ThemeTokenOverrides } from './theme-types'
@@ -83,6 +85,7 @@ export function apply(ctx: KisekaeClientContext): void {
   const controller = new SkinSelectionController(ctx.theme, store)
   const mainBackgroundStore = new MainBackgroundStore()
   const backdropStore = new SidebarBackdropStore()
+  const textStyleStore = new TextStyleStore()
   ctx.effect(() => {
     const disposeStore = store.mount()
     const disposeController = controller.mount()
@@ -102,10 +105,11 @@ export function apply(ctx: KisekaeClientContext): void {
     order: 15,
     label: () => t('nav'),
     locale: KISEKAE_LOCALE_NAMESPACE,
-    inject: () => ({ controller, mainBackgroundStore, backdropStore }),
+    inject: () => ({ controller, mainBackgroundStore, backdropStore, textStyleStore }),
   }, SkinSelectorSection))
   ctx.effect(() => mountSkinVisuals(controller, () => {
     const disposers = [
+      mountTextStyle(ctx.theme, textStyleStore, DEEPSEEK_BLUE_WHALE_CHAN_TEXT_STYLE_OVERRIDES),
       ctx.slots.inject('conversation.composer.bar.decoration', () => ctx.slots.register<BlueWhaleComposerDecorationProps>({
         name: 'conversation.composer.bar.decoration',
       }, BlueWhaleComposerDecoration)),

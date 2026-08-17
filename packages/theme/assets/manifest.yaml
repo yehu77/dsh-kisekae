@@ -2,7 +2,7 @@ version: 1
 assets:
   - id: deepseek-blue-whale-chan-gallery-v1
     files: assets/release/deepseek-blue-whale-chan/*.jpg
-    count: 41
+    count: 42
     creator: yehu77
     source: AI-generated originals supplied by the repository owner
     generation:
@@ -11,6 +11,6 @@ assets:
       date: not recorded
       prompt: not recorded
       reference_rights: no third-party references reported
-    human_edits: Encoded at the original pixel dimensions as JPEG quality 80 for high-density Web surfaces; originals remain unchanged in assets/inbox.
+    human_edits: The original 41 gallery sources remain at their native pixel dimensions as JPEG quality 80; the 3840x2160 conversation wallpaper remains at native dimensions as JPEG quality 92. Originals remain unchanged in assets/inbox.
     license: CC-BY-4.0
     attribution: DeepSeek Blue Whale-chan artwork by yehu77

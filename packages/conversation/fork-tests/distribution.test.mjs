@@ -49,6 +49,7 @@ test('contains the Kisekae conversation presentation seams', async () => {
     '--dsw-specific-conversation-user-message-prose-text-shadow',
     '--dsw-specific-conversation-assistant-message-prose-text-shadow',
     '--dsw-specific-conversation-message-prose-font-weight',
+    '--dsw-specific-conversation-composer-dock-background',
   ]) {
     assert.ok(client.includes(marker), `missing ${marker}`)
   }

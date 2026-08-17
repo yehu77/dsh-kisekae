@@ -6,16 +6,20 @@ async function json(path) {
   return JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))
 }
 
-test('keeps the theme and conversation replacement as two workspace packages', async () => {
-  const [root, theme, conversation] = await Promise.all([
+test('keeps two plugin packages and one private desktop app', async () => {
+  const [root, theme, conversation, desktop] = await Promise.all([
     json('../package.json'),
     json('../packages/theme/package.json'),
     json('../packages/conversation/package.json'),
+    json('../apps/desktop/package.json'),
   ])
 
   assert.equal(root.private, true)
   assert.equal(theme.name, '@yehu77/dsh-kisekae')
   assert.equal(conversation.name, '@deepseek-ai/dsh-client-ui-conversation')
+  assert.equal(desktop.name, '@yehu77/dsh-kisekae-desktop')
+  assert.equal(desktop.private, true)
+  assert.equal(desktop.dsh, undefined)
   assert.ok(theme.dsh.client.inject.includes(conversation.name))
   assert.equal(theme.scripts.prepare, undefined)
   assert.equal(conversation.scripts.prepare, undefined)

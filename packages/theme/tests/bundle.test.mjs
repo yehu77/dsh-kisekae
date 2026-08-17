@@ -5,13 +5,15 @@ import vm from 'node:vm'
 
 const PACKAGE_NAME = '@yehu77/dsh-kisekae'
 const ARTWORK_ROUTE = '/plugins/@yehu77/dsh-kisekae/assets'
-const ARTWORK_RELEASE = 'source-q80-v1'
+const ARTWORK_RELEASE = 'source-native-v2'
 const BACKDROP_STORAGE_KEY = '@yehu77/dsh-kisekae:sidebar-backdrop:v1'
 const DEFAULT_BACKDROP_ARTWORK_ID = '7fd9fafc-aa19-449d-a92d-338a9bce7db5'
 const NEW_SESSION_ARTWORK_ID = '7a9c4fae-6fca-4c5e-b232-5c802f788dae'
 const SETTINGS_TRIGGER_ARTWORK_ID = 'd5dd1b2f-ecdc-4be7-abef-ce9a0cfc6f97'
+const WALLPAPER_ARTWORK_ID = '1eaed38d-0bc6-46bb-a87f-a8e604392773_wallpaper_3840x2160'
 const MAIN_BACKGROUND_STORAGE_KEY = '@yehu77/dsh-kisekae:main-background:v1'
 const SKIN_STORAGE_KEY = '@yehu77/dsh-kisekae:skin:v1'
+const TEXT_STYLE_STORAGE_KEY = '@yehu77/dsh-kisekae:text-style:v1'
 const RELEASE_ARTWORK_DIRECTORY = new URL('../assets/release/deepseek-blue-whale-chan/', import.meta.url)
 const EXPECTED_THEME_TOKENS = [
   '--dsw-alias-bg-base',
@@ -33,6 +35,10 @@ const EXPECTED_THEME_TOKENS = [
   '--dsw-alias-state-business-tertiary',
   '--dsw-specific-conversation-assistant-message-prose-color',
   '--dsw-specific-conversation-assistant-message-prose-text-shadow',
+  '--dsw-specific-conversation-composer-dock-background',
+  '--dsw-specific-conversation-composer-glass-fill',
+  '--dsw-specific-conversation-composer-glass-ornament',
+  '--dsw-specific-conversation-composer-glass-rim',
   '--dsw-specific-conversation-message-prose-font-weight',
   '--dsw-specific-conversation-user-message-prose-color',
   '--dsw-specific-conversation-user-message-prose-text-shadow',
@@ -189,15 +195,18 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   const skinStorageWrites = []
   const mainBackgroundStorageWrites = []
   const backdropStorageWrites = []
+  const textStyleStorageWrites = []
   let storedSkin = null
   let storedMainBackground = null
   let storedBackdrop = null
+  let storedTextStyle = null
   let rejectStorageWrites = false
   const localStorage = {
     getItem(key) {
       if (key === SKIN_STORAGE_KEY) return storedSkin
       if (key === MAIN_BACKGROUND_STORAGE_KEY) return storedMainBackground
       if (key === BACKDROP_STORAGE_KEY) return storedBackdrop
+      if (key === TEXT_STYLE_STORAGE_KEY) return storedTextStyle
       assert.fail(`unexpected browser storage key: ${key}`)
     },
     setItem(key, value) {
@@ -215,6 +224,11 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
       if (key === BACKDROP_STORAGE_KEY) {
         storedBackdrop = value
         backdropStorageWrites.push({ key, value })
+        return
+      }
+      if (key === TEXT_STYLE_STORAGE_KEY) {
+        storedTextStyle = value
+        textStyleStorageWrites.push({ key, value })
         return
       }
       assert.fail(`unexpected browser storage key: ${key}`)
@@ -389,8 +403,8 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   const [{ sourceId: overrideSource, tokens: overrideTokens }] = overrideHistory
   assert.equal(overrideSource, PACKAGE_NAME)
   assert.deepEqual(Object.keys(overrideTokens).sort(), [...EXPECTED_THEME_TOKENS].sort())
-  assert.equal(EXPECTED_THEME_TOKENS.length, 26)
-  assert.equal(Object.keys(overrideTokens).filter(name => !name.endsWith('font-weight')).length, 25)
+  assert.equal(EXPECTED_THEME_TOKENS.length, 30)
+  assert.equal(Object.keys(overrideTokens).filter(name => !name.endsWith('font-weight')).length, 29)
   for (const [name, modes] of Object.entries(overrideTokens)) {
     assert.match(name, /^--dsw-(?:alias|specific)-/)
     assert.equal(typeof modes.light, 'string')
@@ -430,6 +444,18 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(overrideTokens['--dsw-specific-conversation-user-message-prose-text-shadow'].dark, 'none')
   assert.equal(overrideTokens['--dsw-specific-conversation-message-prose-font-weight'].light, '500')
   assert.equal(overrideTokens['--dsw-specific-conversation-message-prose-font-weight'].dark, '500')
+  assert.equal(
+    overrideTokens['--dsw-specific-conversation-composer-dock-background'].light,
+    'linear-gradient(180deg, rgba(4, 27, 45, 0) 0px, rgba(4, 27, 45, 0.10) 36px, rgba(4, 27, 45, 0.24) 100%)',
+  )
+  assert.equal(
+    overrideTokens['--dsw-specific-conversation-composer-dock-background'].dark,
+    'linear-gradient(180deg, rgba(2, 11, 20, 0) 0px, rgba(2, 11, 20, 0.18) 36px, rgba(2, 11, 20, 0.36) 100%)',
+  )
+  assert.match(overrideTokens['--dsw-specific-conversation-composer-glass-fill'].light, /205, 242, 255/)
+  assert.match(overrideTokens['--dsw-specific-conversation-composer-glass-fill'].dark, /8, 47, 98/)
+  assert.equal(overrideTokens['--dsw-specific-conversation-composer-glass-ornament'].light, '#F8FEFF')
+  assert.equal(overrideTokens['--dsw-specific-conversation-composer-glass-rim'].dark, 'rgba(137, 229, 255, 0.94)')
   for (const token of [
     '--dsw-alias-label-primary-foreground',
     '--dsw-alias-label-primary-inverted',
@@ -490,11 +516,20 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   const heroCorner = heroComposerDecoration.find(
     element => element.props?.['data-kisekae-composer-corner'] === 'whale-tail',
   )
+  const heroRightCorner = heroComposerDecoration.find(
+    element => element.props?.['data-kisekae-composer-corner'] === 'whale-tail-right',
+  )
+  const heroHalos = heroComposerDecoration.filter(
+    element => element.props?.['data-kisekae-composer-control-halo'] !== undefined,
+  )
+  const heroOrnaments = heroComposerDecoration.filter(
+    element => element.props?.['data-kisekae-composer-ornament'] !== undefined,
+  )
   assert.equal(heroComposerRoot.props['data-kisekae-composer-decoration'], 'hero')
-  assert.match(heroComposerRoot.props.style.background, /--dsw-alias-state-business-tertiary/)
-  assert.match(heroComposerRoot.props.style.boxShadow, /--dsw-alias-brand-primary/)
+  assert.match(heroComposerRoot.props.style.background, /--dsw-specific-conversation-composer-glass-fill/)
+  assert.match(heroComposerRoot.props.style.boxShadow, /--dsw-specific-conversation-composer-glass-rim/)
   assert.equal(heroTide.type, 'svg')
-  assert.equal(heroTide.props.style.opacity, 0.28)
+  assert.equal(heroTide.props.style.opacity, 0.9)
   assert.equal(heroTide.props.preserveAspectRatio, 'none')
   assert.equal(
     collectElements(heroTide).filter(element => element.type === 'path').every(
@@ -503,7 +538,10 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
     true,
   )
   assert.equal(heroCorner.type, 'svg')
-  assert.equal(heroCorner.props.style.opacity, 0.22)
+  assert.equal(heroCorner.props.style.opacity, 0.92)
+  assert.equal(heroRightCorner.type, 'svg')
+  assert.deepEqual(heroHalos.map(element => element.props['data-kisekae-composer-control-halo']), ['add', 'send'])
+  assert.equal(heroOrnaments.length, 5)
   assert.equal(heroComposerDecoration.some(element =>
     element.props?.style?.filter !== undefined
     || element.props?.style?.backdropFilter !== undefined
@@ -521,14 +559,14 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   )
   assert.equal(quietComposerRoot.props['data-kisekae-composer-decoration'], 'composer')
   assert.notEqual(quietComposerRoot.props.style.background, heroComposerRoot.props.style.background)
-  assert.equal(quietTide.props.style.opacity, 0.12)
-  assert.equal(quietCorner.props.style.opacity, 0.08)
+  assert.equal(quietTide.props.style.opacity, 0.76)
+  assert.equal(quietCorner.props.style.opacity, 0.78)
 
-  const { controller, mainBackgroundStore, backdropStore } = slotOptions.inject()
+  const { controller, mainBackgroundStore, backdropStore, textStyleStore } = slotOptions.inject()
   assert.equal(conversationBackdropSlot.options.inject().mainBackgroundStore, mainBackgroundStore)
   assert.equal(backdropSlot.options.inject().backdropStore, backdropStore)
   const t = key => registeredDictionaries.zh[key]
-  const tree = slotComponent({ controller, mainBackgroundStore, backdropStore, t })
+  const tree = slotComponent({ controller, mainBackgroundStore, backdropStore, textStyleStore, t })
   const elements = collectElements(tree)
   const section = elements.find(element => element.props?.['data-kisekae-skin-section'] === 'true')
   const cards = elements.filter(element => element.props?.['data-kisekae-skin'] !== undefined)
@@ -547,13 +585,59 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
     element => element.props?.['data-kisekae-main-background-mode'] !== undefined,
   )
   assert.ok(gallery)
-  assert.equal(releaseArtworkIds.length, 41)
-  assert.equal(galleryCards.length, 41)
+  assert.equal(releaseArtworkIds.length, 42)
+  assert.equal(galleryCards.length, 42)
+  assert.ok(releaseArtworkIds.includes(WALLPAPER_ARTWORK_ID))
   assert.deepEqual(galleryIds, releaseArtworkIds)
   assert.deepEqual(
     mainBackgroundModeButtons.map(button => button.props['data-kisekae-main-background-mode']),
     ['random', 'fixed', 'off'],
   )
+
+  const textStyleButtons = elements.filter(
+    element => element.props?.['data-kisekae-text-style'] !== undefined,
+  )
+  assert.deepEqual(textStyleButtons.map(button => button.props['data-kisekae-text-style']), [
+    'theme-default', 'official-clear', 'effects-off',
+  ])
+  assert.equal(textStyleButtons[0].props['aria-pressed'], true)
+  textStyleButtons[2].props.onClick()
+  assert.equal(textStyleStore.getSnapshot().mode, 'effects-off')
+  assert.deepEqual(textStyleStorageWrites.at(-1), {
+    key: TEXT_STYLE_STORAGE_KEY,
+    value: 'effects-off',
+  })
+  const effectsOffOverride = overrideHistory.at(-1)
+  assert.equal(effectsOffOverride.sourceId, `${PACKAGE_NAME}:text-style`)
+  assert.equal(
+    effectsOffOverride.tokens['--dsw-specific-conversation-assistant-message-prose-color'].light,
+    '#075C78',
+  )
+  assert.equal(
+    effectsOffOverride.tokens['--dsw-specific-conversation-assistant-message-prose-text-shadow'].light,
+    'none',
+  )
+  textStyleButtons[1].props.onClick()
+  assert.equal(textStyleStore.getSnapshot().mode, 'official-clear')
+  const officialClearOverride = overrideHistory.at(-1)
+  assert.equal(officialClearOverride.sourceId, `${PACKAGE_NAME}:text-style`)
+  assert.equal(
+    officialClearOverride.tokens['--dsw-specific-conversation-user-message-prose-color'].light,
+    '#0F1115',
+  )
+  assert.equal(
+    officialClearOverride.tokens['--dsw-specific-conversation-message-prose-font-weight'].light,
+    '400',
+  )
+  assert.equal(
+    officialClearOverride.tokens['--dsw-font-family'].light,
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+  )
+  textStyleButtons[0].props.onClick()
+  assert.equal(textStyleStore.getSnapshot().mode, 'theme-default')
+  assert.deepEqual(textStyleStorageWrites.map(write => write.value), [
+    'effects-off', 'official-clear', 'theme-default',
+  ])
 
   const backdropSettings = elements.find(element => element.props?.['data-kisekae-sidebar-settings'] === 'true')
   const backdropModeButtons = elements.filter(element => element.props?.['data-kisekae-backdrop-mode'] !== undefined)
@@ -563,7 +647,7 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
     'clear', 'immersive', 'off',
   ])
   assert.equal(backdropSelect.props.value, DEFAULT_BACKDROP_ARTWORK_ID)
-  assert.equal(collectElements(backdropSelect).filter(element => element.type === 'option').length, 41)
+  assert.equal(collectElements(backdropSelect).filter(element => element.type === 'option').length, 42)
 
   assert.equal(backdropStore.getSnapshot().mode, 'clear')
   assert.equal(backdropStore.getSnapshot().artworkId, DEFAULT_BACKDROP_ARTWORK_ID)
@@ -744,11 +828,23 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(mainBackgroundStore.getSnapshot().shownArtworkId, null)
   assert.equal(conversationBackdropSlot.component({ phase: 'active', mainBackgroundStore }), null)
 
-  const fixedArtworkId = releaseArtworkIds.at(-1)
+  const fixedArtworkId = WALLPAPER_ARTWORK_ID
   mainBackgroundStore.fix(fixedArtworkId)
   assert.equal(mainBackgroundStore.getSnapshot().mode, 'fixed')
   assert.equal(mainBackgroundStore.getSnapshot().fixedArtworkId, fixedArtworkId)
   assert.equal(mainBackgroundStore.getSnapshot().shownArtworkId, fixedArtworkId)
+  const wallpaperBackground = collectElements(conversationBackdropSlot.component({
+    phase: 'active',
+    mainBackgroundStore,
+  }))
+  const wallpaperArtwork = wallpaperBackground.find(
+    element => element.props?.['data-kisekae-conversation-artwork'] === fixedArtworkId,
+  )
+  assert.equal(wallpaperArtwork.props.style.objectFit, 'cover')
+  assert.equal(wallpaperArtwork.props.style.objectPosition, 'center')
+  assert.equal(wallpaperBackground.some(
+    element => element.props?.['data-kisekae-conversation-ambient'] !== undefined,
+  ), false)
   assert.equal(mainBackgroundStorageWrites.length, 2)
   assert.deepEqual(mainBackgroundStorageWrites.at(-1), {
     key: MAIN_BACKGROUND_STORAGE_KEY,
@@ -757,18 +853,19 @@ test('ships a reversible Harness Client Plugin bundle', async () => {
   assert.equal(storedMainBackground, mainBackgroundStorageWrites.at(-1).value)
   assert.equal(componentCleanups.length, 1)
 
+  const tokenDisposalsBeforeOfficialPreview = tokenDisposeCalls
   controller.preview('official')
   assert.equal(skinStorageWrites.length, 0)
   assert.equal(controller.getSnapshot().draft, 'official')
   assert.equal(controller.getSnapshot().dirty, true)
-  assert.equal(tokenDisposeCalls, 1)
+  assert.equal(tokenDisposeCalls, tokenDisposalsBeforeOfficialPreview + 1)
   assert.deepEqual([...slotRegistrations.keys()], ['settings.section'])
 
   controller.cancelPreview()
   assert.equal(controller.getSnapshot().committed, 'deepseek-blue-whale-chan')
   assert.equal(controller.getSnapshot().draft, 'deepseek-blue-whale-chan')
   assert.equal(controller.getSnapshot().dirty, false)
-  assert.equal(overrideHistory.length, 2)
+  assert.equal(overrideHistory.filter(entry => entry.sourceId === PACKAGE_NAME).length, 2)
   assert.deepEqual([...slotRegistrations.keys()].sort(), [
     'conversation.backdrop',
     'conversation.composer.bar.decoration',

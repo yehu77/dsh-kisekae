@@ -45,6 +45,7 @@ jspm_packages/
 # Build output. The conversation replacement intentionally commits its
 # distribution artifacts, and the theme commits its Git distribution too.
 /lib/
+/apps/desktop/lib/
 
 # User-managed local artwork library. Agents treat this tree as read-only unless explicitly authorized.
 assets/inbox/**

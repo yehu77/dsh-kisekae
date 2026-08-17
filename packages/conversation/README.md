@@ -14,7 +14,8 @@ The current release is based on DeepSeek Harness `0.1.0-rc.5` at commit `18c2236
 - `conversation.composer.bar.decoration` for non-interactive composer art;
 - separate user and assistant prose color tokens;
 - separate user and assistant prose text-shadow tokens;
-- one shared message-prose font-weight token.
+- one shared message-prose font-weight token;
+- a composer-dock background token whose fallback preserves the official mask.
 
 The fork does not bundle a theme. DSH Kisekae occupies these extension points and supplies the Blue Whale-chan artwork and typography values.
 

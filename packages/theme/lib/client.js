@@ -116,96 +116,249 @@ window.__ModuleLoader__.load({
 			display: "block",
 			width: "100%",
 			height: "100%",
-			color: "var(--dsw-alias-brand-primary)"
+			color: "var(--dsw-specific-conversation-composer-glass-ornament)",
+			boxShadow: "inset 0 0 0 2px var(--dsw-specific-conversation-composer-glass-rim), inset 0 2px 0 rgba(255, 255, 255, 0.72), inset 0 -3px 8px color-mix(in srgb, var(--dsw-alias-state-business-primary) 34%, transparent), 0 0 16px color-mix(in srgb, var(--dsw-specific-conversation-composer-glass-rim) 62%, transparent)"
 		};
-		const HERO_STYLE = {
-			background: "radial-gradient(80% 120% at 10% -16%, color-mix(in srgb, var(--dsw-alias-bg-overlay) 44%, transparent) 0%, transparent 50%), linear-gradient(135deg, color-mix(in srgb, var(--dsw-alias-state-business-tertiary) 32%, transparent) 0%, transparent 58%, color-mix(in srgb, var(--dsw-alias-brand-primary) 14%, transparent) 100%)",
-			boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--dsw-alias-brand-primary) 38%, var(--dsw-alias-border-l2)), inset 0 1px 0 color-mix(in srgb, var(--dsw-alias-bg-overlay) 76%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--dsw-alias-brand-primary) 18%, transparent)"
-		};
-		const COMPOSER_STYLE = {
-			background: "radial-gradient(72% 110% at 10% -18%, color-mix(in srgb, var(--dsw-alias-bg-overlay) 20%, transparent) 0%, transparent 48%), linear-gradient(135deg, color-mix(in srgb, var(--dsw-alias-state-business-tertiary) 14%, transparent) 0%, transparent 62%, color-mix(in srgb, var(--dsw-alias-brand-primary) 7%, transparent) 100%)",
-			boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--dsw-alias-brand-primary) 24%, var(--dsw-alias-border-l2)), inset 0 1px 0 color-mix(in srgb, var(--dsw-alias-bg-overlay) 58%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--dsw-alias-brand-primary) 10%, transparent)"
+		const HERO_STYLE = { background: "radial-gradient(86% 145% at 12% -34%, rgba(255, 255, 255, 0.58) 0%, transparent 54%), var(--dsw-specific-conversation-composer-glass-fill)" };
+		const COMPOSER_STYLE = { background: "radial-gradient(72% 125% at 12% -32%, rgba(255, 255, 255, 0.42) 0%, transparent 52%), var(--dsw-specific-conversation-composer-glass-fill)" };
+		const TOP_SHINE_STYLE = {
+			position: "absolute",
+			top: 2,
+			right: 24,
+			left: 24,
+			height: 2,
+			borderRadius: 999,
+			background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.84) 18%, rgba(255, 255, 255, 0.42) 82%, transparent)"
 		};
 		const TIDE_STYLE = {
 			position: "absolute",
 			right: 0,
-			bottom: 0,
+			bottom: -1,
 			left: 0,
 			width: "100%",
-			height: 18
+			height: 42
 		};
 		const CORNER_STYLE = {
 			position: "absolute",
-			top: 3,
-			right: 5,
-			width: 34,
+			width: 48,
+			height: 54
+		};
+		const LEFT_CORNER_STYLE = {
+			...CORNER_STYLE,
+			top: -3,
+			left: -2
+		};
+		const RIGHT_CORNER_STYLE = {
+			...CORNER_STYLE,
+			right: -2,
+			bottom: -5,
+			transform: "scale(-1, -1)"
+		};
+		const CONTROL_HALO_STYLE = {
+			position: "absolute",
+			bottom: 4,
+			width: 42,
+			height: 42,
+			border: "1px solid color-mix(in srgb, var(--dsw-specific-conversation-composer-glass-rim) 88%, white)",
+			borderRadius: "50%",
+			background: "radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.92) 0%, color-mix(in srgb, var(--dsw-specific-conversation-composer-glass-rim) 76%, transparent) 28%, color-mix(in srgb, var(--dsw-alias-state-business-primary) 68%, transparent) 58%, transparent 72%)",
+			boxShadow: "inset 0 0 8px rgba(255, 255, 255, 0.82), 0 0 0 2px color-mix(in srgb, var(--dsw-specific-conversation-composer-glass-rim) 30%, transparent), 0 0 13px color-mix(in srgb, var(--dsw-specific-conversation-composer-glass-rim) 70%, transparent)"
+		};
+		const STAR_STYLE = {
+			position: "absolute",
+			bottom: 3,
+			left: 58,
+			width: 18,
+			height: 18
+		};
+		const SHELL_STYLE = {
+			position: "absolute",
+			right: 58,
+			bottom: 2,
+			width: 24,
 			height: 20
 		};
+		const PEARLS = [
+			{
+				left: "34%",
+				bottom: 5,
+				width: 10,
+				height: 10
+			},
+			{
+				left: "61%",
+				bottom: 3,
+				width: 12,
+				height: 12
+			},
+			{
+				left: "82%",
+				bottom: 8,
+				width: 7,
+				height: 7
+			}
+		];
 		/**
-		* Draw semantic sea glass, border light, tide lines, and a quiet whale-tail corner.
+		* Draw a scalable ocean-glass frame without changing the official composer controls.
 		* @param props - Official composer placement variant.
 		* @returns non-interactive composer-card artwork.
 		*/
 		function BlueWhaleComposerDecoration({ variant }) {
 			const hero = variant === "hero";
+			const ornamentOpacity = hero ? .92 : .78;
 			return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
 				"data-kisekae-composer-decoration": variant,
 				style: {
 					...ROOT_STYLE$4,
 					...hero ? HERO_STYLE : COMPOSER_STYLE
 				},
-				children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("svg", {
-					"data-kisekae-composer-tide": "true",
-					fill: "none",
-					preserveAspectRatio: "none",
-					style: {
-						...TIDE_STYLE,
-						opacity: hero ? .28 : .12
-					},
-					viewBox: "0 0 100 18",
-					children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
-						d: "M-5 9C3 3 11 3 19 9S35 15 43 9 59 3 67 9 83 15 91 9 107 3 115 9",
-						stroke: "currentColor",
-						strokeLinecap: "round",
-						strokeWidth: "1.2",
-						vectorEffect: "non-scaling-stroke"
-					}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
-						d: "M-8 14C0 10 8 10 16 14S32 18 40 14 56 10 64 14 80 18 88 14 104 10 112 14",
-						opacity: "0.48",
-						stroke: "currentColor",
-						strokeLinecap: "round",
-						strokeWidth: "1",
-						vectorEffect: "non-scaling-stroke"
-					})]
-				}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("svg", {
-					"data-kisekae-composer-corner": "whale-tail",
-					fill: "none",
-					style: {
-						...CORNER_STYLE,
-						opacity: hero ? .22 : .08
-					},
-					viewBox: "0 0 36 20",
-					children: [
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
-							d: "M3 12c4-.4 7-2 9-5 2 2 4 3 6 3s4-1 6-3c2 3 5 4.6 9 5-3.5 3.6-8.5 5.4-15 5.4S6.5 15.6 3 12Z",
-							fill: "currentColor",
-							opacity: "0.46"
-						}),
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("circle", {
-							cx: "29",
-							cy: "5",
-							fill: "currentColor",
-							r: "1.2"
-						}),
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("circle", {
-							cx: "33",
-							cy: "2.5",
-							fill: "currentColor",
-							opacity: "0.6",
-							r: "0.8"
+				children: [
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+						"data-kisekae-composer-shine": "true",
+						style: TOP_SHINE_STYLE
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+						"data-kisekae-composer-control-halo": "add",
+						style: {
+							...CONTROL_HALO_STYLE,
+							left: 5,
+							opacity: hero ? .9 : .76
+						}
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+						"data-kisekae-composer-control-halo": "send",
+						style: {
+							...CONTROL_HALO_STYLE,
+							right: 4,
+							opacity: hero ? .94 : .82
+						}
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("svg", {
+						"data-kisekae-composer-tide": "true",
+						fill: "none",
+						preserveAspectRatio: "none",
+						style: {
+							...TIDE_STYLE,
+							opacity: hero ? .9 : .76
+						},
+						viewBox: "0 0 120 42",
+						children: [
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
+								d: "M-8 28C2 16 12 16 22 28S42 40 52 28 72 16 82 28 102 40 112 28 132 16 142 28",
+								stroke: "currentColor",
+								strokeLinecap: "round",
+								strokeWidth: "2.2",
+								vectorEffect: "non-scaling-stroke"
+							}),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
+								d: "M-8 33C2 23 12 23 22 33S42 43 52 33 72 23 82 33 102 43 112 33 132 23 142 33",
+								opacity: "0.62",
+								stroke: "currentColor",
+								strokeLinecap: "round",
+								strokeWidth: "1.2",
+								vectorEffect: "non-scaling-stroke"
+							}),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
+								d: "M-8 37C4 30 16 30 28 37S52 44 64 37 88 30 100 37 124 44 136 37",
+								opacity: "0.3",
+								stroke: "currentColor",
+								strokeLinecap: "round",
+								strokeWidth: "1",
+								vectorEffect: "non-scaling-stroke"
+							})
+						]
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("svg", {
+						"data-kisekae-composer-corner": "whale-tail",
+						fill: "none",
+						style: {
+							...LEFT_CORNER_STYLE,
+							opacity: ornamentOpacity
+						},
+						viewBox: "0 0 48 54",
+						children: [
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
+								d: "M4 6c8 1 13 5 16 12 3-7 8-11 16-12-1 9-6 15-16 18C10 21 5 15 4 6Z",
+								fill: "currentColor"
+							}),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
+								d: "M20 21c-7 8-9 17-5 28M20 28c8 0 14 4 18 12",
+								opacity: "0.58",
+								stroke: "currentColor",
+								strokeLinecap: "round",
+								strokeWidth: "2"
+							}),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("circle", {
+								cx: "38",
+								cy: "42",
+								fill: "currentColor",
+								opacity: "0.7",
+								r: "2"
+							})
+						]
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("svg", {
+						"data-kisekae-composer-corner": "whale-tail-right",
+						fill: "none",
+						style: {
+							...RIGHT_CORNER_STYLE,
+							opacity: ornamentOpacity
+						},
+						viewBox: "0 0 48 54",
+						children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
+							d: "M4 6c8 1 13 5 16 12 3-7 8-11 16-12-1 9-6 15-16 18C10 21 5 15 4 6Z",
+							fill: "currentColor"
+						}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
+							d: "M20 21c-7 8-9 17-5 28M20 28c8 0 14 4 18 12",
+							opacity: "0.58",
+							stroke: "currentColor",
+							strokeLinecap: "round",
+							strokeWidth: "2"
+						})]
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("svg", {
+						"data-kisekae-composer-ornament": "star",
+						style: {
+							...STAR_STYLE,
+							opacity: ornamentOpacity
+						},
+						viewBox: "0 0 24 24",
+						children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
+							d: "m12 1.8 2.8 6.6 7.1.6-5.4 4.7 1.7 7-6.2-3.8-6.2 3.8 1.7-7L2.1 9l7.1-.6L12 1.8Z",
+							fill: "currentColor"
 						})
-					]
-				})]
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("svg", {
+						"data-kisekae-composer-ornament": "shell",
+						fill: "none",
+						style: {
+							...SHELL_STYLE,
+							opacity: ornamentOpacity
+						},
+						viewBox: "0 0 30 24",
+						children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
+							d: "M3 20C4 10 8 4 15 3c7 1 11 7 12 17H3Z",
+							fill: "currentColor",
+							opacity: "0.82"
+						}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
+							d: "M15 4v15M10 6l2 13M20 6l-2 13M6 11l4 8M24 11l-4 8",
+							stroke: "white",
+							strokeLinecap: "round",
+							strokeWidth: "1.2"
+						})]
+					}),
+					PEARLS.map((style, index) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+						"data-kisekae-composer-ornament": "pearl",
+						style: {
+							position: "absolute",
+							borderRadius: "50%",
+							background: "radial-gradient(circle at 32% 28%, white 0%, color-mix(in srgb, var(--dsw-specific-conversation-composer-glass-rim) 72%, white) 38%, color-mix(in srgb, var(--dsw-alias-state-business-primary) 58%, transparent) 100%)",
+							boxShadow: "0 1px 4px color-mix(in srgb, var(--dsw-alias-state-business-primary) 48%, transparent)",
+							opacity: ornamentOpacity,
+							...style
+						}
+					}, String(index)))
+				]
 			});
 		}
 		//#endregion
@@ -213,10 +366,13 @@ window.__ModuleLoader__.load({
 		/** Static catalog of the released DeepSeek Blue Whale-chan artwork. */
 		/** Public Host route that serves browser-ready artwork. */
 		const KISEKAE_ARTWORK_ROUTE = "/plugins/@yehu77/dsh-kisekae/assets";
-		const KISEKAE_ARTWORK_RELEASE = "source-q80-v1";
+		const KISEKAE_ARTWORK_RELEASE = "source-native-v2";
+		/** Native 16:9 artwork intended to cover the main conversation canvas. */
+		const BLUE_WHALE_NIGHT_WALLPAPER_ID = "1eaed38d-0bc6-46bb-a87f-a8e604392773_wallpaper_3840x2160";
 		/** Stable ids shared by the gallery, main-background controls, and asset route. */
 		const KISEKAE_ARTWORK_IDS = [
 			"1eaed38d-0bc6-46bb-a87f-a8e604392773",
+			BLUE_WHALE_NIGHT_WALLPAPER_ID,
 			"3888b0d1-58b7-49e8-a946-d2a3f61b5cc6",
 			"461461e2-38aa-4dbe-8d89-8f149b95f2e7",
 			"4b004ccc-af16-4274-9eaa-a71be4406d4c",
@@ -261,10 +417,11 @@ window.__ModuleLoader__.load({
 		/** All artwork shown by the gallery, sorted by id. */
 		const KISEKAE_ARTWORKS = KISEKAE_ARTWORK_IDS.map((id) => ({
 			id,
-			file: `${id}.jpg`
+			file: `${id}.jpg`,
+			fit: id === "1eaed38d-0bc6-46bb-a87f-a8e604392773_wallpaper_3840x2160" ? "cover" : "contain"
 		}));
 		/** Initial artwork used by fixed main-background mode. */
-		const DEFAULT_MAIN_BACKGROUND_ARTWORK_ID = "d5dd1b2f-ecdc-4be7-abef-ce9a0cfc6f97";
+		const DEFAULT_MAIN_BACKGROUND_ARTWORK_ID = BLUE_WHALE_NIGHT_WALLPAPER_ID;
 		/**
 		* Build the public URL for released artwork.
 		* @param id - Artwork catalog id.
@@ -298,7 +455,6 @@ window.__ModuleLoader__.load({
 			display: "block",
 			width: "100%",
 			height: "100%",
-			objectFit: "contain",
 			objectPosition: "center"
 		};
 		/**
@@ -309,12 +465,13 @@ window.__ModuleLoader__.load({
 		function BlueWhaleConversationBackdrop({ phase, mainBackgroundStore }) {
 			const snapshot = (0, react.useSyncExternalStore)(mainBackgroundStore.subscribe, mainBackgroundStore.getSnapshot, mainBackgroundStore.getSnapshot);
 			if (snapshot.shownArtworkId === null) return null;
+			const artwork = KISEKAE_ARTWORKS.find((entry) => entry.id === snapshot.shownArtworkId);
 			return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 				"aria-hidden": "true",
 				"data-kisekae-conversation-backdrop": phase,
 				"data-kisekae-main-background": snapshot.shownArtworkId,
 				style: ROOT_STYLE$3,
-				children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+				children: [artwork.fit === "contain" && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
 					"data-kisekae-conversation-ambient": snapshot.shownArtworkId,
 					style: {
 						...AMBIENT_STYLE,
@@ -325,7 +482,10 @@ window.__ModuleLoader__.load({
 					"data-kisekae-conversation-artwork": snapshot.shownArtworkId,
 					draggable: false,
 					src: artworkUrl(snapshot.shownArtworkId),
-					style: ARTWORK_STYLE
+					style: {
+						...ARTWORK_STYLE,
+						objectFit: artwork.fit
+					}
 				})]
 			});
 		}
@@ -548,6 +708,14 @@ window.__ModuleLoader__.load({
 			restoreOfficial: "恢复官方",
 			cancel: "取消",
 			apply: "应用",
+			textStyleTitle: "文字风格",
+			textStyleDescription: "选择会立即保存在当前浏览器。主题默认会跟随当前动画主题；以后每套主题都能提供自己的字体与文字效果。",
+			textStyleBlueWhaleIce: "蓝鲸冰晶",
+			textStyleBlueWhaleIceDescription: "近白冰芯、蓝色硬边和短促深海投影。",
+			textStyleOfficialClear: "官方清晰",
+			textStyleOfficialClearDescription: "恢复官方深浅文字、常规字重并关闭描边。",
+			textStyleEffectsOff: "关闭文字特效",
+			textStyleEffectsOffDescription: "保留蓝鲸娘配色与字重，但移除描边和投影。",
 			backdropTitle: "蓝鲸玻璃侧栏·雨幕",
 			backdropDescription: "图片从侧栏底部向上渐隐；折叠为窄栏时自动使用安静的纯渐变。",
 			backdropClear: "清爽",
@@ -557,12 +725,12 @@ window.__ModuleLoader__.load({
 			backdropArtworkOption: "背景",
 			backdropPreview: "蓝鲸玻璃侧栏效果预览",
 			mainBackgroundTitle: "主对话背景",
-			mainBackgroundDescription: "随机模式会在每次加载 Web 页面时更换图片；点击图鉴可固定一张。图片会随会话阶段自动降低存在感，保持内容清晰。",
+			mainBackgroundDescription: "随机模式会在每次加载 Web 页面时更换图片；点击图鉴可固定一张。4K 横向壁纸会铺满主聊天区，普通插画则保持完整构图。",
 			mainBackgroundRandom: "随机",
 			mainBackgroundFixed: "固定",
 			mainBackgroundOff: "关闭",
 			galleryTitle: "蓝鲸娘图鉴",
-			galleryDescription: "共 41 张。点击任意图片，即可固定为主对话背景。",
+			galleryDescription: "共 42 张。点击任意图片，即可固定为主对话背景。",
 			artworkFixed: "主背景",
 			artworkShown: "本次背景",
 			chooseArtwork: "设为主对话背景"
@@ -589,6 +757,14 @@ window.__ModuleLoader__.load({
 			restoreOfficial: "Restore official",
 			cancel: "Cancel",
 			apply: "Apply",
+			textStyleTitle: "Text style",
+			textStyleDescription: "Choices save immediately in this browser. Theme default follows the active anime theme, so future themes can supply their own typeface and text effects.",
+			textStyleBlueWhaleIce: "Blue Whale Ice",
+			textStyleBlueWhaleIceDescription: "Near-white ice core, hard blue edge, and a short deep-sea drop shadow.",
+			textStyleOfficialClear: "Official clear",
+			textStyleOfficialClearDescription: "Official light/dark prose, regular weight, and no outline.",
+			textStyleEffectsOff: "Turn off text effects",
+			textStyleEffectsOffDescription: "Keep Blue Whale-chan colors and weight, but remove outlines and shadows.",
 			backdropTitle: "Blue Whale glass sidebar · Rain veil",
 			backdropDescription: "Artwork fades upward from the sidebar foot; the narrow rail falls back to a quiet gradient.",
 			backdropClear: "Clear",
@@ -598,12 +774,12 @@ window.__ModuleLoader__.load({
 			backdropArtworkOption: "Background",
 			backdropPreview: "Blue Whale glass sidebar preview",
 			mainBackgroundTitle: "Main conversation background",
-			mainBackgroundDescription: "Random mode chooses a new image whenever the Web page loads. Choose any gallery image to fix it. Artwork automatically recedes with the conversation phase to keep content clear.",
+			mainBackgroundDescription: "Random mode chooses a new image whenever the Web page loads. Choose any gallery image to fix it. The 4K landscape wallpaper fills the conversation canvas; ordinary illustrations keep their complete composition.",
 			mainBackgroundRandom: "Random",
 			mainBackgroundFixed: "Fixed",
 			mainBackgroundOff: "Off",
 			galleryTitle: "Blue Whale-chan gallery",
-			galleryDescription: "41 illustrations. Choose any image to fix it as the main conversation background.",
+			galleryDescription: "42 illustrations. Choose any image to fix it as the main conversation background.",
 			artworkFixed: "Main background",
 			artworkShown: "Current background",
 			chooseArtwork: "Use as main conversation background"
@@ -956,6 +1132,22 @@ window.__ModuleLoader__.load({
 					light: "500",
 					dark: "500"
 				},
+				"--dsw-specific-conversation-composer-dock-background": {
+					light: "linear-gradient(180deg, rgba(4, 27, 45, 0) 0px, rgba(4, 27, 45, 0.10) 36px, rgba(4, 27, 45, 0.24) 100%)",
+					dark: "linear-gradient(180deg, rgba(2, 11, 20, 0) 0px, rgba(2, 11, 20, 0.18) 36px, rgba(2, 11, 20, 0.36) 100%)"
+				},
+				"--dsw-specific-conversation-composer-glass-fill": {
+					light: "linear-gradient(180deg, rgba(205, 242, 255, 0.96) 0%, rgba(172, 225, 246, 0.96) 48%, rgba(144, 209, 236, 0.97) 100%)",
+					dark: "linear-gradient(180deg, rgba(35, 111, 157, 0.94) 0%, rgba(15, 78, 131, 0.96) 48%, rgba(8, 47, 98, 0.98) 100%)"
+				},
+				"--dsw-specific-conversation-composer-glass-rim": {
+					light: "rgba(218, 250, 255, 0.96)",
+					dark: "rgba(137, 229, 255, 0.94)"
+				},
+				"--dsw-specific-conversation-composer-glass-ornament": {
+					light: "#F8FEFF",
+					dark: "#C9F6FF"
+				},
 				"--dsw-specific-sidebar-fill": {
 					light: "#EAF5FA",
 					dark: "#0D2131"
@@ -967,6 +1159,57 @@ window.__ModuleLoader__.load({
 				"--dsw-specific-sidebar-nav-item-active": {
 					light: "rgba(255, 255, 255, 0.74)",
 					dark: "rgba(28, 72, 94, 0.78)"
+				}
+			}
+		};
+		/** Optional text presentations layered over the Blue Whale-chan default. */
+		const DEEPSEEK_BLUE_WHALE_CHAN_TEXT_STYLE_OVERRIDES = {
+			"official-clear": {
+				"--dsw-font-family": {
+					light: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+					dark: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+				},
+				"--dsw-specific-conversation-user-message-prose-color": {
+					light: "#0F1115",
+					dark: "#F9FAFB"
+				},
+				"--dsw-specific-conversation-user-message-prose-text-shadow": {
+					light: "none",
+					dark: "none"
+				},
+				"--dsw-specific-conversation-assistant-message-prose-color": {
+					light: "#0F1115",
+					dark: "#F9FAFB"
+				},
+				"--dsw-specific-conversation-assistant-message-prose-text-shadow": {
+					light: "none",
+					dark: "none"
+				},
+				"--dsw-specific-conversation-message-prose-font-weight": {
+					light: "400",
+					dark: "400"
+				}
+			},
+			"effects-off": {
+				"--dsw-specific-conversation-user-message-prose-color": {
+					light: "#6A1B8C",
+					dark: "#E8C4FF"
+				},
+				"--dsw-specific-conversation-user-message-prose-text-shadow": {
+					light: "none",
+					dark: "none"
+				},
+				"--dsw-specific-conversation-assistant-message-prose-color": {
+					light: "#075C78",
+					dark: "#BDEEFF"
+				},
+				"--dsw-specific-conversation-assistant-message-prose-text-shadow": {
+					light: "none",
+					dark: "none"
+				},
+				"--dsw-specific-conversation-message-prose-font-weight": {
+					light: "500",
+					dark: "500"
 				}
 			}
 		};
@@ -1195,13 +1438,15 @@ window.__ModuleLoader__.load({
     flex: 1 1 auto;
   }
   [data-kisekae-mode-group],
-  [data-kisekae-backdrop-mode-group] {
+  [data-kisekae-backdrop-mode-group],
+  [data-kisekae-text-style-group] {
     display: grid !important;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 4px !important;
   }
   [data-kisekae-mode-group] button,
-  [data-kisekae-backdrop-mode-group] button {
+  [data-kisekae-backdrop-mode-group] button,
+  [data-kisekae-text-style-group] button {
     min-width: 0;
     padding: 0 4px !important;
     font-size: 12px !important;
@@ -1365,6 +1610,29 @@ window.__ModuleLoader__.load({
 			borderColor: "var(--dsw-alias-state-business-primary)",
 			background: "var(--dsw-alias-state-business-tertiary)"
 		};
+		const TEXT_STYLE_GRID_STYLE = {
+			display: "grid",
+			gridTemplateColumns: "repeat(auto-fit, minmax(min(170px, 100%), 1fr))",
+			gap: 8,
+			minWidth: 0
+		};
+		const TEXT_STYLE_BUTTON_STYLE = {
+			...BUTTON_BASE_STYLE,
+			display: "flex",
+			flexDirection: "column",
+			alignItems: "flex-start",
+			gap: 4,
+			height: "auto",
+			minHeight: 82,
+			padding: "12px 14px",
+			borderRadius: 14,
+			textAlign: "left"
+		};
+		const TEXT_STYLE_DESCRIPTION_STYLE = {
+			color: "var(--dsw-alias-label-secondary)",
+			fontSize: 12,
+			lineHeight: 1.45
+		};
 		const GALLERY_GRID_STYLE = {
 			display: "grid",
 			gridTemplateColumns: "repeat(auto-fill, minmax(min(112px, 100%), 1fr))",
@@ -1504,6 +1772,23 @@ window.__ModuleLoader__.load({
 				label: "backdropOff"
 			}
 		];
+		const TEXT_STYLE_MODES = [
+			{
+				id: "theme-default",
+				label: "textStyleBlueWhaleIce",
+				description: "textStyleBlueWhaleIceDescription"
+			},
+			{
+				id: "official-clear",
+				label: "textStyleOfficialClear",
+				description: "textStyleOfficialClearDescription"
+			},
+			{
+				id: "effects-off",
+				label: "textStyleEffectsOff",
+				description: "textStyleEffectsOffDescription"
+			}
+		];
 		function statusKey(snapshot) {
 			if (snapshot.error !== null) return "saveFailed";
 			if (snapshot.saving) return "saving";
@@ -1518,11 +1803,13 @@ window.__ModuleLoader__.load({
 		* @param props - Slot-injected controller and localized copy.
 		* @returns the settings section element tree.
 		*/
-		function SkinSelectorSection({ controller, mainBackgroundStore, backdropStore, t }) {
+		function SkinSelectorSection({ controller, mainBackgroundStore, backdropStore, textStyleStore, t }) {
 			const snapshot = (0, react.useSyncExternalStore)(controller.subscribe, controller.getSnapshot, controller.getSnapshot);
 			const mainBackground = (0, react.useSyncExternalStore)(mainBackgroundStore.subscribe, mainBackgroundStore.getSnapshot, mainBackgroundStore.getSnapshot);
 			const backdrop = (0, react.useSyncExternalStore)(backdropStore.subscribe, backdropStore.getSnapshot, backdropStore.getSnapshot);
+			const textStyle = (0, react.useSyncExternalStore)(textStyleStore.subscribe, textStyleStore.getSnapshot, textStyleStore.getSnapshot);
 			const headingId = (0, react.useId)();
+			const textStyleHeadingId = (0, react.useId)();
 			const backdropHeadingId = (0, react.useId)();
 			const mainBackgroundHeadingId = (0, react.useId)();
 			const galleryHeadingId = (0, react.useId)();
@@ -1647,6 +1934,46 @@ window.__ModuleLoader__.load({
 							color: snapshot.error === null ? STATUS_STYLE.color : "var(--dsw-alias-state-error-primary)"
 						},
 						children: t(status)
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("section", {
+						"aria-labelledby": textStyleHeadingId,
+						style: SUBSECTION_STYLE,
+						children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+							style: HEADER_STYLE,
+							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", {
+								id: textStyleHeadingId,
+								style: SUBTITLE_STYLE,
+								children: t("textStyleTitle")
+							}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+								"data-kisekae-subsection-description": "true",
+								style: DESCRIPTION_STYLE,
+								children: t("textStyleDescription")
+							})]
+						}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+							role: "group",
+							"aria-labelledby": textStyleHeadingId,
+							"data-kisekae-text-style-group": "true",
+							style: TEXT_STYLE_GRID_STYLE,
+							children: TEXT_STYLE_MODES.map((mode) => {
+								const selected = textStyle.mode === mode.id;
+								return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
+									type: "button",
+									"aria-pressed": selected,
+									"data-kisekae-text-style": mode.id,
+									style: {
+										...TEXT_STYLE_BUTTON_STYLE,
+										...selected ? MODE_SELECTED_STYLE : {}
+									},
+									onClick: () => {
+										textStyleStore.setMode(mode.id);
+									},
+									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("strong", { children: t(mode.label) }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+										style: TEXT_STYLE_DESCRIPTION_STYLE,
+										children: t(mode.description)
+									})]
+								}, mode.id);
+							})
+						})]
 					}),
 					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("section", {
 						"aria-labelledby": backdropHeadingId,
@@ -1847,6 +2174,86 @@ window.__ModuleLoader__.load({
 			};
 		}
 		//#endregion
+		//#region src/client/text-style-store.ts
+		/** Versioned browser preference key for the text-style selector. */
+		const KISEKAE_TEXT_STYLE_STORAGE_KEY = "@yehu77/dsh-kisekae:text-style:v1";
+		const TEXT_STYLE_SOURCE = "@yehu77/dsh-kisekae:text-style";
+		/** Immediate localStorage-backed text-style preference. */
+		var TextStyleStore = class {
+			listeners = /* @__PURE__ */ new Set();
+			storage;
+			snapshot;
+			/**
+			* @param storage - Browser storage; omitted callers use the current window.
+			*/
+			constructor(storage) {
+				let browserStorage = storage;
+				if (browserStorage === void 0) try {
+					browserStorage = window.localStorage;
+				} catch (_browserStorageUnavailable) {
+					browserStorage = void 0;
+				}
+				this.storage = browserStorage;
+				this.snapshot = { mode: this.read() };
+			}
+			/** @returns the current text-style preference. */
+			getSnapshot = () => this.snapshot;
+			/**
+			* Observe text-style changes.
+			* @param listener - Subscriber notified after a local change.
+			* @returns disposer removing the subscriber.
+			*/
+			subscribe = (listener) => {
+				this.listeners.add(listener);
+				return () => {
+					this.listeners.delete(listener);
+				};
+			};
+			/**
+			* Select and persist one text style.
+			* @param mode - Theme default, official clear, or effects-off presentation.
+			*/
+			setMode(mode) {
+				if (mode === this.snapshot.mode) return;
+				this.snapshot = { mode };
+				try {
+					this.storage?.setItem(KISEKAE_TEXT_STYLE_STORAGE_KEY, mode);
+				} catch (_browserStorageUnavailable) {}
+				for (const listener of [...this.listeners]) listener();
+			}
+			read() {
+				try {
+					const value = this.storage?.getItem(KISEKAE_TEXT_STYLE_STORAGE_KEY);
+					return value === "official-clear" || value === "effects-off" ? value : "theme-default";
+				} catch (_browserStorageUnavailable) {
+					return "theme-default";
+				}
+			}
+		};
+		/**
+		* Apply the selected optional text layer while its parent skin is visible.
+		* @param theme - Official reversible token service.
+		* @param store - Current browser-local text-style preference.
+		* @param overrides - Theme-owned values for optional modes.
+		* @returns cleanup for the subscription and active token layer.
+		*/
+		function mountTextStyle(theme, store, overrides) {
+			let disposeLayer;
+			const sync = () => {
+				const previous = disposeLayer;
+				const mode = store.getSnapshot().mode;
+				disposeLayer = mode === "theme-default" ? void 0 : theme.overrideTokens(TEXT_STYLE_SOURCE, overrides[mode]);
+				previous?.();
+			};
+			const unsubscribe = store.subscribe(sync);
+			sync();
+			return () => {
+				unsubscribe();
+				disposeLayer?.();
+				disposeLayer = void 0;
+			};
+		}
+		//#endregion
 		//#region src/client/index.ts
 		/** Browser half: durable skin selection over the official color mode. */
 		/** Cordis services required by the browser entry. */
@@ -1864,6 +2271,7 @@ window.__ModuleLoader__.load({
 			const controller = new SkinSelectionController(ctx.theme, store);
 			const mainBackgroundStore = new MainBackgroundStore();
 			const backdropStore = new SidebarBackdropStore();
+			const textStyleStore = new TextStyleStore();
 			ctx.effect(() => {
 				const disposeStore = store.mount();
 				const disposeController = controller.mount();
@@ -1886,11 +2294,13 @@ window.__ModuleLoader__.load({
 				inject: () => ({
 					controller,
 					mainBackgroundStore,
-					backdropStore
+					backdropStore,
+					textStyleStore
 				})
 			}, SkinSelectorSection));
 			ctx.effect(() => mountSkinVisuals(controller, () => {
 				const disposers = [
+					mountTextStyle(ctx.theme, textStyleStore, DEEPSEEK_BLUE_WHALE_CHAN_TEXT_STYLE_OVERRIDES),
 					ctx.slots.inject("conversation.composer.bar.decoration", () => ctx.slots.register({ name: "conversation.composer.bar.decoration" }, BlueWhaleComposerDecoration)),
 					ctx.slots.inject("conversation.backdrop", () => ctx.slots.register({
 						name: "conversation.backdrop",

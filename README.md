@@ -2,14 +2,15 @@
 
 English | [中文](README.zh.md)
 
-DSH Kisekae is a community theme workspace for DeepSeek Harness. The repository contains two real Cordis Client Plugin packages that are developed, tested, and released together.
+DSH Kisekae is a community theme workspace for DeepSeek Harness. The repository contains two real Cordis Client Plugin packages plus an optional desktop shell, developed and tested together.
 
 ## Packages
 
-| Package | Path | Responsibility |
+| Workspace unit | Path | Responsibility |
 | --- | --- | --- |
 | `@yehu77/dsh-kisekae` | [`packages/theme`](packages/theme) | Themes, artwork, settings, color, typography, and decorative slot contributions |
 | `@deepseek-ai/dsh-client-ui-conversation` | [`packages/conversation`](packages/conversation) | Community drop-in replacement for the official conversation plugin, preserving official behavior while exposing themeable conversation presentation controls |
+| `@yehu77/dsh-kisekae-desktop` | [`apps/desktop`](apps/desktop) | Electron shell that runs or attaches to the same local Harness Web profile; it is an app, not a third theme plugin |
 
 Typography belongs to the theme package. “DeepSeek Blue Whale-chan” currently supplies violet user prose and ice-edged assistant prose; later themes may choose entirely different colors, weights, shadows, and, when properly licensed font files are added, font families. The conversation replacement only routes the selected theme values to the correct user and assistant text. It contains no Blue Whale-chan palette or artwork.
 
@@ -37,6 +38,12 @@ pnpm install
 pnpm run check
 ```
 
+Start the development desktop shell. It reuses port 3080 and starts the sibling Harness checkout only when that port is not already serving Harness:
+
+```sh
+pnpm desktop
+```
+
 Link both packages into a source-built Harness profile:
 
 ```sh
@@ -54,7 +61,7 @@ pnpm dsh plugin --profile web remove @yehu77/dsh-kisekae
 pnpm dsh plugin --profile web remove @deepseek-ai/dsh-client-ui-conversation
 ```
 
-See the [theme package](packages/theme/README.md) for current visuals and usage, the [conversation package](packages/conversation/README.md) for replacement and compatibility details, and the [roadmap](ROADMAP.md) for planned themes and surfaces.
+See the [theme package](packages/theme/README.md) for current visuals and usage, the [conversation package](packages/conversation/README.md) for replacement and compatibility details, the [desktop app](apps/desktop/README.md) for its development and packaging stages, and the [roadmap](ROADMAP.md) for planned themes and surfaces.
 
 ## Licensing
 

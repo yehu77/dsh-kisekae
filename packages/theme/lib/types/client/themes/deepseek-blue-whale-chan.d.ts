@@ -100,6 +100,22 @@ export declare const DEEPSEEK_BLUE_WHALE_CHAN: {
             readonly light: "500";
             readonly dark: "500";
         };
+        readonly '--dsw-specific-conversation-composer-dock-background': {
+            readonly light: "linear-gradient(180deg, rgba(4, 27, 45, 0) 0px, rgba(4, 27, 45, 0.10) 36px, rgba(4, 27, 45, 0.24) 100%)";
+            readonly dark: "linear-gradient(180deg, rgba(2, 11, 20, 0) 0px, rgba(2, 11, 20, 0.18) 36px, rgba(2, 11, 20, 0.36) 100%)";
+        };
+        readonly '--dsw-specific-conversation-composer-glass-fill': {
+            readonly light: "linear-gradient(180deg, rgba(205, 242, 255, 0.96) 0%, rgba(172, 225, 246, 0.96) 48%, rgba(144, 209, 236, 0.97) 100%)";
+            readonly dark: "linear-gradient(180deg, rgba(35, 111, 157, 0.94) 0%, rgba(15, 78, 131, 0.96) 48%, rgba(8, 47, 98, 0.98) 100%)";
+        };
+        readonly '--dsw-specific-conversation-composer-glass-rim': {
+            readonly light: "rgba(218, 250, 255, 0.96)";
+            readonly dark: "rgba(137, 229, 255, 0.94)";
+        };
+        readonly '--dsw-specific-conversation-composer-glass-ornament': {
+            readonly light: "#F8FEFF";
+            readonly dark: "#C9F6FF";
+        };
         readonly '--dsw-specific-sidebar-fill': {
             readonly light: "#EAF5FA";
             readonly dark: "#0D2131";
@@ -111,6 +127,57 @@ export declare const DEEPSEEK_BLUE_WHALE_CHAN: {
         readonly '--dsw-specific-sidebar-nav-item-active': {
             readonly light: "rgba(255, 255, 255, 0.74)";
             readonly dark: "rgba(28, 72, 94, 0.78)";
+        };
+    };
+};
+/** Optional text presentations layered over the Blue Whale-chan default. */
+export declare const DEEPSEEK_BLUE_WHALE_CHAN_TEXT_STYLE_OVERRIDES: {
+    readonly 'official-clear': {
+        readonly '--dsw-font-family': {
+            readonly light: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif";
+            readonly dark: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif";
+        };
+        readonly '--dsw-specific-conversation-user-message-prose-color': {
+            readonly light: "#0F1115";
+            readonly dark: "#F9FAFB";
+        };
+        readonly '--dsw-specific-conversation-user-message-prose-text-shadow': {
+            readonly light: "none";
+            readonly dark: "none";
+        };
+        readonly '--dsw-specific-conversation-assistant-message-prose-color': {
+            readonly light: "#0F1115";
+            readonly dark: "#F9FAFB";
+        };
+        readonly '--dsw-specific-conversation-assistant-message-prose-text-shadow': {
+            readonly light: "none";
+            readonly dark: "none";
+        };
+        readonly '--dsw-specific-conversation-message-prose-font-weight': {
+            readonly light: "400";
+            readonly dark: "400";
+        };
+    };
+    readonly 'effects-off': {
+        readonly '--dsw-specific-conversation-user-message-prose-color': {
+            readonly light: "#6A1B8C";
+            readonly dark: "#E8C4FF";
+        };
+        readonly '--dsw-specific-conversation-user-message-prose-text-shadow': {
+            readonly light: "none";
+            readonly dark: "none";
+        };
+        readonly '--dsw-specific-conversation-assistant-message-prose-color': {
+            readonly light: "#075C78";
+            readonly dark: "#BDEEFF";
+        };
+        readonly '--dsw-specific-conversation-assistant-message-prose-text-shadow': {
+            readonly light: "none";
+            readonly dark: "none";
+        };
+        readonly '--dsw-specific-conversation-message-prose-font-weight': {
+            readonly light: "500";
+            readonly dark: "500";
         };
     };
 };

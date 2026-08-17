@@ -280,10 +280,13 @@
      region and the fade band never stretches. The 0px stop is bg-base at
      zero alpha (not white, which the figma export hardcodes) so both themes
      fade from their own base. */
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--dsw-alias-bg-base) 0%, transparent) 0px,
-    var(--dsw-alias-bg-base) 36px
+  background: var(
+    --dsw-specific-conversation-composer-dock-background,
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--dsw-alias-bg-base) 0%, transparent) 0px,
+      var(--dsw-alias-bg-base) 36px
+    )
   );
 }
 

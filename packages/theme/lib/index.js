@@ -6,6 +6,7 @@ const KISEKAE_ARTWORK_ROUTE = "/plugins/@yehu77/dsh-kisekae/assets";
 /** All artwork shown by the gallery, sorted by id. */
 const KISEKAE_ARTWORKS = [
 	"1eaed38d-0bc6-46bb-a87f-a8e604392773",
+	"1eaed38d-0bc6-46bb-a87f-a8e604392773_wallpaper_3840x2160",
 	"3888b0d1-58b7-49e8-a946-d2a3f61b5cc6",
 	"461461e2-38aa-4dbe-8d89-8f149b95f2e7",
 	"4b004ccc-af16-4274-9eaa-a71be4406d4c",
@@ -48,7 +49,8 @@ const KISEKAE_ARTWORKS = [
 	"ffa97a37-a511-4b3e-bb9e-f1c2b61b9551"
 ].map((id) => ({
 	id,
-	file: `${id}.jpg`
+	file: `${id}.jpg`,
+	fit: id === "1eaed38d-0bc6-46bb-a87f-a8e604392773_wallpaper_3840x2160" ? "cover" : "contain"
 }));
 //#endregion
 //#region src/index.ts

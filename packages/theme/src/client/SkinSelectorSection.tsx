@@ -9,6 +9,7 @@ import type { MainBackgroundMode, MainBackgroundStore } from './main-background-
 import { SidebarBackdrop } from './SidebarBackdrop'
 import type { SidebarBackdropMode, SidebarBackdropStore } from './sidebar-backdrop-store'
 import type { SkinSelectionController, SkinSelectionSnapshot } from './skin-controller'
+import type { TextStyleMode, TextStyleStore } from './text-style-store'
 
 const SECTION_STYLE: CSSProperties = {
   containerType: 'inline-size',
@@ -43,13 +44,15 @@ const NARROW_LAYOUT_CSS = `
     flex: 1 1 auto;
   }
   [data-kisekae-mode-group],
-  [data-kisekae-backdrop-mode-group] {
+  [data-kisekae-backdrop-mode-group],
+  [data-kisekae-text-style-group] {
     display: grid !important;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 4px !important;
   }
   [data-kisekae-mode-group] button,
-  [data-kisekae-backdrop-mode-group] button {
+  [data-kisekae-backdrop-mode-group] button,
+  [data-kisekae-text-style-group] button {
     min-width: 0;
     padding: 0 4px !important;
     font-size: 12px !important;
@@ -234,6 +237,32 @@ const MODE_SELECTED_STYLE: CSSProperties = {
   background: 'var(--dsw-alias-state-business-tertiary)',
 }
 
+const TEXT_STYLE_GRID_STYLE: CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(min(170px, 100%), 1fr))',
+  gap: 8,
+  minWidth: 0,
+}
+
+const TEXT_STYLE_BUTTON_STYLE: CSSProperties = {
+  ...BUTTON_BASE_STYLE,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  gap: 4,
+  height: 'auto',
+  minHeight: 82,
+  padding: '12px 14px',
+  borderRadius: 14,
+  textAlign: 'left',
+}
+
+const TEXT_STYLE_DESCRIPTION_STYLE: CSSProperties = {
+  color: 'var(--dsw-alias-label-secondary)',
+  fontSize: 12,
+  lineHeight: 1.45,
+}
+
 const GALLERY_GRID_STYLE: CSSProperties = {
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fill, minmax(min(112px, 100%), 1fr))',
@@ -374,11 +403,22 @@ const BACKDROP_MODES: readonly { readonly id: SidebarBackdropMode; readonly labe
   { id: 'off', label: 'backdropOff' },
 ]
 
+const TEXT_STYLE_MODES: readonly {
+  readonly id: TextStyleMode
+  readonly label: KisekaeLocaleKey
+  readonly description: KisekaeLocaleKey
+}[] = [
+  { id: 'theme-default', label: 'textStyleBlueWhaleIce', description: 'textStyleBlueWhaleIceDescription' },
+  { id: 'official-clear', label: 'textStyleOfficialClear', description: 'textStyleOfficialClearDescription' },
+  { id: 'effects-off', label: 'textStyleEffectsOff', description: 'textStyleEffectsOffDescription' },
+]
+
 /** Props composed by the settings section slot. */
 export interface SkinSelectorSectionProps {
   readonly controller: SkinSelectionController
   readonly mainBackgroundStore: MainBackgroundStore
   readonly backdropStore: SidebarBackdropStore
+  readonly textStyleStore: TextStyleStore
   readonly t: (key: KisekaeLocaleKey) => string
 }
 
@@ -401,6 +441,7 @@ export function SkinSelectorSection({
   controller,
   mainBackgroundStore,
   backdropStore,
+  textStyleStore,
   t,
 }: SkinSelectorSectionProps): ReactElement {
   const snapshot = useSyncExternalStore(controller.subscribe, controller.getSnapshot, controller.getSnapshot)
@@ -410,7 +451,13 @@ export function SkinSelectorSection({
     mainBackgroundStore.getSnapshot,
   )
   const backdrop = useSyncExternalStore(backdropStore.subscribe, backdropStore.getSnapshot, backdropStore.getSnapshot)
+  const textStyle = useSyncExternalStore(
+    textStyleStore.subscribe,
+    textStyleStore.getSnapshot,
+    textStyleStore.getSnapshot,
+  )
   const headingId = useId()
+  const textStyleHeadingId = useId()
   const backdropHeadingId = useId()
   const mainBackgroundHeadingId = useId()
   const galleryHeadingId = useId()
@@ -502,6 +549,38 @@ export function SkinSelectorSection({
       >
         {t(status)}
       </p>
+
+      <section aria-labelledby={textStyleHeadingId} style={SUBSECTION_STYLE}>
+        <div style={HEADER_STYLE}>
+          <h3 id={textStyleHeadingId} style={SUBTITLE_STYLE}>{t('textStyleTitle')}</h3>
+          <p data-kisekae-subsection-description="true" style={DESCRIPTION_STYLE}>
+            {t('textStyleDescription')}
+          </p>
+        </div>
+        <div
+          role="group"
+          aria-labelledby={textStyleHeadingId}
+          data-kisekae-text-style-group="true"
+          style={TEXT_STYLE_GRID_STYLE}
+        >
+          {TEXT_STYLE_MODES.map(mode => {
+            const selected = textStyle.mode === mode.id
+            return (
+              <button
+                key={mode.id}
+                type="button"
+                aria-pressed={selected}
+                data-kisekae-text-style={mode.id}
+                style={{ ...TEXT_STYLE_BUTTON_STYLE, ...(selected ? MODE_SELECTED_STYLE : {}) }}
+                onClick={() => { textStyleStore.setMode(mode.id) }}
+              >
+                <strong>{t(mode.label)}</strong>
+                <span style={TEXT_STYLE_DESCRIPTION_STYLE}>{t(mode.description)}</span>
+              </button>
+            )
+          })}
+        </div>
+      </section>
 
       <section
         aria-labelledby={backdropHeadingId}

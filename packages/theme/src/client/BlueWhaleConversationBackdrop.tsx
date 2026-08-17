@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from 'react'
 import type { CSSProperties, ReactElement } from 'react'
-import { artworkUrl } from '../artworks'
+import { KISEKAE_ARTWORKS, artworkUrl } from '../artworks'
 import type { MainBackgroundStore } from './main-background-store'
 
 /** Conversation display phase supplied by the official backdrop slot. */
@@ -32,7 +32,6 @@ const ARTWORK_STYLE: CSSProperties = {
   display: 'block',
   width: '100%',
   height: '100%',
-  objectFit: 'contain',
   objectPosition: 'center',
 }
 
@@ -59,6 +58,7 @@ export function BlueWhaleConversationBackdrop({
     mainBackgroundStore.getSnapshot,
   )
   if (snapshot.shownArtworkId === null) return null
+  const artwork = KISEKAE_ARTWORKS.find(entry => entry.id === snapshot.shownArtworkId)!
 
   return (
     <div
@@ -67,19 +67,21 @@ export function BlueWhaleConversationBackdrop({
       data-kisekae-main-background={snapshot.shownArtworkId}
       style={ROOT_STYLE}
     >
-      <span
-        data-kisekae-conversation-ambient={snapshot.shownArtworkId}
-        style={{
-          ...AMBIENT_STYLE,
-          backgroundImage: `url(${artworkUrl(snapshot.shownArtworkId)})`,
-        }}
-      />
+      {artwork.fit === 'contain' && (
+        <span
+          data-kisekae-conversation-ambient={snapshot.shownArtworkId}
+          style={{
+            ...AMBIENT_STYLE,
+            backgroundImage: `url(${artworkUrl(snapshot.shownArtworkId)})`,
+          }}
+        />
+      )}
       <img
         alt=""
         data-kisekae-conversation-artwork={snapshot.shownArtworkId}
         draggable={false}
         src={artworkUrl(snapshot.shownArtworkId)}
-        style={ARTWORK_STYLE}
+        style={{ ...ARTWORK_STYLE, objectFit: artwork.fit }}
       />
     </div>
   )

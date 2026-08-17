@@ -14,7 +14,8 @@
 - `conversation.composer.bar.decoration`：输入框下方的非交互装饰层；
 - 分开的用户与助手正文颜色 token；
 - 分开的用户与助手正文文字阴影 token；
-- 一个共享的消息正文字重 token。
+- 一个共享的消息正文字重 token；
+- 一个输入区底座背景 token，其默认值保留官方遮罩。
 
 本仓库不内置具体主题。DSH Kisekae 会占用这些扩展点，并提供“DeepSeek 蓝鲸娘”的图片与文字效果。
 
