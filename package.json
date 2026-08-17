@@ -2,16 +2,13 @@
   "name": "dsh-kisekae-workspace",
   "version": "0.1.0",
   "private": true,
-  "description": "Theme, conversation, and desktop workspace for DSH Kisekae.",
+  "description": "Theme and conversation plugin workspace for DSH Kisekae.",
   "type": "module",
   "scripts": {
-    "build": "pnpm --filter @deepseek-ai/dsh-client-ui-conversation test && pnpm --filter @yehu77/dsh-kisekae build && pnpm --filter @yehu77/dsh-kisekae-desktop build",
-    "check": "pnpm run test:workspace && pnpm --filter @deepseek-ai/dsh-client-ui-conversation check && pnpm --filter @yehu77/dsh-kisekae check && pnpm --filter @yehu77/dsh-kisekae-desktop check",
+    "build": "pnpm --filter @deepseek-ai/dsh-client-ui-conversation test && pnpm --filter @yehu77/dsh-kisekae build",
+    "check": "pnpm run test:workspace && pnpm --filter @deepseek-ai/dsh-client-ui-conversation check && pnpm --filter @yehu77/dsh-kisekae check",
     "check:conversation": "pnpm --filter @deepseek-ai/dsh-client-ui-conversation check",
-    "check:desktop": "pnpm --filter @yehu77/dsh-kisekae-desktop check",
     "check:theme": "pnpm --filter @yehu77/dsh-kisekae check",
-    "desktop": "pnpm --filter @yehu77/dsh-kisekae-desktop start",
-    "desktop:attach": "pnpm --filter @yehu77/dsh-kisekae-desktop start -- --url http://127.0.0.1:3080/",
     "test:workspace": "node --test tests/*.test.mjs"
   },
   "engines": {

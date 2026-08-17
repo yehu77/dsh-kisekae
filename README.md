@@ -2,7 +2,7 @@
 
 English | [中文](README.zh.md)
 
-DSH Kisekae is a community theme workspace for DeepSeek Harness. The repository contains two real Cordis Client Plugin packages plus an optional desktop shell, developed and tested together.
+DSH Kisekae is a community theme workspace for DeepSeek Harness. The repository contains two Cordis Client Plugin packages that are developed, versioned, and tested together.
 
 ## Packages
 
@@ -10,7 +10,6 @@ DSH Kisekae is a community theme workspace for DeepSeek Harness. The repository 
 | --- | --- | --- |
 | `@yehu77/dsh-kisekae` | [`packages/theme`](packages/theme) | Themes, artwork, settings, color, typography, and decorative slot contributions |
 | `@deepseek-ai/dsh-client-ui-conversation` | [`packages/conversation`](packages/conversation) | Community drop-in replacement for the official conversation plugin, preserving official behavior while exposing themeable conversation presentation controls |
-| `@yehu77/dsh-kisekae-desktop` | [`apps/desktop`](apps/desktop) | Electron shell that runs or attaches to the same local Harness Web profile; it is an app, not a third theme plugin |
 
 Typography belongs to the theme package. “DeepSeek Blue Whale-chan” currently supplies violet user prose and ice-edged assistant prose; later themes may choose entirely different colors, weights, shadows, and, when properly licensed font files are added, font families. The conversation replacement only routes the selected theme values to the correct user and assistant text. It contains no Blue Whale-chan palette or artwork.
 
@@ -19,6 +18,8 @@ The replacement keeps the official package identity because the rest of Harness 
 ## Install from GitHub
 
 Install the conversation replacement first, then the theme. pnpm's Git `path:` selector installs each package from this monorepo independently.
+
+DSH Kisekae distributes plugins rather than a native application, so it does not require macOS application notarization or Windows executable signing. The same packages run inside the user's existing Harness installation; use Terminal on macOS or PowerShell on Windows.
 
 ```sh
 dsh plugin --profile web add 'github:yehu77/dsh-kisekae#path:/packages/conversation'
@@ -38,12 +39,6 @@ pnpm install
 pnpm run check
 ```
 
-Start the development desktop shell. It reuses port 3080 and starts the sibling Harness checkout only when that port is not already serving Harness:
-
-```sh
-pnpm desktop
-```
-
 Link both packages into a source-built Harness profile:
 
 ```sh
@@ -54,6 +49,8 @@ pnpm dsh --profile web --dump-config
 pnpm dsh --profile web
 ```
 
+Open the local URL printed by Harness. Kisekae remains part of that Web profile rather than starting a separate application or server.
+
 Remove them with:
 
 ```sh
@@ -61,7 +58,7 @@ pnpm dsh plugin --profile web remove @yehu77/dsh-kisekae
 pnpm dsh plugin --profile web remove @deepseek-ai/dsh-client-ui-conversation
 ```
 
-See the [theme package](packages/theme/README.md) for current visuals and usage, the [conversation package](packages/conversation/README.md) for replacement and compatibility details, the [desktop app](apps/desktop/README.md) for its development and packaging stages, and the [roadmap](ROADMAP.md) for planned themes and surfaces.
+See the [theme package](packages/theme/README.md) for current visuals and usage, the [conversation package](packages/conversation/README.md) for replacement and compatibility details, and the [roadmap](ROADMAP.md) for planned themes and surfaces.
 
 ## Licensing
 

@@ -4,20 +4,20 @@ Status: in progress
 
 English | [中文](ROADMAP.zh.md)
 
-Current milestone: Stage 2 — browser-persistent selection for Official appearance and “DeepSeek Blue Whale-chan,” alongside the Stage 6 desktop-shell foundation. The rest of Stage 2 remains open until two more original skins prove the catalog is data-driven.
+Current milestone: Stage 2 — browser-persistent selection for Official appearance and “DeepSeek Blue Whale-chan.” The rest of Stage 2 remains open until two more original skins prove the catalog is data-driven.
 
 The first gallery, phase-aware main conversation background, “Blue Whale glass sidebar · Rain veil,” and browser-local text-style selector are implemented. All 42 released illustrations appear in the gallery; Fixed, Random, and Off control `conversation.backdrop`, while Clear, Immersive, and Off control a fixed-image `sidebar.backdrop`. The composer adds image-free sea glass through `conversation.composer.bar.decoration`; the New Session button adds `sidebar.newSession.decoration` and a wave-chat `sidebar.newSession.icon`; and the Settings trigger adds `settings.trigger.decoration`. These six visual contributions follow the currently previewed skin; their stored artwork preferences remain independent. Text style can follow the theme default, restore official clear prose, or keep theme colors with text effects disabled.
 
 ## Goal
 
-Build a maintainable, open-source collection of anime-inspired skins for DeepSeek Harness without splitting the Web and desktop experiences. Installation, selection, preview, and removal must be reversible, and richer art must never become necessary to use the agent.
+Build a maintainable, open-source collection of anime-inspired skins for the existing DeepSeek Harness Web experience. Installation, selection, preview, and removal must be reversible, and richer art must never become necessary to use the agent.
 
 ## Boundaries
 
 - Official Light, Dark, and System preferences remain unchanged.
 - A Kisekae skin is one `theme.overrideTokens()` layer with light and dark values for every override.
 - The first release uses original or appropriately licensed art; recognizable franchise assets are excluded.
-- The first desktop baseline is a secure shell around the same local Web profile. It has no bundled runtime, updater, remote marketplace, arbitrary user CSS, browser-downloaded code, model persona, or alternate conversation layout yet.
+- This repository distributes plugin packages and their assets, not a native application, installer, or updater.
 - Settings selection, decorative overlays, and onboarding are separate features even when they share one art direction.
 
 ## Delivery stages
@@ -80,16 +80,6 @@ Exit when a clean Web profile can install, run, upgrade, and remove Kisekae usin
 
 Exit when a new pack can be built without importing Kisekae runtime internals. A hosted marketplace remains a separate proposal.
 
-### 6. Desktop distribution
-
-- Keep `apps/desktop` as an application beside the two independently installable plugins; do not turn desktop packaging into a third theme runtime.
-- During development, attach to an assembled Harness already serving the stable `127.0.0.1:3080` origin or start the sibling checkout there. Never silently create a second port or a second profile instance.
-- Bundle a reviewed Node 24 runtime, the supported Harness distribution, and both Kisekae packages for end users who do not have Node, pnpm, or source checkouts.
-- Keep the renderer sandboxed with Node integration disabled. Add native desktop features only through narrow main-process capabilities.
-- Produce signed and notarized macOS builds, signed Windows installers, crash-safe child-process cleanup, and an explicit update channel before calling the desktop app generally available.
-
-Exit when a clean supported machine can install, launch, update, and remove the desktop app by ordinary graphical workflows while the Web-only installation remains available.
-
 ## Decision gates
 
 - If tokens cannot express a credible first skin, list missing semantic roles and propose only generic aliases justified by two consumers; do not use private CSS as an escape hatch.
@@ -109,4 +99,3 @@ Exit when a clean supported machine can install, launch, update, and remove the 
 - Keyboard operation, visible focus, readable content, reduced motion, zoom, and narrow layouts work for every skin.
 - Tests cover definition validation, persistence, fallback, replacement, and disposal; a real Web profile proves assembled behavior.
 - Code and asset licenses remain separate, and every released non-code file has provenance metadata.
-- The desktop shell owns at most one Harness process, preserves one stable local origin, and exposes no unrestricted Node or Electron API to Web content.

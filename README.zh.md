@@ -2,7 +2,7 @@
 
 [English](README.md) | 中文
 
-DSH Kisekae 是一个面向 DeepSeek Harness 的社区主题工作区。仓库里包含两个真正的 Cordis Client Plugin 包和一个可选桌面外壳，它们在同一个仓库中开发和测试。
+DSH Kisekae 是一个面向 DeepSeek Harness 的社区主题工作区。仓库里包含两个一起开发、统一版本和共同测试的 Cordis Client Plugin 包。
 
 ## 包结构
 
@@ -10,7 +10,6 @@ DSH Kisekae 是一个面向 DeepSeek Harness 的社区主题工作区。仓库�
 | --- | --- | --- |
 | `@yehu77/dsh-kisekae` | [`packages/theme`](packages/theme) | 主题、美术、设置、配色、字体与装饰 slot 贡献 |
 | `@deepseek-ai/dsh-client-ui-conversation` | [`packages/conversation`](packages/conversation) | 完整替换官方对话插件，在保留官方行为的同时提供可换肤的对话呈现接口 |
-| `@yehu77/dsh-kisekae-desktop` | [`apps/desktop`](apps/desktop) | 运行或接入同一个本地 Harness Web profile 的 Electron 外壳；它是应用，不是第三个主题插件 |
 
 字体属于主题包。“DeepSeek 蓝鲸娘”现在提供紫色用户正文和冰晶边缘的助手正文；后续主题可以选择完全不同的颜色、字重、阴影，以及在加入许可合规的字体文件后选择不同字族。对话底座只负责把当前主题值分发到正确的用户或助手文字上，不包含蓝鲸娘配色或美术。
 
@@ -19,6 +18,8 @@ DSH Kisekae 是一个面向 DeepSeek Harness 的社区主题工作区。仓库�
 ## 从 GitHub 安装
 
 先安装对话底座，再安装主题。pnpm 的 Git `path:` 选择器会从同一个仓库分别安装两个包。
+
+DSH Kisekae 发布的是插件而不是原生应用，因此不需要 macOS 应用公证或 Windows 可执行文件签名。两个包都安装进使用者已有的 Harness；macOS 使用“终端”，Windows 使用 PowerShell 执行相同命令。
 
 ```sh
 dsh plugin --profile web add 'github:yehu77/dsh-kisekae#path:/packages/conversation'
@@ -38,12 +39,6 @@ pnpm install
 pnpm run check
 ```
 
-启动开发版桌面外壳。它固定复用 3080，只有该端口尚未运行 Harness 时才会启动相邻的 Harness 源码仓库：
-
-```sh
-pnpm desktop
-```
-
 把两个包链接到从源码运行的 Harness profile：
 
 ```sh
@@ -54,6 +49,8 @@ pnpm dsh --profile web --dump-config
 pnpm dsh --profile web
 ```
 
+打开 Harness 输出的本地地址即可。Kisekae 始终运行在该 Web profile 中，不会另启应用或第二个服务器。
+
 移除命令：
 
 ```sh
@@ -61,7 +58,7 @@ pnpm dsh plugin --profile web remove @yehu77/dsh-kisekae
 pnpm dsh plugin --profile web remove @deepseek-ai/dsh-client-ui-conversation
 ```
 
-当前视觉与使用方法见[主题包](packages/theme/README.zh.md)，替换机制与兼容性见[对话包](packages/conversation/README.zh.md)，桌面开发与打包阶段见[桌面应用](apps/desktop/README.zh.md)，后续主题和界面计划见[路线图](ROADMAP.zh.md)。
+当前视觉与使用方法见[主题包](packages/theme/README.zh.md)，替换机制与兼容性见[对话包](packages/conversation/README.zh.md)，后续主题和界面计划见[路线图](ROADMAP.zh.md)。
 
 ## 许可证
 
